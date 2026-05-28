@@ -6,6 +6,8 @@ import Footer from './components/Footer'
 import AllRooms from './pages/AllRooms'
 import RoomDetails from './pages/RoomDetails'
 import MyBookings from './pages/MyBookings'
+import Profile from './pages/Profile'
+import Experiences from './pages/Experiences'
 import HotelReg from './components/HotelReg'
 import Layout from './pages/hotelOwner/Layout'
 import Dashboard from './pages/hotelOwner/Dashboard'
@@ -31,6 +33,8 @@ const App = () => {
           <Route path='/rooms' element={<AllRooms />} />
           <Route path='/rooms/:id' element={<RoomDetails />} />
           <Route path='/my-bookings' element={<MyBookings />} />
+          <Route path='/experiences' element={<Experiences />} />
+          <Route path='/profile' element={<Profile />} />
           <Route path='/owner' element={<Layout />}>
             <Route index element={<Dashboard />} />
             <Route path="add-room" element={<AddRoom />} />

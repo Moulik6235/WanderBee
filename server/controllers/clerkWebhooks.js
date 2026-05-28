@@ -27,7 +27,7 @@ const clerkWebhooks = async (req, res) => {
         }
 
         // Switch Cases for Different Events
-        switch (key) {
+        switch (type) {
             case "user.created": {
                 await User.create(userData);
                 break;

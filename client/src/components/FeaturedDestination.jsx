@@ -47,7 +47,7 @@ const TrendingDestinations = () => {
                         <div 
                             key={dest.id}
                             onClick={() => { navigate('/rooms'); scrollTo(0, 0); }}
-                            className="group bg-white rounded-2xl overflow-hidden shadow-ambient-sm hover:shadow-ambient-md transition-premium cursor-pointer border border-gray-100/60 flex flex-col"
+                            className="group bg-white rounded-2xl overflow-hidden property-card-shadow hover:shadow-lg transition-premium cursor-pointer border border-gray-100/60 flex flex-col active:scale-[0.99]"
                         >
                             {/* Card Image Container */}
                             <div className="relative h-64 overflow-hidden">
@@ -57,14 +57,14 @@ const TrendingDestinations = () => {
                                     alt={dest.name} 
                                 />
                                 {/* Rating Badge */}
-                                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-xl flex items-center gap-1 shadow-sm">
-                                    <span className="material-symbols-outlined text-secondary text-sm font-fill">star</span>
+                                <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-xl flex items-center gap-1 shadow-sm">
+                                    <span className="material-symbols-outlined text-secondary-container text-sm font-fill" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
                                     <span className="font-montserrat font-bold text-xs text-primary">{dest.rating}</span>
                                 </div>
                             </div>
 
                             {/* Card Details */}
-                            <div className="p-6 border-b-2 border-transparent group-hover:border-secondary transition-colors flex-1 flex flex-col justify-between text-left">
+                            <div className="p-6 border-b-4 border-transparent group-hover:border-secondary transition-colors flex-1 flex flex-col justify-between text-left">
                                 <div>
                                     <h3 className="font-montserrat text-lg font-bold text-primary mb-1">{dest.name}</h3>
                                     <p className="font-inter text-sm text-gray-400 mb-4">{dest.description}</p>
@@ -78,7 +78,7 @@ const TrendingDestinations = () => {
                                             <span className="font-inter text-xs text-gray-400 font-normal">/night</span>
                                         </span>
                                     </div>
-                                    <span className="material-symbols-outlined text-primary group-hover:translate-x-2 transition-transform">arrow_forward</span>
+                                    <span className="material-symbols-outlined text-primary group-hover:translate-x-2 transition-transform duration-300">arrow_forward</span>
                                 </div>
                             </div>
                         </div>
@@ -89,7 +89,7 @@ const TrendingDestinations = () => {
                 <div className="text-center mt-12">
                     <button 
                         onClick={() => { navigate('/rooms'); scrollTo(0, 0); }} 
-                        className="px-6 py-3 text-xs font-bold font-montserrat tracking-wider uppercase border border-primary text-primary hover:bg-primary hover:text-white rounded-lg shadow-sm transition-premium cursor-pointer bg-white"
+                        className="px-6 py-3 text-xs font-bold font-montserrat tracking-wider uppercase border border-primary text-primary hover:bg-primary hover:text-white rounded-lg shadow-sm transition-premium cursor-pointer bg-white active:scale-95"
                     >
                         View All Destinations
                     </button>

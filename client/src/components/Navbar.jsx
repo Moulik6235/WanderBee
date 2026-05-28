@@ -10,15 +10,20 @@ const BookIcon = () => (
     </svg>
 )
 
+const ProfileIcon = () => (
+    <svg className="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+        <path stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a8.967 8.967 0 0 1-5.9-2.29C6.5 17.082 8 16 12 16s5.5 1.082 5.9 2.71A8.967 8.967 0 0 1 12 21Zm0-7a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/>
+    </svg>
+)
+
 const Navbar = () => {
     const navLinks = [
         { name: 'Home', path: '/' },
         { name: 'Hotels', path: '/rooms' },
-        { name: 'Experience', path: '/' },
-        { name: 'About', path: '/' },
+        { name: 'My Bookings', path: '/my-bookings' },
+        { name: 'Experiences', path: '/experiences' },
+        { name: 'Offers', path: '/rooms' },
     ];
-
-
 
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,14 +34,12 @@ const Navbar = () => {
     const { user, navigate, isOwner, setShowHotelReg } = useAppContext()
 
     useEffect(() => {
-
         if (location.pathname !== '/') {
             setIsScrolled(true);
             return;
         } else {
             setIsScrolled(false)
         }
-        setIsScrolled(prev => location.pathname !== '/' ? true : prev);
 
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 10);
@@ -46,83 +49,148 @@ const Navbar = () => {
     }, [location.pathname]);
 
     return (
-
-        <nav className="sticky top-0 left-0 w-full flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 transition-all duration-300 z-50 bg-white/95 text-neutral-text backdrop-blur-lg py-4 border-b border-gray-100 shadow-sm">
-
-            {/* Logo */}
-            <Link to='/'>
-                <span className={`font-montserrat text-2xl font-black tracking-tight transition-premium ${isScrolled ? "text-primary" : "text-white"}`}>
-                    QuickStay
-                </span>
-            </Link>
-
-            {/* Desktop Nav */}
-            <div className="hidden md:flex items-center gap-6 lg:gap-8">
-                {navLinks.map((link, i) => (
-                    <Link key={i} to={link.path} className="group font-montserrat text-sm font-semibold tracking-wide flex flex-col gap-1 transition-premium text-primary hover:text-secondary">
-                        {link.name}
-                        <div className="bg-secondary h-0.5 w-0 group-hover:w-full transition-all duration-300" />
+        <header className="w-full top-0 sticky bg-white/95 backdrop-blur-md shadow-sm z-50 border-b border-gray-100 transition-all duration-300">
+            <nav className="flex justify-between items-center px-6 md:px-16 lg:px-24 xl:px-32 py-4 max-w-7xl mx-auto">
+                {/* Logo */}
+                <div className="flex items-center gap-8">
+                    <Link to='/' className="active:scale-95 transition-transform">
+                        <span className="font-montserrat text-2xl font-bold tracking-tight text-primary">
+                            BharatStay
+                        </span>
                     </Link>
-                ))}
 
-                {user &&
-                    <button className="px-4 py-1.5 text-xs font-bold font-montserrat rounded-lg border border-primary text-primary hover:bg-primary/5 transition-premium cursor-pointer" onClick={() => isOwner ? navigate('/owner') : setShowHotelReg(true)}>
-                        {isOwner ? 'Dashboard' : 'List Your Hotel'}
+                    {/* Desktop Nav */}
+                    <div className="hidden md:flex gap-6 items-center">
+                        {navLinks.map((link, i) => {
+                            const isActive = location.pathname === link.path;
+                            return (
+                                <Link 
+                                    key={i} 
+                                    to={link.path} 
+                                    className={`font-inter text-sm font-semibold transition-all duration-200 cursor-pointer active:scale-95 hover:text-secondary ${
+                                        isActive ? "text-primary border-b-2 border-primary pb-1" : "text-gray-500 hover:text-secondary"
+                                    }`}
+                                >
+                                    {link.name}
+                                </Link>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                {/* Desktop Right */}
+                <div className="hidden md:flex items-center gap-6">
+                    <button className="text-gray-500 font-inter text-sm font-semibold hover:text-secondary transition-colors cursor-pointer">
+                        Support
                     </button>
-                }
-            </div>
+                    <div className="flex items-center gap-4 text-gray-500">
+                        <span className="material-symbols-outlined cursor-pointer hover:text-secondary transition-all" onClick={() => navigate('/rooms')}>language</span>
+                        {user ? (
+                            <UserButton>
+                                <UserButton.MenuItems>
+                                    <UserButton.Action label="My Profile" labelIcon={<ProfileIcon />} onClick={() => navigate('/profile')} />
+                                    <UserButton.Action label="My Bookings" labelIcon={<BookIcon />} onClick={() => navigate('/my-bookings')} />
+                                </UserButton.MenuItems>
+                            </UserButton>
+                        ) : (
+                            <span className="material-symbols-outlined cursor-pointer hover:text-secondary transition-all" onClick={openSignIn}>account_circle</span>
+                        )}
+                    </div>
 
-            {/* Desktop Right */}
-            <div className="hidden md:flex items-center gap-6">
-                <span className="material-symbols-outlined text-primary cursor-pointer hover:text-secondary transition-premium text-2xl font-bold">search</span>
+                    {user ? (
+                        <div className="flex items-center gap-3">
+                            <button 
+                                className="px-4 py-2 text-xs font-bold font-montserrat rounded-lg border border-primary text-primary hover:bg-primary/5 transition-premium cursor-pointer" 
+                                onClick={() => isOwner ? navigate('/owner') : setShowHotelReg(true)}
+                            >
+                                {isOwner ? 'Dashboard' : 'List Your Hotel'}
+                            </button>
+                            <button 
+                                className="px-4 py-2 text-xs font-bold font-montserrat rounded-lg bg-secondary text-white hover:bg-secondary-dark transition-premium cursor-pointer" 
+                                onClick={() => navigate('/profile')}
+                            >
+                                Profile
+                            </button>
+                        </div>
+                    ) : (
+                        <button 
+                            onClick={openSignIn} 
+                            className="bg-primary text-white font-montserrat font-semibold px-6 py-2 rounded-lg hover:bg-secondary transition-all active:scale-95 cursor-pointer shadow-sm"
+                        >
+                            Sign In
+                        </button>
+                    )}
+                </div>
 
-                {user ?
-                    (<UserButton>
-                        <UserButton.MenuItems>
-                            <UserButton.Action label="My Bookings" labelIcon={<BookIcon />} onClick={() => navigate('/my-bookings')} />
-                        </UserButton.MenuItems>
-                    </UserButton>)
-                    :
-                    (<button onClick={openSignIn} className="bg-secondary hover:bg-secondary-dark text-white font-montserrat font-bold px-6 py-2 rounded-lg transition-premium cursor-pointer shadow-sm">
-                        Login
-                    </button>)}
+                {/* Mobile Menu Button */}
+                <div className="flex items-center gap-3 md:hidden">
+                    {user && (
+                        <UserButton>
+                            <UserButton.MenuItems>
+                                <UserButton.Action label="My Profile" labelIcon={<ProfileIcon />} onClick={() => navigate('/profile')} />
+                                <UserButton.Action label="My Bookings" labelIcon={<BookIcon />} onClick={() => navigate('/my-bookings')} />
+                            </UserButton.MenuItems>
+                        </UserButton>
+                    )}
+                    <img 
+                        onClick={() => setIsMenuOpen(!isMenuOpen)} 
+                        src={assets.menuIcon} 
+                        alt="menu" 
+                        className="h-5 cursor-pointer hover:scale-110 transition-transform" 
+                    />
+                </div>
 
-            </div>
+                {/* Mobile Menu */}
+                <div className={`fixed top-0 left-0 w-full h-screen bg-white text-base flex flex-col md:hidden items-center justify-center gap-6 font-medium text-gray-800 transition-all duration-500 ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}>
+                    <button className="absolute top-4 right-4" onClick={() => setIsMenuOpen(false)}>
+                        <img src={assets.closeIcon} alt="close-menu" className="h-6.5" />
+                    </button>
 
-            {/* Mobile Menu Button */}
+                    {navLinks.map((link, i) => (
+                        <Link 
+                            key={i} 
+                            to={link.path} 
+                            onClick={() => setIsMenuOpen(false)} 
+                            className="font-montserrat font-semibold text-lg text-primary hover:text-secondary transition-premium"
+                        >
+                            {link.name}
+                        </Link>
+                    ))}
 
-            <div className="flex items-center gap-3 md:hidden">
-                {user && <UserButton>
-                    <UserButton.MenuItems>
-                        <UserButton.Action label="My Bookings" labelIcon={<BookIcon />} onClick={() => navigate('/my-bookings')} />
-                    </UserButton.MenuItems>
-                </UserButton>}
-                <img onClick={() => setIsMenuOpen(!isMenuOpen)} src={assets.menuIcon} alt="menu" className="h-5 cursor-pointer" />
-            </div>
+                    <button 
+                        onClick={() => setIsMenuOpen(false)} 
+                        className="text-primary font-inter text-base font-semibold hover:text-secondary transition-colors"
+                    >
+                        Support
+                    </button>
 
-            {/* Mobile Menu */}
-            <div className={`fixed top-0 left-0 w-full h-screen bg-white text-base flex flex-col md:hidden items-center justify-center gap-6 font-medium text-gray-800 transition-all duration-500 ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}>
-                <button className="absolute top-4 right-4" onClick={() => setIsMenuOpen(false)}>
-                    <img src={assets.closeIcon} alt="close-menu" className="h-6.5" />
-                </button>
-
-                {navLinks.map((link, i) => (
-                    <a key={i} href={link.path} onClick={() => setIsMenuOpen(false)} className="font-montserrat font-semibold text-lg text-primary hover:text-secondary transition-premium">
-                        {link.name}
-                    </a>
-                ))}
-
-                {user && <button className="border border-primary text-primary px-5 py-2 text-sm font-bold font-montserrat rounded-lg cursor-pointer transition-premium" onClick={() => { setIsMenuOpen(false); isOwner ? navigate('/owner') : setShowHotelReg(true); }}>
-                    {isOwner ? 'Dashboard' : 'List Your Hotel'}
-                </button>}
-
-                {!user && <button onClick={() => { setIsMenuOpen(false); openSignIn(); }} className="bg-secondary hover:bg-secondary-dark text-white px-8 py-2.5 font-montserrat font-bold rounded-lg transition-premium shadow-sm">
-                    Login
-                </button>}
-            </div>
-        </nav>
-
+                    {user ? (
+                        <div className="flex flex-col gap-3 w-48">
+                            <button 
+                                className="border border-primary text-primary px-5 py-2 text-sm font-bold font-montserrat rounded-lg cursor-pointer transition-premium w-full text-center" 
+                                onClick={() => { setIsMenuOpen(false); isOwner ? navigate('/owner') : setShowHotelReg(true); }}
+                            >
+                                {isOwner ? 'Dashboard' : 'List Your Hotel'}
+                            </button>
+                            <button 
+                                className="bg-secondary text-white px-5 py-2 text-sm font-bold font-montserrat rounded-lg cursor-pointer transition-premium w-full text-center" 
+                                onClick={() => { setIsMenuOpen(false); navigate('/profile'); }}
+                            >
+                                Profile
+                            </button>
+                        </div>
+                    ) : (
+                        <button 
+                            onClick={() => { setIsMenuOpen(false); openSignIn(); }} 
+                            className="bg-primary text-white px-8 py-2.5 font-montserrat font-bold rounded-lg hover:bg-secondary transition-all active:scale-95 shadow-sm"
+                        >
+                            Sign In
+                        </button>
+                    )}
+                </div>
+            </nav>
+        </header>
     );
 }
 
-export default Navbar
+export default Navbar;

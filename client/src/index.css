@@ -3,11 +3,17 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #1a237e;
-  --color-primary-dark: #000666;
-  --color-secondary: #ff9933;
-  --color-secondary-dark: #8f4e00;
-  --color-tertiary: #ffb300;
+  --color-primary: #000666;
+  --color-primary-dark: #000555;
+  --color-primary-container: #1a237e;
+  --color-secondary: #8f4e00;
+  --color-secondary-dark: #6f3a00;
+  --color-secondary-container: #fe9832;
+  --color-on-secondary-container: #683700;
+  --color-secondary-fixed: #ffdcc2;
+  --color-on-secondary-fixed: #2e1500;
+  --color-tertiary: #271800;
+  --color-tertiary-container: #422c00;
   --color-neutral-bg: #f9f9fb;
   --color-neutral-text: #1a1c1d;
 
@@ -28,6 +34,10 @@ body {
   background-size: 24px 24px;
 }
 
+.jali-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l30 30-30 30L0 30z' fill='%231a237e' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
 .glass-effect {
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(10px);
@@ -36,7 +46,6 @@ body {
 .text-shadow-sm {
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
-
 
 h1, h2, h3, h4, h5, h6, .font-display-lg, .font-headline-lg, .font-headline-md, .font-montserrat {
   font-family: var(--font-montserrat) !important;
@@ -47,11 +56,11 @@ h1, h2, h3, h4, h5, h6, .font-display-lg, .font-headline-lg, .font-headline-md, 
 }
 
 /* Ambient shadow styles */
-.shadow-ambient-sm {
+.property-card-shadow, .custom-shadow {
   box-shadow: 0px 4px 20px rgba(26, 35, 126, 0.05);
 }
 
-.shadow-ambient-md {
+.property-card-shadow:hover, .custom-shadow-hover:hover {
   box-shadow: 0px 12px 30px rgba(26, 35, 126, 0.10);
 }
 

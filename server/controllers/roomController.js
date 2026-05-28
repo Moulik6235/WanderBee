@@ -1,3 +1,4 @@
+import { v2 as cloudinary } from "cloudinary";
 import Hotel from "../models/Hotel.js";
 import Room from "../models/Room.js";
 
@@ -11,7 +12,7 @@ export const createRoom = async (req, res) => {
 
         // upload images to cloudinary
         const uploadImages = req.files.map(async (file) => {
-            const response = await connectCloudinary.uploader.upload(file.path);
+            const response = await cloudinary.uploader.upload(file.path);
             return response.secure_url;
         })
         // Wait for all uploads to complete
@@ -49,7 +50,10 @@ export const getRooms = async (req, res) => {
 // API to get All Rooms for a Specific Hotel
 export const getOwnerRooms = async (req, res) => {
     try {
-        const hotelData = await Hotel({ owner: req.auth.userId })
+        const hotelData = await Hotel.findOne({ owner: req.auth.userId })
+        if (!hotelData) {
+            return res.json({ success: true, rooms: [] });
+        }
         const rooms = await Room.find({ hotel: hotelData._id.toString() }).populate("hotel");
         res.json({ success: true, rooms })
     } catch (error) {
