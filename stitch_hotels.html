@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BharatStay - Hotels in Udaipur</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#fe9832",
+                    "on-tertiary-fixed": "#281900",
+                    "inverse-primary": "#bdc2ff",
+                    "primary-container": "#1a237e",
+                    "outline": "#767683",
+                    "on-tertiary-container": "#c98c00",
+                    "secondary": "#8f4e00",
+                    "primary-fixed": "#e0e0ff",
+                    "background": "#f9f9fb",
+                    "secondary-fixed": "#ffdcc2",
+                    "on-primary-container": "#8690ee",
+                    "primary": "#000666",
+                    "on-tertiary-fixed-variant": "#604100",
+                    "on-primary-fixed": "#000767",
+                    "surface-variant": "#e2e2e4",
+                    "surface-container-low": "#f3f3f5",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed": "#2e1500",
+                    "on-surface-variant": "#454652",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed-variant": "#6d3a00",
+                    "inverse-surface": "#2f3132",
+                    "surface-container": "#eeeef0",
+                    "on-error": "#ffffff",
+                    "tertiary": "#271800",
+                    "on-background": "#1a1c1d",
+                    "on-primary": "#ffffff",
+                    "secondary-fixed-dim": "#ffb77a",
+                    "tertiary-fixed-dim": "#ffba38",
+                    "inverse-on-surface": "#f0f0f2",
+                    "primary-fixed-dim": "#bdc2ff",
+                    "outline-variant": "#c6c5d4",
+                    "on-error-container": "#93000a",
+                    "on-secondary-container": "#683700",
+                    "surface-container-highest": "#e2e2e4",
+                    "surface-tint": "#4c56af",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-bright": "#f9f9fb",
+                    "on-primary-fixed-variant": "#343d96",
+                    "surface-dim": "#d9dadc",
+                    "tertiary-container": "#422c00",
+                    "surface": "#f9f9fb",
+                    "on-surface": "#1a1c1d",
+                    "surface-container-high": "#e8e8ea",
+                    "tertiary-fixed": "#ffdeac",
+                    "error": "#ba1a1a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "24px",
+                    "container-max": "1280px",
+                    "sm": "12px",
+                    "xs": "4px",
+                    "xl": "64px",
+                    "gutter": "24px",
+                    "lg": "40px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Montserrat"],
+                    "display-lg-mobile": ["Montserrat"],
+                    "body-lg": ["Inter"],
+                    "headline-lg-mobile": ["Montserrat"],
+                    "body-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "display-lg": ["Montserrat"],
+                    "label-md": ["Inter"],
+                    "headline-lg": ["Montserrat"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .jali-pattern {
+            background-image: radial-gradient(circle at 2px 2px, rgba(26, 35, 126, 0.03) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+        .property-card-shadow {
+            box-shadow: 0px 4px 20px rgba(26, 35, 126, 0.05);
+        }
+        .property-card-shadow:hover {
+            box-shadow: 0px 12px 30px rgba(26, 35, 126, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background font-body-md text-on-surface">
+<!-- TopNavBar -->
+<header class="w-full top-0 sticky bg-surface shadow-sm z-50">
+<div class="flex justify-between items-center px-gutter py-4 max-w-container-max mx-auto">
+<div class="flex items-center gap-lg">
+<span class="font-headline-lg text-primary font-bold">BharatStay</span>
+<nav class="hidden md:flex gap-md items-center">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-Inter text-body-md transition-colors duration-200" href="#">Hotels</a>
+<a class="text-on-surface-variant font-Inter text-body-md hover:text-secondary transition-colors duration-200 cursor-pointer active:scale-95 transition-transform" href="#">Experiences</a>
+<a class="text-on-surface-variant font-Inter text-body-md hover:text-secondary transition-colors duration-200 cursor-pointer active:scale-95 transition-transform" href="#">Offers</a>
+<a class="text-on-surface-variant font-Inter text-body-md hover:text-secondary transition-colors duration-200 cursor-pointer active:scale-95 transition-transform" href="#">My Bookings</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant font-Inter text-body-md hover:text-secondary transition-colors duration-200">Support</button>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">language</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">account_circle</span>
+</div>
+<button class="bg-primary text-on-primary px-md py-2 rounded-lg font-label-md cursor-pointer active:scale-95 transition-transform">Sign In</button>
+</div>
+</div>
+</header>
+<main class="max-w-container-max mx-auto px-gutter py-lg jali-pattern min-h-screen">
+<!-- Search Results Header -->
+<div class="mb-lg flex flex-col md:flex-row justify-between items-end gap-md">
+<div>
+<nav class="flex text-label-sm text-outline mb-xs gap-xs">
+<span>India</span>
+<span>/</span>
+<span>Rajasthan</span>
+<span>/</span>
+<span class="text-on-surface">Udaipur</span>
+</nav>
+<h1 class="font-headline-lg text-primary">Hotels in Udaipur</h1>
+<p class="text-on-surface-variant font-body-md mt-xs">142 properties found for your stay</p>
+</div>
+<div class="flex items-center gap-md">
+<div class="relative">
+<label class="text-label-sm text-outline block mb-1">Sort by</label>
+<div class="flex items-center gap-sm bg-surface-container-low px-md py-2 rounded-lg border border-outline-variant cursor-pointer group">
+<span class="text-body-md">Recommended</span>
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-lg">
+<!-- Sidebar Filters -->
+<aside class="col-span-12 md:col-span-3 space-y-lg">
+<!-- Price Range -->
+<section class="bg-surface p-md rounded-xl border border-outline-variant">
+<h3 class="font-label-md text-primary mb-md uppercase tracking-wider">Price per night</h3>
+<div class="space-y-md">
+<input class="w-full h-1 bg-surface-container-highest rounded-full appearance-none cursor-pointer accent-secondary-container" max="50000" min="1000" step="1000" type="range"/>
+<div class="flex justify-between text-label-sm text-on-surface-variant">
+<span>₹1,000</span>
+<span>₹50,000+</span>
+</div>
+</div>
+</section>
+<!-- Rating -->
+<section class="bg-surface p-md rounded-xl border border-outline-variant">
+<h3 class="font-label-md text-primary mb-md uppercase tracking-wider">Guest Rating</h3>
+<div class="space-y-sm">
+<label class="flex items-center gap-sm cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-body-md group-hover:text-secondary">4.5+ Excellent</span>
+</label>
+<label class="flex items-center gap-sm cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-body-md group-hover:text-secondary">4.0+ Very Good</span>
+</label>
+<label class="flex items-center gap-sm cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-body-md group-hover:text-secondary">3.5+ Good</span>
+</label>
+</div>
+</section>
+<!-- Amenities -->
+<section class="bg-surface p-md rounded-xl border border-outline-variant">
+<h3 class="font-label-md text-primary mb-md uppercase tracking-wider">Amenities</h3>
+<div class="space-y-sm">
+<label class="flex items-center gap-sm cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-body-md group-hover:text-secondary">Swimming Pool</span>
+</label>
+<label class="flex items-center gap-sm cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-body-md group-hover:text-secondary">Free WiFi</span>
+</label>
+<label class="flex items-center gap-sm cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-body-md group-hover:text-secondary">Airport Shuttle</span>
+</label>
+<label class="flex items-center gap-sm cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-body-md group-hover:text-secondary">Spa &amp; Wellness</span>
+</label>
+<label class="flex items-center gap-sm cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-body-md group-hover:text-secondary">Lake View</span>
+</label>
+</div>
+</section>
+<!-- Property Type -->
+<section class="bg-surface p-md rounded-xl border border-outline-variant">
+<h3 class="font-label-md text-primary mb-md uppercase tracking-wider">Property Type</h3>
+<div class="space-y-sm">
+<label class="flex items-center gap-sm cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-body-md group-hover:text-secondary">Palace Hotel</span>
+</label>
+<label class="flex items-center gap-sm cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-body-md group-hover:text-secondary">Boutique Resort</span>
+</label>
+<label class="flex items-center gap-sm cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-body-md group-hover:text-secondary">Heritage Haveli</span>
+</label>
+</div>
+</section>
+</aside>
+<!-- Main Listings Content -->
+<div class="col-span-12 md:col-span-9 space-y-md">
+<!-- Listing Card 1 -->
+<article class="bg-surface rounded-xl overflow-hidden property-card-shadow flex flex-col md:flex-row border-b-2 border-transparent hover:border-secondary-container transition-all duration-300">
+<div class="md:w-2/5 relative h-64 md:h-auto">
+<img alt="Luxury Lake Palace Udaipur" class="w-full h-full object-cover" data-alt="A breathtaking, wide-angle shot of a majestic white marble palace hotel floating on the serene waters of Lake Pichola in Udaipur at sunset. The sky is painted in deep oranges and purples, reflecting off the calm water surface. The architecture features intricate carved arches and domes in a traditional Rajasthani style, illuminated by warm, golden accent lights. The overall mood is ultra-luxurious, regal, and tranquil, capturing the essence of 'Modern Heritage'." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGlz5gHgFMHRxbukya0kwq4oXcZBKwS_V6V-Y2F2-LG6PQPaaIaN3453GeYBH-UCWEjMb0gnibVUBH4ROP9Kpk8cPOlimdfKTJGvV5S2FOPCXwHU5Wr0Q7NDwSfR9YoGkHihXODaa3oobJG6z0sNhYtevtf7DqI_csa9OM-L8IvOy8rKl8m6oSZJGolUI3-98Y5pg7Z-yrbHj3IwqXuKRom6tq7cQ9IBiphvav81_DgnOlG0WdJCtHH8aAzADER9umJ2izhqlgWFNy"/>
+<div class="absolute top-4 right-4 bg-surface px-2 py-1 rounded shadow-md flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-on-surface">4.9</span>
+</div>
+</div>
+<div class="md:w-3/5 p-md flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-xs">
+<h2 class="font-headline-md text-primary">The Maharana’s Lake Retreat</h2>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-error transition-colors">favorite</span>
+</div>
+<div class="flex items-center gap-xs text-on-surface-variant mb-md">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="text-label-md">Lake Pichola, Udaipur</span>
+</div>
+<div class="flex flex-wrap gap-sm mb-md">
+<span class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full text-label-sm">Infinity Pool</span>
+<span class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full text-label-sm">Heritage Spa</span>
+<span class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full text-label-sm">Fine Dining</span>
+<span class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full text-label-sm">+4 more</span>
+</div>
+<p class="text-on-surface-variant line-clamp-2 mb-md">Experience royal hospitality in this floating white marble marvel. Every room offers panoramic views of the Aravalli hills and the historic City Palace.</p>
+</div>
+<div class="flex items-center justify-between border-t border-outline-variant pt-md">
+<div>
+<span class="text-label-sm text-outline block">Starts from</span>
+<span class="text-headline-md text-primary">₹32,500 <span class="text-body-md font-normal text-on-surface-variant">/ night</span></span>
+</div>
+<button class="bg-secondary-container text-on-secondary px-lg py-3 rounded-lg font-label-md hover:brightness-110 transition-all active:scale-95">View Details</button>
+</div>
+</div>
+</article>
+<!-- Listing Card 2 -->
+<article class="bg-surface rounded-xl overflow-hidden property-card-shadow flex flex-col md:flex-row border-b-2 border-transparent hover:border-secondary-container transition-all duration-300">
+<div class="md:w-2/5 relative h-64 md:h-auto">
+<img alt="Udaipur Heritage Haveli" class="w-full h-full object-cover" data-alt="An intimate, beautifully restored heritage haveli courtyard in the heart of Udaipur's old city. The walls are adorned with traditional blue and yellow frescoes and intricate stone-carved balconies. A small, turquoise plunge pool sits in the center of the courtyard, surrounded by lush potted plants and luxury seating. Sunlight filters through a lattice jali screen, creating geometric shadows. The atmosphere is cozy, authentic, and high-end boutique hospitality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8mMjWqDYpW0cIcAAXeDqqHvxWw9SzCaURWkQZnjeIiMwJIAn-LKuwMNYbqgKIVSWKtsEO_ABGESktMViVYeVSW81Wen1VjPS0yrGEGOxpXy_slmxyz_3sJ-Ke4wTPqQMoR0RPgH6X-XdN52L8ZPj1i9vfynMLMdOyvhqpdNZPqR1euJ01Q3XP8vEAwkN7Q095kXfZGvA3ikmBx6Lj1Y8iPt2I5pgnPFrVPKv5gUBnMcZqw0q-mGMMVPXYRF8UQKOzqU0NEBpIClbK"/>
+<div class="absolute top-4 right-4 bg-surface px-2 py-1 rounded shadow-md flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-on-surface">4.7</span>
+</div>
+</div>
+<div class="md:w-3/5 p-md flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-xs">
+<h2 class="font-headline-md text-primary">Aravalli Boutique Haveli</h2>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-error transition-colors">favorite</span>
+</div>
+<div class="flex items-center gap-xs text-on-surface-variant mb-md">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="text-label-md">Old City, Udaipur</span>
+</div>
+<div class="flex flex-wrap gap-sm mb-md">
+<span class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full text-label-sm">Rooftop Cafe</span>
+<span class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full text-label-sm">Traditional Music</span>
+<span class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full text-label-sm">WiFi</span>
+</div>
+<p class="text-on-surface-variant line-clamp-2 mb-md">A stunning 200-year-old mansion meticulously restored to provide modern comfort while preserving original Rajasthani frescoes and architecture.</p>
+</div>
+<div class="flex items-center justify-between border-t border-outline-variant pt-md">
+<div>
+<span class="text-label-sm text-outline block">Starts from</span>
+<span class="text-headline-md text-primary">₹12,800 <span class="text-body-md font-normal text-on-surface-variant">/ night</span></span>
+</div>
+<button class="bg-secondary-container text-on-secondary px-lg py-3 rounded-lg font-label-md hover:brightness-110 transition-all active:scale-95">View Details</button>
+</div>
+</div>
+</article>
+<!-- Listing Card 3 -->
+<article class="bg-surface rounded-xl overflow-hidden property-card-shadow flex flex-col md:flex-row border-b-2 border-transparent hover:border-secondary-container transition-all duration-300">
+<div class="md:w-2/5 relative h-64 md:h-auto">
+<img alt="Grand Mewar Resort" class="w-full h-full object-cover" data-alt="A sprawling modern luxury resort situated on the outskirts of Udaipur with the rugged Aravalli mountains in the background. The resort features a massive, multi-level swimming pool with several private sun loungers and cabanas. The architecture blends modern minimalist lines with traditional sandstone accents. High-key morning light emphasizes the clean whites and warm ochre tones of the property. The mood is expansive, vibrant, and sophisticated." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOBRf9O3TxGK1Okcrd_PJ_wUSxfow5Ip4FPgiutNQwF2g6B0yGGOAkbCNAcCzdxAh5sPJONdPfIfaaRP-aIarRanrVsJUUvK-uurW8lmvBUVP6hA0MAMY7vW5i1_zULb1RPEPaweue0naimZi0VYrXnoOd-ddcoeebo4Em9WBoRLnbv9_NsztZLMhPtBc1bVPsp4x30qmyj4NJclOeZunU2dp_MlMqILGOkzoeBlsT8vrv0lus5CpDqEE4yoh6Htz4HX8X0qXZBV-7"/>
+<div class="absolute top-4 right-4 bg-surface px-2 py-1 rounded shadow-md flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-on-surface">4.8</span>
+</div>
+</div>
+<div class="md:w-3/5 p-md flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-xs">
+<h2 class="font-headline-md text-primary">The Grand Mewar Resort &amp; Spa</h2>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-error transition-colors">favorite</span>
+</div>
+<div class="flex items-center gap-xs text-on-surface-variant mb-md">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="text-label-md">Fateh Sagar Lake, Udaipur</span>
+</div>
+<div class="flex flex-wrap gap-sm mb-md">
+<span class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full text-label-sm">Yoga Pavilion</span>
+<span class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full text-label-sm">Kids Club</span>
+<span class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full text-label-sm">Airport Shuttle</span>
+</div>
+<p class="text-on-surface-variant line-clamp-2 mb-md">A luxury oasis spread over 15 acres of manicured gardens. Ideal for families and couples looking for a serene getaway with world-class amenities.</p>
+</div>
+<div class="flex items-center justify-between border-t border-outline-variant pt-md">
+<div>
+<span class="text-label-sm text-outline block">Starts from</span>
+<span class="text-headline-md text-primary">₹24,000 <span class="text-body-md font-normal text-on-surface-variant">/ night</span></span>
+</div>
+<button class="bg-secondary-container text-on-secondary px-lg py-3 rounded-lg font-label-md hover:brightness-110 transition-all active:scale-95">View Details</button>
+</div>
+</div>
+</article>
+<!-- Pagination -->
+<div class="flex justify-center items-center gap-md py-lg">
+<button class="w-10 h-10 flex items-center justify-center rounded-full border border-outline-variant hover:border-primary text-primary transition-all">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<div class="flex items-center gap-sm">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-on-primary font-label-md">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container font-label-md">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container font-label-md">3</button>
+<span class="text-outline">...</span>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container font-label-md">12</button>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full border border-outline-variant hover:border-primary text-primary transition-all">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-xl bg-surface-container-lowest border-t border-outline-variant dark:border-outline">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-lg px-gutter max-w-container-max mx-auto">
+<div class="flex flex-col gap-md">
+<span class="font-headline-md text-primary font-bold">BharatStay</span>
+<p class="text-on-surface-variant text-body-md">Curating India's finest stays since 2024. Discover the soul of the subcontinent through our handpicked collection.</p>
+<div class="flex gap-md">
+<span class="material-symbols-outlined text-primary cursor-pointer">public</span>
+<span class="material-symbols-outlined text-primary cursor-pointer">mail</span>
+<span class="material-symbols-outlined text-primary cursor-pointer">call</span>
+</div>
+</div>
+<div class="flex flex-col gap-sm">
+<h4 class="font-label-md text-primary uppercase">Company</h4>
+<a class="text-on-surface-variant hover:text-secondary-container transition-colors" href="#">About Us</a>
+<a class="text-on-surface-variant hover:text-secondary-container transition-colors" href="#">Partner with Us</a>
+<a class="text-on-surface-variant hover:text-secondary-container transition-colors" href="#">Careers</a>
+</div>
+<div class="flex flex-col gap-sm">
+<h4 class="font-label-md text-primary uppercase">Support</h4>
+<a class="text-on-surface-variant hover:text-secondary-container transition-colors" href="#">Contact Support</a>
+<a class="text-on-surface-variant hover:text-secondary-container transition-colors" href="#">FAQs</a>
+<a class="text-on-surface-variant hover:text-secondary-container transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-secondary-container transition-colors" href="#">Privacy Policy</a>
+</div>
+<div class="flex flex-col gap-sm">
+<h4 class="font-label-md text-primary uppercase">Newsletter</h4>
+<p class="text-on-surface-variant text-body-md mb-xs">Join our elite travel community for exclusive offers.</p>
+<div class="flex gap-0 border border-outline-variant rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-primary">
+<input class="bg-surface border-none focus:ring-0 px-md py-2 w-full text-body-md" placeholder="Your email" type="email"/>
+<button class="bg-primary text-on-primary px-md font-label-md">Join</button>
+</div>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-gutter mt-xl pt-lg border-t border-outline-variant flex flex-col md:flex-row justify-between items-center gap-md">
+<p class="text-label-md text-on-surface-variant">© 2024 BharatStay. Atithi Devo Bhava.</p>
+<div class="flex gap-lg">
+<span class="text-label-sm text-outline">English (IN)</span>
+<span class="text-label-sm text-outline">INR (₹)</span>
+</div>
+</div>
+</footer>
+<script>
+        // Simple interactive script for filter toggles and hover states
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                // Future implementation for filtering logic
+                console.log('Filter toggled:', this.nextElementSibling.textContent);
+            });
+        });
+
+        // Price range display update
+        const range = document.querySelector('input[type="range"]');
+        if(range) {
+            range.addEventListener('input', (e) => {
+                // Could update a price label here
+            });
+        }
+    </script>
+</body></html>

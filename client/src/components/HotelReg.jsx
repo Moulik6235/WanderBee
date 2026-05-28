@@ -25,50 +25,54 @@ const HotelReg = () => {
                 toast.error(data.message)
             }
         } catch (error) {
-            toast.error(data.message)
+            toast.error(error.message)
         }
     }
 
     return (
-        <div onClick={() => setShowHotelReg(false)} className='fixed top-0 bottom-0 left-0 right-0 z-100 flex items-center justify-center bg-black/70'>
+        <div onClick={() => setShowHotelReg(false)} className='fixed top-0 bottom-0 left-0 right-0 z-100 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4'>
 
-            <form onSubmit={onSubmitHandler} onClick={(e) => e.stopPropagation()} className='flex bg-white rounded-xl max-w-4xl max-md:mx-2'>
-                <img src={assets.regImage} alt="reg-image" className='w-1/2 rounded-xl hidden md:block' />
+            <form onSubmit={onSubmitHandler} onClick={(e) => e.stopPropagation()} className='flex bg-white rounded-xl shadow-ambient-md max-w-4xl w-full overflow-hidden border border-gray-100 font-inter'>
+                <img src={assets.regImage} alt="reg-image" className='w-1/2 rounded-l-xl hidden md:block object-cover max-h-[550px]' />
 
-                <div className='relative flex flex-col items-center md:w-1/2 p-8 md:p-10'>
-                    <img src={assets.closeIcon} alt="close-icon" className='absolute top-4 right-4 h-4 w-4 cursor-pointer' onClick={() => setShowHotelReg(false)} />
-                    <p className='text-2xl font-semibold mt-6'>Register Your Hotel</p>
+                <div className='relative flex flex-col items-start md:w-1/2 p-6 md:p-10 w-full'>
+                    <img src={assets.closeIcon} alt="close-icon" className='absolute top-6 right-6 h-4 w-4 cursor-pointer hover:scale-110 transition-premium opacity-70' onClick={() => setShowHotelReg(false)} />
+                    
+                    <h2 className='text-xl md:text-2xl font-extrabold font-montserrat text-primary mt-4'>Register Your Hotel</h2>
+                    <p className="text-xs text-gray-400 mt-1 leading-relaxed">Join QuickStay's modern heritage ecosystem to list your suites and unlock premium bookings.</p>
 
                     {/* Hotel Name */}
-                    <div className='w-full mt-4'>
-                        <label htmlFor="name" className='font-medium text-gray-500'>Hotel Name</label>
-                        <input id='name' onChange={(e) => setName(e.target.value)} value={name} type="text" placeholder='Hotel Name' className='border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light' required />
+                    <div className='w-full mt-5'>
+                        <label htmlFor="name" className='font-montserrat font-bold text-[10px] uppercase tracking-wider text-gray-400'>Hotel Name</label>
+                        <input id='name' onChange={(e) => setName(e.target.value)} value={name} type="text" placeholder='e.g. Royal Heritage Palace' className='border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg w-full px-3 py-2.5 mt-1.5 outline-none font-inter text-sm bg-slate-50/50 transition-premium' required />
                     </div>
 
                     {/* Contact */}
                     <div className='w-full mt-4'>
-                        <label htmlFor="contact" className='font-medium text-gray-500'>Phone</label>
-                        <input id='contact' type="text" onChange={(e) => setContact(e.target.value)} value={contact} placeholder='Contact' className='border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light' required />
+                        <label htmlFor="contact" className='font-montserrat font-bold text-[10px] uppercase tracking-wider text-gray-400'>Phone Number</label>
+                        <input id='contact' type="text" onChange={(e) => setContact(e.target.value)} value={contact} placeholder='+1 (555) 019-2834' className='border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg w-full px-3 py-2.5 mt-1.5 outline-none font-inter text-sm bg-slate-50/50 transition-premium' required />
                     </div>
 
                     {/* Address */}
                     <div className='w-full mt-4'>
-                        <label htmlFor="address" className='font-medium text-gray-500'>Address</label>
-                        <input id='address' type="text" onChange={(e) => setAddress(e.target.value)} value={address} placeholder='Address' className='border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light' required />
+                        <label htmlFor="address" className='font-montserrat font-bold text-[10px] uppercase tracking-wider text-gray-400'>Address</label>
+                        <input id='address' type="text" onChange={(e) => setAddress(e.target.value)} value={address} placeholder='e.g. 101 Royal Boulevard, Heritage Zone' className='border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg w-full px-3 py-2.5 mt-1.5 outline-none font-inter text-sm bg-slate-50/50 transition-premium' required />
                     </div>
 
                     {/* Select City Drop Down */}
-                    <div className='w-full mt-4 max-w-60 mr-auto'>
-                        <label htmlFor="city" className='font-medium text-gray-500'>City</label>
-                        <select id="city" onChange={(e) => setCity(e.target.value)} value={city} className='border border-gray-200 rounded w-full px-3 py-2.3 mt-1 outline-indigo-500 font-light' required>
+                    <div className='w-full mt-4 max-w-xs'>
+                        <label htmlFor="city" className='font-montserrat font-bold text-[10px] uppercase tracking-wider text-gray-400'>City</label>
+                        <select id="city" onChange={(e) => setCity(e.target.value)} value={city} className='border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg w-full px-3 py-2.5 mt-1.5 outline-none font-inter text-sm bg-slate-50/50 transition-premium text-gray-800' required>
                             <option value="">Select City</option>
                             {cities.map((city) => (
                                 <option key={city} value={city}>{city}</option>
                             ))}
                         </select>
                     </div>
-                    <button className='bg-indigo-500 hover:bg-indigo-600 transition-all text-white mr-auto px-6 py-2 rounded cursor-pointer mt-6'>Register</button>
-
+                    
+                    <button type="submit" className='bg-secondary hover:bg-secondary-dark text-white font-montserrat font-bold text-xs uppercase tracking-widest px-8 py-3 rounded-lg shadow-sm transition-premium cursor-pointer mt-6 w-full sm:w-auto'>
+                        Register Hotel
+                    </button>
                 </div>
             </form>
 
@@ -77,3 +81,4 @@ const HotelReg = () => {
 }
 
 export default HotelReg
+

@@ -47,32 +47,34 @@ const Navbar = () => {
 
     return (
 
-        <nav className={`fixed top-0 left-0  w-full flex items-center justify-between px-4 md:px-16 lg:px-24 xl:px-32 transition-all duration-500 z-50 ${isScrolled ? "bg-white/80 shadow-md text-gray-700 backdrop-blur-lg py-3 md:py-4" : "py-4 md:py-6"}`}>
+        <nav className="sticky top-0 left-0 w-full flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 transition-all duration-300 z-50 bg-white/95 text-neutral-text backdrop-blur-lg py-4 border-b border-gray-100 shadow-sm">
 
             {/* Logo */}
             <Link to='/'>
-                <img src={assets.logo} alt="logo" className={`h-9 ${isScrolled && "invert opacity-80"}`} />
+                <span className={`font-montserrat text-2xl font-black tracking-tight transition-premium ${isScrolled ? "text-primary" : "text-white"}`}>
+                    QuickStay
+                </span>
             </Link>
 
             {/* Desktop Nav */}
-            <div className="hidden md:flex items-center gap-4 lg:gap-8">
+            <div className="hidden md:flex items-center gap-6 lg:gap-8">
                 {navLinks.map((link, i) => (
-                    <a key={i} href={link.path} className={`group flex flex-col gap-0.5 ${isScrolled ? "text-gray-700" : "text-white"}`}>
+                    <Link key={i} to={link.path} className="group font-montserrat text-sm font-semibold tracking-wide flex flex-col gap-1 transition-premium text-primary hover:text-secondary">
                         {link.name}
-                        <div className={`${isScrolled ? "bg-gray-700" : "bg-white"} h-0.5 w-0 group-hover:w-full transition-all duration-300`} />
-                    </a>
+                        <div className="bg-secondary h-0.5 w-0 group-hover:w-full transition-all duration-300" />
+                    </Link>
                 ))}
 
                 {user &&
-                    <button className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer ${isScrolled ? 'text-black' : 'text-white'} transition-all`} onClick={() => isOwner ? navigate('/owner') : setShowHotelReg(true)}>
+                    <button className="px-4 py-1.5 text-xs font-bold font-montserrat rounded-lg border border-primary text-primary hover:bg-primary/5 transition-premium cursor-pointer" onClick={() => isOwner ? navigate('/owner') : setShowHotelReg(true)}>
                         {isOwner ? 'Dashboard' : 'List Your Hotel'}
                     </button>
                 }
             </div>
 
             {/* Desktop Right */}
-            <div className="hidden md:flex items-center gap-4">
-                <img src={assets.searchIcon} alt="search" className={`${isScrolled && 'invert'} h-7 transition-all duration-500`} />
+            <div className="hidden md:flex items-center gap-6">
+                <span className="material-symbols-outlined text-primary cursor-pointer hover:text-secondary transition-premium text-2xl font-bold">search</span>
 
                 {user ?
                     (<UserButton>
@@ -81,7 +83,7 @@ const Navbar = () => {
                         </UserButton.MenuItems>
                     </UserButton>)
                     :
-                    (<button onClick={openSignIn} className="bg-black text-white px-8 py-2.5 rounded-full ml-4 transition-all duration-500 cursor-pointer">
+                    (<button onClick={openSignIn} className="bg-secondary hover:bg-secondary-dark text-white font-montserrat font-bold px-6 py-2 rounded-lg transition-premium cursor-pointer shadow-sm">
                         Login
                     </button>)}
 
@@ -95,7 +97,7 @@ const Navbar = () => {
                         <UserButton.Action label="My Bookings" labelIcon={<BookIcon />} onClick={() => navigate('/my-bookings')} />
                     </UserButton.MenuItems>
                 </UserButton>}
-                <img onClick={() => setIsMenuOpen(!isMenuOpen)} src={assets.menuIcon} alt="menu" className={`${isScrolled && "invert"} h-4`} />
+                <img onClick={() => setIsMenuOpen(!isMenuOpen)} src={assets.menuIcon} alt="menu" className="h-5 cursor-pointer" />
             </div>
 
             {/* Mobile Menu */}
@@ -105,16 +107,16 @@ const Navbar = () => {
                 </button>
 
                 {navLinks.map((link, i) => (
-                    <a key={i} href={link.path} onClick={() => setIsMenuOpen(false)}>
+                    <a key={i} href={link.path} onClick={() => setIsMenuOpen(false)} className="font-montserrat font-semibold text-lg text-primary hover:text-secondary transition-premium">
                         {link.name}
                     </a>
                 ))}
 
-                {user && <button className="border px-4 py-1 text-sm font-light rounded-full cursor-pointer transition-all" onClick={() => isOwner ? navigate('/owner') : setShowHotelReg(true)}>
+                {user && <button className="border border-primary text-primary px-5 py-2 text-sm font-bold font-montserrat rounded-lg cursor-pointer transition-premium" onClick={() => { setIsMenuOpen(false); isOwner ? navigate('/owner') : setShowHotelReg(true); }}>
                     {isOwner ? 'Dashboard' : 'List Your Hotel'}
                 </button>}
 
-                {!user && <button onClick={openSignIn} className="bg-black text-white px-8 py-2.5 rounded-full transition-all duration-500">
+                {!user && <button onClick={() => { setIsMenuOpen(false); openSignIn(); }} className="bg-secondary hover:bg-secondary-dark text-white px-8 py-2.5 font-montserrat font-bold rounded-lg transition-premium shadow-sm">
                     Login
                 </button>}
             </div>

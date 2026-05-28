@@ -1,4 +1,5 @@
 import express from "express"
+import { ClerkExpressWithAuth } from '@clerk/clerk-sdk-node';
 import "dotenv/config";
 import cors from "cors";
 import connectDB from "./configs/db.js";
@@ -19,6 +20,8 @@ app.use(cors()) //Enable Cross-Origin Sharing
 // Middleware
 app.use(express.json())
 app.use(clerkMiddleware())
+// 👇 Add Clerk middleware globally if needed
+app.use(ClerkExpressWithAuth());
 
 // API to listen to Clerk Webhooks
 app.use("/api/clerk", clerkWebhooks);

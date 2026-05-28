@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#fe9832",
+                    "on-tertiary-fixed": "#281900",
+                    "inverse-primary": "#bdc2ff",
+                    "primary-container": "#1a237e",
+                    "outline": "#767683",
+                    "on-tertiary-container": "#c98c00",
+                    "secondary": "#8f4e00",
+                    "primary-fixed": "#e0e0ff",
+                    "background": "#f9f9fb",
+                    "secondary-fixed": "#ffdcc2",
+                    "on-primary-container": "#8690ee",
+                    "primary": "#000666",
+                    "on-tertiary-fixed-variant": "#604100",
+                    "on-primary-fixed": "#000767",
+                    "surface-variant": "#e2e2e4",
+                    "surface-container-low": "#f3f3f5",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed": "#2e1500",
+                    "on-surface-variant": "#454652",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed-variant": "#6d3a00",
+                    "inverse-surface": "#2f3132",
+                    "surface-container": "#eeeef0",
+                    "on-error": "#ffffff",
+                    "tertiary": "#271800",
+                    "on-background": "#1a1c1d",
+                    "on-primary": "#ffffff",
+                    "secondary-fixed-dim": "#ffb77a",
+                    "tertiary-fixed-dim": "#ffba38",
+                    "inverse-on-surface": "#f0f0f2",
+                    "primary-fixed-dim": "#bdc2ff",
+                    "outline-variant": "#c6c5d4",
+                    "on-error-container": "#93000a",
+                    "on-secondary-container": "#683700",
+                    "surface-container-highest": "#e2e2e4",
+                    "surface-tint": "#4c56af",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-bright": "#f9f9fb",
+                    "on-primary-fixed-variant": "#343d96",
+                    "surface-dim": "#d9dadc",
+                    "tertiary-container": "#422c00",
+                    "surface": "#f9f9fb",
+                    "on-surface": "#1a1c1d",
+                    "surface-container-high": "#e8e8ea",
+                    "tertiary-fixed": "#ffdeac",
+                    "error": "#ba1a1a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "24px",
+                    "container-max": "1280px",
+                    "sm": "12px",
+                    "xs": "4px",
+                    "xl": "64px",
+                    "gutter": "24px",
+                    "lg": "40px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Montserrat"],
+                    "display-lg-mobile": ["Montserrat"],
+                    "body-lg": ["Inter"],
+                    "headline-lg-mobile": ["Montserrat"],
+                    "body-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "display-lg": ["Montserrat"],
+                    "label-md": ["Inter"],
+                    "headline-lg": ["Montserrat"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .jali-overlay {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l30 30-30 30L0 30z' fill='%231a237e' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        .custom-shadow {
+            box-shadow: 0px 4px 20px rgba(26, 35, 126, 0.05);
+        }
+        .custom-shadow-hover:hover {
+            box-shadow: 0px 12px 30px rgba(26, 35, 126, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-on-background w-full top-0 sticky z-50 shadow-sm">
+<div class="flex justify-between items-center px-gutter py-4 max-w-container-max mx-auto">
+<div class="flex items-center gap-lg">
+<span class="font-headline-lg text-primary dark:text-primary-fixed font-bold cursor-pointer transition-transform active:scale-95">BharatStay</span>
+<nav class="hidden md:flex gap-md items-center">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-Inter text-body-md hover:text-secondary transition-colors duration-200" href="#">Hotels</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-Inter text-body-md hover:text-secondary transition-colors duration-200" href="#">Experiences</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-Inter text-body-md hover:text-secondary transition-colors duration-200" href="#">Offers</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-Inter text-body-md hover:text-secondary transition-colors duration-200" href="#">My Bookings</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex items-center gap-sm text-on-surface-variant">
+<span class="material-symbols-outlined cursor-pointer hover:text-secondary transition-all">language</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-secondary transition-all">account_circle</span>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full font-label-md hover:bg-primary-container transition-all active:scale-95">Sign In</button>
+</div>
+</div>
+</header>
+<main class="jali-overlay min-h-screen">
+<!-- Hero Section: Immersive Gallery -->
+<section class="max-w-container-max mx-auto px-gutter pt-lg">
+<div class="flex justify-between items-end mb-md">
+<div>
+<h1 class="font-display-lg text-display-lg text-primary">The Marigold Palace</h1>
+<div class="flex items-center gap-xs mt-xs">
+<span class="material-symbols-outlined text-secondary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-md ml-xs text-on-surface-variant">4.9 (1,240 Reviews) • Jaipur, Rajasthan</span>
+</div>
+</div>
+<div class="flex gap-sm">
+<button class="flex items-center gap-xs px-4 py-2 border border-outline-variant rounded-lg hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-body-md">share</span>
+<span class="font-label-md">Share</span>
+</button>
+<button class="flex items-center gap-xs px-4 py-2 border border-outline-variant rounded-lg hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-body-md">favorite</span>
+<span class="font-label-md">Save</span>
+</button>
+</div>
+</div>
+<!-- Bento Gallery -->
+<div class="grid grid-cols-4 grid-rows-2 gap-sm h-[500px] rounded-xl overflow-hidden custom-shadow">
+<div class="col-span-2 row-span-2 relative group cursor-pointer overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="An expansive wide-angle view of a majestic Rajasthani palace hotel exterior at dusk. The architecture features intricate sandstone carvings, traditional arched windows, and grand courtyards illuminated by warm golden lanterns. The lighting is dramatic and luxurious, highlighting the deep indigo sky against the warm saffron-hued stone, creating an atmosphere of royal heritage and invitational warmth." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpfDnnoxRLnX9Z1MXeB31XFJLClZI41FYwzdn-u_y0Ww2Ev95ew52gSrW-NhAWDTpIelfx0mkWYk-lOKC76TQ_Yl5AAticlNsmOGkO2OdV0Kh-z-Y74hbc1znxZToPSH3XCt1HygtlDUQ2kNXOYc0ryLAOn8fwVLJ52nXY0b2CJ-HiVeDfJR0ZOdhjE7tybzjnu5u0jwr9Y9wfYH94t0hzbi4csbL1Tys6EdK_fEDPyUMFk05DcBA68wqpV2va_6T-muRDCutb-9Id"/>
+</div>
+<div class="col-span-1 row-span-1 relative group cursor-pointer overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A close-up view of a luxury hotel suite interior at The Marigold Palace. The room features high-end textiles in royal indigo and gold, a hand-carved teak bed frame, and silk cushions with traditional Indian embroidery. Soft morning sunlight filters through a delicate Jali lattice screen, casting intricate geometric shadows across the polished white marble floor, evoking a serene and premium hospitality experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_ZYqirc6aOsriRZ6YZ2yYaIPt5W-uagipa9Zne5l-h7aNa7bgx0dJ92VCGr52PBxwUUMHBzi1xULXEZP1KE9hUBlFKBZei-q-4BoHTLGLAeCtW32UuBp1JLD1ZmCODEPgJqkE5THzj13inswULn-3KcG80OPcilxxP6FgMbukrYKFsniij3QVjXrXuNcAODcOWzde9RZzUM7I6RnJUtd0W_0gqqWgw_wJVBXfcZJalFr5fdTcAPofArgMYblGU3C2AvVOfjUYOnSr"/>
+</div>
+<div class="col-span-1 row-span-1 relative group cursor-pointer overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="An elegant infinity pool overlooking the Pink City of Jaipur from a high vantage point at a luxury heritage hotel. The water is crystal clear and reflects the vibrant sunset sky of orange and purple. Ornate stone columns surround the deck, which is furnished with premium indigo-colored loungers. The overall mood is tranquil, exclusive, and breathtakingly beautiful." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBY9TfYTQd55PQEfwQIQDHMpdNGa38-RkOQ4v8oncrb1lYcGrNdD8ULF9pD7L7KPS1U41Lb0ycDC7A29ojVs4XxiYRTJfkmfYXIlWbN7M0kc6rctXOCdiYbY8Fb3j5hTAkUinnWQomYHeHWOwaZy8n88gVaumAkfIuc5Ai9jD3tQ7KuJimPQkfJq64nQ1Hx2k4qxbzGwK8Rhi3bspthW28xGszBhXk8GSm4A3wYeUym2qq0uF4pJwKWc_MDqz9uK2grIYrSaiWle8Wy"/>
+</div>
+<div class="col-span-2 row-span-1 relative group cursor-pointer overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A grand dining hall at a modern heritage hotel featuring a long table set for a royal feast. The ceiling is adorned with gold leaf patterns and large crystal chandeliers that emit a warm, festive glow. The furniture is crafted from dark wood with indigo velvet upholstery, and the walls showcase fine Indian miniature paintings. The atmosphere is one of opulent celebration and radical trust in world-class service." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9rmuOj5iWmWeJucgaxzlcgax4VI7caas8PUTwdrI0-5ZTw7s58TUoJzSGhS_bqTU5LGsUDGAqhGXYK5HIiueDAI4G_5uuI81won73xQzS8U_z71uBXFdd5UlzakF-wOUSm0WYwu7e9iZ_ApUf3PXvxiQjn0K3_RXVgQ_uooPylgorRlpotNVxF9co-b9NqRtzZSzgrAS8S0T_cM2JN0CVAQR_npC4jZoU-UdcFvCN6dViHPfbD6S6YXeC8WekWxx6qyylqDz_1tdw"/>
+<div class="absolute bottom-4 right-4 bg-surface px-4 py-2 rounded-lg font-label-md flex items-center gap-xs shadow-lg">
+<span class="material-symbols-outlined text-body-md">grid_view</span>
+                        View all 48 photos
+                    </div>
+</div>
+</div>
+</section>
+<!-- Main Content Section -->
+<section class="max-w-container-max mx-auto px-gutter py-xl flex flex-col md:flex-row gap-lg">
+<!-- Left Column: Description & Amenities -->
+<div class="w-full md:w-5/12 space-y-lg">
+<div class="space-y-md">
+<h2 class="font-headline-md text-primary">About this Heritage Gem</h2>
+<p class="font-body-lg text-on-surface-variant leading-relaxed">
+                        The Marigold Palace is more than a hotel; it's a journey into the heart of India's royal past. Nestled in the foothills of the Aravalli Range, this 18th-century heritage estate has been meticulously restored to offer a blend of historical grandeur and modern comfort. Experience the philosophy of <span class="text-secondary font-semibold italic">"Atithi Devo Bhava"</span> as our staff caters to your every whim with radical warmth and professional precision.
+                    </p>
+<button class="text-primary font-bold hover:underline flex items-center gap-xs">
+                        Show more <span class="material-symbols-outlined text-body-md">chevron_right</span>
+</button>
+</div>
+<div class="border-t border-outline-variant pt-lg">
+<h3 class="font-headline-md text-primary mb-md">Premium Amenities</h3>
+<div class="grid grid-cols-2 gap-y-md">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary p-2 bg-primary-fixed rounded-full">pool</span>
+<span class="font-body-md">Royal Infinity Pool</span>
+</div>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary p-2 bg-primary-fixed rounded-full">spa</span>
+<span class="font-body-md">Ayurvedic Wellness Spa</span>
+</div>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary p-2 bg-primary-fixed rounded-full">restaurant</span>
+<span class="font-body-md">3 Fine-Dining Venues</span>
+</div>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary p-2 bg-primary-fixed rounded-full">wifi</span>
+<span class="font-body-md">Complimentary Hi-Speed WiFi</span>
+</div>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary p-2 bg-primary-fixed rounded-full">fitness_center</span>
+<span class="font-body-md">State-of-the-Art Gym</span>
+</div>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary p-2 bg-primary-fixed rounded-full">local_parking</span>
+<span class="font-body-md">Free Valet Parking</span>
+</div>
+</div>
+<button class="mt-lg border border-primary text-primary px-8 py-3 rounded-lg font-label-md hover:bg-primary hover:text-on-primary transition-all">
+                        View all 25 Amenities
+                    </button>
+</div>
+</div>
+<!-- Middle Column: Choose Your Room -->
+<div class="w-full md:w-4/12 space-y-md">
+<h2 class="font-headline-md text-primary">Choose Your Room</h2>
+<div class="space-y-md">
+<!-- Room Card 1 -->
+<div class="bg-surface rounded-xl overflow-hidden custom-shadow custom-shadow-hover transition-all cursor-pointer border-b-2 border-transparent hover:border-secondary-container">
+<div class="h-48 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A luxurious Heritage Suite at a five-star Indian hotel. The room features a king-sized bed with white linens and a silk throw in deep saffron. Hand-painted murals decorate the walls, and a small balcony offers a view of a lush interior garden. The lighting is warm and inviting, emphasizing the rich wood textures and the modern hospitality setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZgMhaS0opcxhnAc0V-tPuki9bJbL0FiCQQHlKlinq7MbbBzHXS6KTyo4dakPf3L_X6fQ3lx3I5B--sBOz-1A4008dbTYuqAgs2U_BZBVnTuLNM3zaQtYnVoZUeeOMFUH-SKKLKTo3jBmg5E0pBqFnehbfHc1R9cnjQpifS2Vom-9MMfw4ptV8U_mPKphBlNlA_L7l8-Mij3qKQNTT6bjXsAnb3C769FrIc1JpIi_h64_lljdRYtuDpwhEjsxLxQpEPzbK2evlHjOM"/>
+</div>
+<div class="p-md space-y-sm">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-md text-primary">Heritage Suite</h3>
+<span class="bg-secondary-fixed text-on-secondary-fixed text-label-sm px-2 py-1 rounded">Rare Find</span>
+</div>
+<p class="text-on-surface-variant text-body-md">450 sq ft • City View • Balcony</p>
+<div class="flex flex-wrap gap-xs">
+<span class="bg-surface-container text-on-surface-variant text-label-sm px-2 py-1 rounded-full">King Bed</span>
+<span class="bg-surface-container text-on-surface-variant text-label-sm px-2 py-1 rounded-full">Mini Bar</span>
+</div>
+<div class="flex justify-between items-end pt-sm">
+<div>
+<span class="text-headline-md text-primary">₹12,500</span>
+<span class="text-label-md text-on-surface-variant">/night</span>
+</div>
+<button class="text-secondary font-bold font-label-md">Details</button>
+</div>
+</div>
+</div>
+<!-- Room Card 2 -->
+<div class="bg-surface rounded-xl overflow-hidden custom-shadow custom-shadow-hover transition-all cursor-pointer border-b-2 border-transparent hover:border-secondary-container">
+<div class="h-48 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A grand Royal Palace Suite featuring high ceilings, a four-poster bed with translucent white drapes, and antique furniture. The color palette is a sophisticated mix of ivory, indigo, and gold. Large bay windows overlook a marble fountain in the courtyard. The atmosphere is exceptionally luxurious and exclusive, reflecting a top-tier digital booking platform's premium offering." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJr-R3IfjfFn_hAaLqEbltAY_5xFcPkjVC-kRtwjePKATkPRKyzh6KddcZsdhEMBRFehKD6Ucm6pn81QgtHJhyi7cqfH9L8sg4YU5ovYSlmF3adhsvsILkwad-IyGxSCWK3P02uMIiH9hFjSbddAWnG17vAfHmzJgHrumyFChS-GctcWga2q_Xm3MON4-_oR36ptOxYuu1aYTAik1LRnSqyjv2BRooBE-xd7ZI-c9y4pTtwLMAU0kl9D92I1AM9dRh-DYZtUVxM9S8"/>
+</div>
+<div class="p-md space-y-sm">
+<h3 class="font-headline-md text-primary">Royal Palace Suite</h3>
+<p class="text-on-surface-variant text-body-md">750 sq ft • Garden View • Courtyard Access</p>
+<div class="flex flex-wrap gap-xs">
+<span class="bg-surface-container text-on-surface-variant text-label-sm px-2 py-1 rounded-full">Four Poster Bed</span>
+<span class="bg-surface-container text-on-surface-variant text-label-sm px-2 py-1 rounded-full">Bathtub</span>
+</div>
+<div class="flex justify-between items-end pt-sm">
+<div>
+<span class="text-headline-md text-primary">₹24,000</span>
+<span class="text-label-md text-on-surface-variant">/night</span>
+</div>
+<button class="text-secondary font-bold font-label-md">Details</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Sticky Booking Summary -->
+<div class="w-full md:w-3/12">
+<div class="sticky top-28 bg-surface p-md rounded-xl custom-shadow border border-outline-variant space-y-md">
+<div class="flex justify-between items-end">
+<span class="font-headline-md text-primary">₹12,500</span>
+<span class="font-label-md text-on-surface-variant mb-1">per night</span>
+</div>
+<div class="grid grid-cols-2 border border-outline-variant rounded-lg overflow-hidden">
+<div class="p-sm border-r border-outline-variant cursor-pointer hover:bg-surface-container-low transition-colors">
+<p class="text-[10px] font-bold uppercase text-on-surface-variant">Check-in</p>
+<p class="text-label-md">Oct 12, 2024</p>
+</div>
+<div class="p-sm cursor-pointer hover:bg-surface-container-low transition-colors">
+<p class="text-[10px] font-bold uppercase text-on-surface-variant">Check-out</p>
+<p class="text-label-md">Oct 15, 2024</p>
+</div>
+<div class="col-span-2 p-sm border-t border-outline-variant cursor-pointer hover:bg-surface-container-low transition-colors flex justify-between items-center">
+<div>
+<p class="text-[10px] font-bold uppercase text-on-surface-variant">Guests</p>
+<p class="text-label-md">2 Adults, 0 Children</p>
+</div>
+<span class="material-symbols-outlined text-body-md">keyboard_arrow_down</span>
+</div>
+</div>
+<div class="space-y-sm">
+<div class="flex justify-between text-body-md">
+<span class="text-on-surface-variant">₹12,500 x 3 nights</span>
+<span>₹37,500</span>
+</div>
+<div class="flex justify-between text-body-md">
+<span class="text-on-surface-variant underline decoration-dotted">BharatStay Service Fee</span>
+<span>₹1,250</span>
+</div>
+<div class="flex justify-between text-body-md">
+<span class="text-on-surface-variant underline decoration-dotted">Taxes</span>
+<span>₹4,500</span>
+</div>
+<hr class="border-outline-variant"/>
+<div class="flex justify-between font-bold text-headline-md text-primary">
+<span>Total</span>
+<span>₹43,250</span>
+</div>
+</div>
+<button class="w-full bg-secondary-container text-on-primary py-4 rounded-lg font-label-md font-bold text-lg hover:shadow-lg transition-all active:scale-[0.98]">
+                        Book Now
+                    </button>
+<p class="text-center text-label-sm text-on-surface-variant">You won't be charged yet</p>
+</div>
+</div>
+</section>
+<!-- Local Experiences Section -->
+<section class="max-w-container-max mx-auto px-gutter py-xl bg-surface-container-low rounded-t-[40px]">
+<div class="flex justify-between items-end mb-lg">
+<div class="space-y-xs">
+<h2 class="font-headline-lg text-primary">Curated Local Experiences</h2>
+<p class="text-body-lg text-on-surface-variant">Handpicked adventures near The Marigold Palace</p>
+</div>
+<button class="text-primary font-bold hover:underline flex items-center gap-xs">
+                    View all experiences <span class="material-symbols-outlined text-body-md">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<!-- Experience Card 1 -->
+<div class="group cursor-pointer">
+<div class="rounded-xl overflow-hidden aspect-[4/3] mb-sm relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A beautiful hot air balloon safari over the Rajasthani desert at sunrise. Several colorful balloons float gracefully against a sky painted with shades of saffron, pink, and pale blue. Below, the desert landscape and ancient forts are bathed in soft, ethereal morning light. The image captures a sense of adventurous luxury and high-end cultural exploration." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYnxXIKa_qwaAI8LEyjwDTt8BZ3oSoHOOoElVLtX2xHbfIT_U927oeD1l3uQEe9e_hsDjAbf7SGwS5jH40strZMYHuhXW15FSsXc5Ysq_FbAUDh3tSnuRuCPCuIMOZ62GHyFbyQdK-OwkSyGR9kcdM2aFSnhwvgoifQdRY38kjBNC1DkDo8TseMFMqi0ZJBuoykxbqcRGQmBvU7eO9UDjrBnVfpM8e8c9qDQlWmBEYr2xGExeOH-hPrR8C0biA8Pk3bjARZLS_P1sh"/>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-label-sm font-bold text-primary">
+                            Featured
+                        </div>
+</div>
+<h3 class="font-headline-md text-primary group-hover:text-secondary-container transition-colors">Pink City Sunrise Balloon Safari</h3>
+<p class="text-on-surface-variant text-body-md mb-xs">Guided tour • 3 hours</p>
+<p class="font-bold text-primary">₹8,500 <span class="text-label-md font-normal text-on-surface-variant">/ person</span></p>
+</div>
+<!-- Experience Card 2 -->
+<div class="group cursor-pointer">
+<div class="rounded-xl overflow-hidden aspect-[4/3] mb-sm relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="An intimate traditional culinary masterclass held in a heritage kitchen. A local Rajasthani chef, dressed in vibrant traditional attire, demonstrates the art of grinding spices on a stone mortar. The scene is filled with authentic brass utensils, colorful ingredients, and warm, focused lighting that highlights the tactile textures and cultural richness of the experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD87j4lxnW2IPH7lWc97Os3jIkweuUIUlbfHlXh5NJk8OeAheeh6k9mNaIfDSbLnn0FsrzU6ktptD0Yby9x4vShOy2eOA32PM46moW5XH1HqkyBcGqOD_b8zAK20f6PrmaPyFqBMQh-lpa26kiXV4VuffW2i6CC-cf6N0GRsqzanuieAwGBT85kgr03AdcTteGAVkh_aNdpGCwvnFz1CuS5CQtprPTxWaZyd0uhws7uNk0rh2j5H-4MTXSWXeKvdYyUz505Uu08hjoQ"/>
+</div>
+<h3 class="font-headline-md text-primary group-hover:text-secondary-container transition-colors">Traditional Rajasthani Culinary Class</h3>
+<p class="text-on-surface-variant text-body-md mb-xs">Workshop • 4 hours</p>
+<p class="font-bold text-primary">₹3,200 <span class="text-label-md font-normal text-on-surface-variant">/ person</span></p>
+</div>
+<!-- Experience Card 3 -->
+<div class="group cursor-pointer">
+<div class="rounded-xl overflow-hidden aspect-[4/3] mb-sm relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A private night photography tour at the Amber Fort in Jaipur. The ancient sandstone walls are beautifully illuminated by soft spotlights, creating dramatic shadows and highlighting the grand architecture. A photographer with professional gear is seen capturing the reflection of the fort in the Maota Lake. The mood is mysterious, artistic, and deeply immersive." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6qhbu_vUUUm3xkc6ORX1nBBznbhkvsYq-XN_gmfsNuxP54YyFXCSg6FBRrLy-nR8ubt0YMvhZc9lwX-I1B0HYX1FAtEHg3KhU7HYYrHqnfryJ1vmUy4Fab2YnC2JstKgesh1YxSezdtGRq0yfaVzzg0Qrgt5urNbi7FrfqUaDGQTA39-hsMSJmwq2TEw9i9IxKRPFUb9xaeVjHJkuYhUkUQlNrWCXl0TcyvyAeRw9rXE-cOfFA10XzX4VuhLNyhXawY2qX75WdLjT"/>
+</div>
+<h3 class="font-headline-md text-primary group-hover:text-secondary-container transition-colors">Night Photography at Amber Fort</h3>
+<p class="text-on-surface-variant text-body-md mb-xs">Night tour • 2.5 hours</p>
+<p class="font-bold text-primary">₹5,000 <span class="text-label-md font-normal text-on-surface-variant">/ person</span></p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-on-background w-full py-xl border-t border-outline-variant">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-lg px-gutter max-w-container-max mx-auto">
+<div class="space-y-md">
+<span class="font-headline-md text-primary dark:text-primary-fixed">BharatStay</span>
+<p class="text-on-surface-variant font-Inter text-label-md italic">Atithi Devo Bhava.</p>
+<div class="flex gap-sm">
+<span class="material-symbols-outlined text-primary cursor-pointer hover:text-secondary transition-all">social_leaderboard</span>
+<span class="material-symbols-outlined text-primary cursor-pointer hover:text-secondary transition-all">language</span>
+</div>
+</div>
+<div class="flex flex-col gap-sm">
+<h4 class="font-label-md text-primary uppercase">Company</h4>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-secondary transition-colors duration-300 font-Inter text-label-md" href="#">About Us</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-secondary transition-colors duration-300 font-Inter text-label-md" href="#">Partner with Us</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-secondary transition-colors duration-300 font-Inter text-label-md" href="#">Contact Support</a>
+</div>
+<div class="flex flex-col gap-sm">
+<h4 class="font-label-md text-primary uppercase">Legal</h4>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-secondary transition-colors duration-300 font-Inter text-label-md" href="#">Terms of Service</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-secondary transition-colors duration-300 font-Inter text-label-md" href="#">Privacy Policy</a>
+</div>
+<div class="space-y-md">
+<h4 class="font-label-md text-primary uppercase">Newsletter</h4>
+<p class="text-on-surface-variant font-Inter text-label-md">Subscribe for exclusive heritage offers.</p>
+<div class="flex">
+<input class="bg-surface-container-high border-none rounded-l-lg px-4 py-2 w-full focus:ring-1 focus:ring-primary outline-none" placeholder="Your email" type="email"/>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-r-lg font-label-md hover:bg-primary-container transition-all">Join</button>
+</div>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-gutter mt-xl pt-md border-t border-outline-variant flex justify-between items-center text-on-surface-variant text-label-sm">
+<p>© 2024 BharatStay. All rights reserved.</p>
+<div class="flex gap-md">
+<span>INR (₹)</span>
+<span>English (US)</span>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interactions for the gallery items
+        document.querySelectorAll('.group').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                item.classList.add('scale-[1.01]');
+            });
+            item.addEventListener('mouseleave', () => {
+                item.classList.remove('scale-[1.01]');
+            });
+        });
+
+        // Simple sticky header effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('bg-white/90', 'backdrop-blur-md');
+            } else {
+                header.classList.remove('bg-white/90', 'backdrop-blur-md');
+            }
+        });
+    </script>
+</body></html>

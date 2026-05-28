@@ -21,7 +21,7 @@ const App = () => {
   const { showHotelReg } = useAppContext();
 
   return (
-    <div>
+    <div className="jali-pattern">
       <Toaster />
       {!isOwnerPath && <Navbar />}
       {showHotelReg && <HotelReg />}

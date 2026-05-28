@@ -1,35 +1,48 @@
 import React from 'react'
-import Title from './Title'
 import { assets, exclusiveOffers } from '../assets/quickStay-assets/assets'
 
 const ExclusiveOffer = () => {
     return (
-        <div className='flex flex-col items-center px-6 md:px-16 lg:px-24 xl:px-32 pt-20 pb-30'>
-            <div className='flex flex-col md:flex-row items-center justify-between w-full'>
-                <Title align='left' title='Exclusive Offers' subTitle='Take advantage of our limited-time offers and special packages to enhance your stay and create unforgettable memories.' />
-                <button className='group flex items-center gap-2 font-medium cursor-pointer max-md:mt-12'>
-                    View All Offers
-                    <img src={assets.arrowIcon} alt="arrow-icon" className='group-hover:translate-x-1 transition-all' />
-                </button>
+        <section className="py-16 max-w-6xl mx-auto px-6 md:px-16 lg:px-24 xl:px-32 bg-white">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
+                <div>
+                    <h2 className="font-montserrat text-3xl font-bold text-primary mb-2">Offers for You</h2>
+                    <p className="font-inter text-gray-500">Handpicked festive deals just for you.</p>
+                </div>
+                <a className="text-primary font-montserrat font-bold text-sm hover:text-secondary flex items-center gap-1 group transition-premium" href="#offers">
+                    View All Offers 
+                    <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-premium">arrow_forward</span>
+                </a>
             </div>
 
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12'>
-                {exclusiveOffers.map((item) => (
-                    <div key={item._id} className='group relative flex flex-col items-start justify-between gap-1 pt-12 md:pt-18 px-4 rounded-xl text-white bg-no-repeat bg-cover bg-center' style={{ backgroundImage: `url(${item.image})` }}>
-                        <p className='px-3 py-1 absolute top-4 left-4 text-xs bg-white text-gray-800 font-medium rounded-full'>{item.priceOff}% OFF</p>
-                        <div>
-                            <p className='text-2xl font-medium font-playfair'>{item.title}</p>
-                            <p>{item.description}</p>
-                            <p className='text-xs text-white/70 mt-3'>{item.expiryDate}</p>
+            <div className="flex flex-col md:flex-row gap-6 overflow-x-auto pb-4 scrollbar-hide">
+                {exclusiveOffers.map((item, index) => (
+                    <div 
+                        key={item._id} 
+                        className={`min-w-[45%] flex-1 bg-slate-50/50 rounded-2xl overflow-hidden shadow-ambient-sm hover:shadow-ambient-md transition-premium border-b-4 ${index === 0 ? 'border-secondary' : 'border-primary'} flex flex-col sm:flex-row border border-gray-100/60`}
+                    >
+                        {/* Image side */}
+                        <div className="w-full sm:w-1/3 h-48">
+                            <img className="w-full h-full object-cover" src={item.image} alt={item.title} />
                         </div>
-                        <button className='flex items-center gap-2 font-medium cursor pointer mt-4 mb-5'>
-                            View Offers
-                            <img className='invert group-hover:translate-x-1 transition-all' src={assets.arrowIcon} alt="arrow-icon" />
-                        </button>
+                        
+                        {/* Text side */}
+                        <div className="p-6 flex-1 flex flex-col justify-center items-start text-left">
+                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase mb-3 ${index === 0 ? 'bg-secondary/15 text-secondary' : 'bg-primary/10 text-primary'}`}>
+                                {item.label}
+                            </span>
+                            <h3 className="font-montserrat text-xl font-bold text-primary mb-1">{item.title}</h3>
+                            <p className="font-inter text-sm text-gray-500 mb-4">{item.description}</p>
+                            
+                            <button className={`font-bold font-montserrat text-xs flex items-center gap-1 hover:gap-2 transition-all cursor-pointer ${index === 0 ? 'text-secondary hover:text-secondary-dark' : 'text-primary hover:text-primary-dark'}`}>
+                                {index === 0 ? 'Book Now' : 'Claim Offer'} 
+                                <span className="material-symbols-outlined text-sm">chevron_right</span>
+                            </button>
+                        </div>
                     </div>
                 ))}
             </div>
-        </div>
+        </section>
     )
 }
 

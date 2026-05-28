@@ -83,9 +83,8 @@ export const cities = [
 
 // Exclusive Offers Dummy Data
 export const exclusiveOffers = [
-    { _id: 1, title: "Summer Escape Package", description: "Enjoy a complimentary night and daily breakfast", priceOff: 25, expiryDate: "Aug 31", image: exclusiveOfferCardImg1 },
-    { _id: 2, title: "Romantic Getaway", description: "Special couples package including spa treatment", priceOff: 20, expiryDate: "Sep 20", image: exclusiveOfferCardImg2 },
-    { _id: 3, title: "Luxury Retreat", description: "Book 60 days in advance and save on your stay at any of our luxury properties worldwide.", priceOff: 30, expiryDate: "Sep 25", image: exclusiveOfferCardImg3 },
+    { _id: 1, title: "Diwali Delight", description: "Up to 35% off on luxury heritage stays.", priceOff: 35, expiryDate: "Nov 15", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuA8nnsAMI80NQWnyiRKgKQab0gnTh78PhVbw36oQpGLbROToSXkol5c7XujA6wA7TjUVgH3t0VJRE46Lz7wrAnumOA9kHPYMKwnRRAu0opgsirYtXQgt1Zll2YU1PMNT-9yvmIuiEpHaNwfWLBXrGKHUaR6SIRx62qYI8MmliL4kGdFDc5VvUqolOI7meU1yxZ11_OjKuAVT9viiWJzadQ2ayG_wNqPbetoAsyBKRn_UKphsUJZhS1VWgsCil_wbEO-ZT5FtYNh_MTL", label: "Limited Time" },
+    { _id: 2, title: "Ayurvedic Rejuvenation", description: "Complimentary spa treatment on 3+ nights.", priceOff: 20, expiryDate: "Dec 10", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuD9hxNHLGNzNeqoL1l7FRuLa9wTvj7zKEkBUWBs3HVWiCTDe3bUaMa8IDzhXzD-hxkT_H_JQ1404M5eHa_5-i-hi7z9zcOl7Ze29q7V20HhYRAtDv0VKtaLGftyUGgP6QvyeTsIsaVayvUw1Lb86M1YvS9ewRkyXh5urVVwR2CqFQxWhCp3r7_RSWJRGUNe4tJ-PVkJY9UmZiq_2kpxtGY34FmqWbrLy-lKiAzJQMIFQsNpB2e61hKUhjhcuTl6V4SA6cakOolIW7WR", label: "Wellness Exclusive" },
 ]
 
 // Testimonials Dummy Data
@@ -107,7 +106,7 @@ export const facilityIcons = {
 // For Room Details Page
 export const roomCommonData = [
     { icon: assets.homeIcon, title: "Clean & Safe Stay", description: "A well-maintained and hygienic space just for you." },
-    { icon: assets.badgeIcon, title: "Enhanced Cleaning", description: "This host follows Staybnb's strict cleaning standards." },
+    { icon: assets.badgeIcon, title: "Enhanced Cleaning", description: "This host follows QuickStay's strict cleaning standards." },
     { icon: assets.locationFilledIcon, title: "Excellent Location", description: "90% of guests rated the location 5 stars." },
     { icon: assets.heartIcon, title: "Smooth Check-In", description: "100% of guests gave check-in a 5-star rating." },
 ];

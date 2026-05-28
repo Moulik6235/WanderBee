@@ -1,19 +1,68 @@
 import React from 'react'
-import { assets } from '../assets/quickStay-assets/assets'
-import Title from './Title'
 
 const NewsLetter = () => {
     return (
-        <div className="flex flex-col items-center max-w-5xl lg:w-full rounded-2xl px-4 py-12 md:py-16 mx-2 lg:mx-auto my-30 bg-gray-900 text-white">
-            <Title title="Stay Inspired" subTitle="Join our newsletter and be the first to discover new destinations, exclusive offers, and travel inspiration." />
-            <div className="flex flex-col md:flex-row items-center justify-center gap-4 mt-6">
-                <input type="text" className="bg-white/10 px-4 py-2.5 border border-white/20 rounded outline-none max-w-66 w-full" placeholder="Enter your email" />
-                <button className="flex items-center justify-center gap-2 group bg-black px-4 md:px-7 py-2.5 rounded active:scale-95 transition-all">Subscribe
-                    <img src={assets.arrowIcon} alt="arrow-icon" className='w-3.5 invert group-hover:translate-x-1 transition-all' />
-                </button>
+        <section className="py-16 max-w-6xl mx-auto px-6 md:px-16 lg:px-24 xl:px-32 bg-white">
+            <div className="bg-primary rounded-3xl p-8 md:p-12 relative overflow-hidden flex flex-col lg:flex-row items-center gap-12 text-left">
+                
+                {/* Abstract Mandala Backdrop */}
+                <div className="absolute -right-20 -bottom-20 opacity-10 pointer-events-none">
+                    <svg height="400" viewBox="0 0 100 100" width="400">
+                        <circle cx="50" cy="50" fill="none" r="48" stroke="#ff9933" strokeWidth="0.5"></circle>
+                        <circle cx="50" cy="50" fill="none" r="40" stroke="#ff9933" strokeWidth="0.2"></circle>
+                        <path d="M50 2 L50 98 M2 50 L98 50 M15 15 L85 85 M15 85 L85 15" stroke="#ff9933" strokeWidth="0.2"></path>
+                    </svg>
+                </div>
+
+                <div className="relative z-10 lg:w-1/2 w-full">
+                    <h2 className="font-montserrat text-3xl md:text-4xl font-extrabold text-white mb-4">
+                        Join the Circle of Heritage
+                    </h2>
+                    <p className="font-inter text-base text-blue-100 mb-8 max-w-md">
+                        Subscribe to get secret deals and early access to QuickStay's newest heritage openings across India.
+                    </p>
+                    
+                    <form onSubmit={(e) => e.preventDefault()} className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
+                        <input 
+                            className="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-3.5 text-white placeholder:text-white/60 focus:ring-2 focus:ring-secondary focus:outline-none transition-premium font-inter text-sm" 
+                            placeholder="Your email address" 
+                            type="email"
+                            required
+                        />
+                        <button className="bg-secondary text-white px-6 py-3.5 rounded-xl font-montserrat font-bold hover:bg-secondary-dark transition-premium cursor-pointer text-sm whitespace-nowrap">
+                            Join Now
+                        </button>
+                    </form>
+                </div>
+
+                <div className="lg:w-1/2 w-full grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
+                    <div className="bg-white/5 backdrop-blur-md p-5 rounded-2xl border border-white/10 text-center flex flex-col items-center">
+                        <span className="material-symbols-outlined text-secondary text-4xl mb-2 font-fill">verified_user</span>
+                        <h4 className="text-white font-montserrat font-bold text-sm">100% Secure</h4>
+                        <p className="text-blue-100/70 font-inter text-xs mt-1">Safe & encrypted payments</p>
+                    </div>
+                    
+                    <div className="bg-white/5 backdrop-blur-md p-5 rounded-2xl border border-white/10 text-center flex flex-col items-center">
+                        <span className="material-symbols-outlined text-secondary text-4xl mb-2 font-fill">hotel_class</span>
+                        <h4 className="text-white font-montserrat font-bold text-sm">Curated Luxury</h4>
+                        <p className="text-blue-100/70 font-inter text-xs mt-1">Top-tier property audits</p>
+                    </div>
+                    
+                    <div className="bg-white/5 backdrop-blur-md p-5 rounded-2xl border border-white/10 text-center flex flex-col items-center">
+                        <span className="material-symbols-outlined text-secondary text-4xl mb-2 font-fill">support_agent</span>
+                        <h4 className="text-white font-montserrat font-bold text-sm">24/7 Support</h4>
+                        <p className="text-blue-100/70 font-inter text-xs mt-1">Indian local experts</p>
+                    </div>
+                    
+                    <div className="bg-white/5 backdrop-blur-md p-5 rounded-2xl border border-white/10 text-center flex flex-col items-center">
+                        <span className="material-symbols-outlined text-secondary text-4xl mb-2 font-fill">loyalty</span>
+                        <h4 className="text-white font-montserrat font-bold text-sm">Stay Rewards</h4>
+                        <p className="text-blue-100/70 font-inter text-xs mt-1">Earn on every booking</p>
+                    </div>
+                </div>
+
             </div>
-            <p className="text-gray-500 mt-6 text-xs text-center">By subscribing, you agree to our Privacy Policy and consent to receive updates.</p>
-        </div>
+        </section>
     )
 }
 
