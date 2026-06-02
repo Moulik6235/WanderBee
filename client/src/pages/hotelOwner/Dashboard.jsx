@@ -40,7 +40,7 @@ const Dashboard = () => {
                     <div className='flex flex-col text-left'>
                         <span className='text-[10px] font-extrabold uppercase tracking-widest text-slate-400 font-montserrat'>Total Revenue</span>
                         <span className='text-primary text-3xl font-extrabold font-montserrat mt-2'>
-                            {currency}{dashboardData.totalRevenue.toLocaleString()}
+                            {currency}{(dashboardData.totalRevenue || 0).toLocaleString()}
                         </span>
                         <span className='text-xs text-emerald-600 font-semibold mt-1 flex items-center gap-1'>
                             <span className="material-symbols-outlined text-xs">trending_up</span>
@@ -99,7 +99,7 @@ const Dashboard = () => {
                                             </div>
                                         </td>
                                         <td className='py-4 px-6 max-sm:hidden text-slate-500 font-medium'>{item.room.roomType}</td>
-                                        <td className='py-4 px-6 text-center font-bold text-slate-900'>{currency}{item.totalPrice.toLocaleString()}</td>
+                                        <td className='py-4 px-6 text-center font-bold text-slate-900'>{currency}{(item.totalPrice || 0).toLocaleString()}</td>
 
                                         <td className='py-4 px-6 text-center'>
                                             <span className={`inline-block py-1.5 px-3.5 text-[9px] font-extrabold uppercase tracking-widest rounded-xl ${

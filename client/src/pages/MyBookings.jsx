@@ -1,10 +1,12 @@
 import React, { useState, useMemo, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Title from '../components/Title'
 import { assets, userBookingsDummyData } from '../assets/quickStay-assets/assets'
 import { useAppContext } from '../context/AppContext'
 import { toast } from 'react-hot-toast'
 
 const MyBookings = () => {
+    const navigate = useNavigate()
     const { currency, axios, getToken } = useAppContext()
     const [bookings, setBookings] = useState([])
 
@@ -27,8 +29,8 @@ const MyBookings = () => {
                 if (data.success) {
                     const dbBookings = data.bookings.map(b => ({
                         ...b,
-                        isPaid: true,
-                        status: "Confirmed"
+                        isPaid: b.isPaid || false,
+                        status: b.isPaid ? "Confirmed" : "Pending Payment"
                     }))
                     setBookings([...localBookings, ...dbBookings, ...userBookingsDummyData])
                 } else {
@@ -62,6 +64,11 @@ const MyBookings = () => {
             // Check if it is a pre-seeded generic dummy booking or a real custom/DB booking
             const isDummyBooking = booking.hotel?.name === "Urbanza Suites" || booking.hotel?._id === "67f76393197ac559e4089b72";
             if (!isDummyBooking) {
+                const checkIn = new Date(booking.checkInDate);
+                const checkOut = new Date(booking.checkOutDate);
+                const timeDiff = checkOut.getTime() - checkIn.getTime();
+                const nights = Math.max(1, Math.ceil(timeDiff / (1000 * 3600 * 24)));
+                const fallbackPrice = (booking.room?.pricePerNight || 299) * nights;
                 return {
                     ...booking,
                     hotel: {
@@ -72,12 +79,13 @@ const MyBookings = () => {
                         roomType: booking.room?.roomType || "Luxury Suite",
                         images: booking.room?.images && booking.room.images.length > 0 ? booking.room.images : [stitchProperties[idx % stitchProperties.length].image]
                     },
-                    totalPrice: booking.totalPrice,
+                    totalPrice: booking.totalPrice || fallbackPrice,
                     status: booking.status || "Confirmed"
                 };
             }
 
             const prop = stitchProperties[idx % stitchProperties.length];
+            const rawPrice = booking.totalPrice || 299;
             return {
                 ...booking,
                 hotel: {
@@ -89,15 +97,34 @@ const MyBookings = () => {
                     ...booking.room,
                     images: [prop.image]
                 },
-                totalPrice: booking.totalPrice < 1000 ? booking.totalPrice * 30 : booking.totalPrice,
+                totalPrice: rawPrice < 1000 ? rawPrice * 30 : rawPrice,
                 status: booking.isPaid ? "Confirmed" : "Pending Payment"
             };
         });
     }, [bookings]);
 
-    const handlePayNow = (bookingId) => {
-        setBookings(prev => prev.map(b => b._id === bookingId ? { ...b, isPaid: true } : b))
-        toast.success("Payment successful! Atithi Devo Bhava!")
+    const handlePayNow = (booking) => {
+        const checkIn = new Date(booking.checkInDate)
+        const checkOut = new Date(booking.checkOutDate)
+        const timeDiff = checkOut.getTime() - checkIn.getTime()
+        const nights = Math.max(1, Math.ceil(timeDiff / (1000 * 3600 * 24)))
+        
+        navigate('/payment', {
+            state: {
+                room: booking.room,
+                bookingDate: {
+                    checkIn: new Date(booking.checkInDate).toISOString().split('T')[0],
+                    checkOut: new Date(booking.checkOutDate).toISOString().split('T')[0],
+                    guests: booking.guests
+                },
+                basePrice: booking.room?.pricePerNight || 12500,
+                serviceFee: 1250,
+                taxes: 4500,
+                totalPrice: booking.totalPrice || ((booking.room?.pricePerNight || 12500) * nights) + 1250 + 4500,
+                totalNights: nights,
+                bookingId: booking._id
+            }
+        })
     }
 
     const handleRequestUpgrade = () => {
@@ -195,16 +222,16 @@ const MyBookings = () => {
                                 {/* Right Side: Status & Elite Actions */}
                                 <div className="flex flex-col sm:flex-row lg:flex-col items-stretch lg:items-end justify-between lg:w-2/12 border-t lg:border-t-0 lg:border-l border-gray-100 pt-6 lg:pt-0 lg:pl-8 gap-4">
                                     <div className="flex items-center gap-2 lg:text-right">
-                                        <div className={`h-2.5 w-2.5 rounded-full ${booking.status === "Confirmed" ? "bg-emerald-500" : "bg-rose-500"}`}></div>
-                                        <span className={`text-[10px] font-extrabold uppercase tracking-wider ${booking.status === "Confirmed" ? "text-emerald-600" : "text-rose-600"}`}>
-                                            {booking.status}
+                                        <div className={`h-2.5 w-2.5 rounded-full ${booking.isPaid ? "bg-emerald-500" : "bg-amber-500"}`}></div>
+                                        <span className={`text-[10px] font-extrabold uppercase tracking-wider ${booking.isPaid ? "text-emerald-600" : "text-amber-600"}`}>
+                                            {booking.isPaid ? "Confirmed & Paid" : (booking.paymentMethod?.includes("Check-in") ? "Pay At Hotel" : "Pending Payment")}
                                         </span>
                                     </div>
 
                                     <div className="flex flex-col gap-2 w-full">
-                                        {booking.status !== "Confirmed" ? (
+                                        {!booking.isPaid ? (
                                             <button 
-                                                onClick={() => handlePayNow(booking._id)}
+                                                onClick={() => handlePayNow(booking)}
                                                 className="bg-secondary-container hover:bg-secondary text-on-secondary-container hover:text-white font-montserrat font-bold text-[10px] uppercase tracking-wider py-2.5 px-4 rounded-xl shadow-sm transition-premium cursor-pointer w-full active:scale-95 text-center"
                                             >
                                                 Pay Now

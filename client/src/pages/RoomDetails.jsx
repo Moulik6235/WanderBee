@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useMemo } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { roomsDummyData } from '../assets/quickStay-assets/assets'
 import { useAppContext } from '../context/AppContext'
 import { toast } from 'react-hot-toast'
 
 const RoomDetails = () => {
     const { id } = useParams()
+    const navigate = useNavigate()
     const { axios, currency, getToken } = useAppContext()
     const [room, setRoom] = useState(null)
     const [bookingDate, setBookingDate] = useState({
@@ -336,53 +337,21 @@ const RoomDetails = () => {
             const checkOut = new Date(bookingDate.checkOut)
             const timeDiff = checkOut.getTime() - checkIn.getTime();
             const nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
-            const totalNights = nights > 0 ? nights : 3;
+            const calculatedNights = nights > 0 ? nights : 3;
 
-            // If it's a mock custom luxury room, save in LocalStorage so it renders on MyBookings.jsx
-            if (room._id.startsWith("ud-") || room._id.startsWith("jp-") || room._id.startsWith("jd-")) {
-                const localBooking = {
-                    _id: `local-${Date.now()}`,
-                    hotel: {
-                        name: room.hotel.name,
-                        address: room.hotel.address
-                    },
-                    room: {
-                        roomType: room.roomType || "Luxury Suite",
-                        images: room.images
-                    },
-                    guests: bookingDate.guests,
-                    checkInDate: bookingDate.checkIn,
-                    checkOutDate: bookingDate.checkOut,
-                    totalPrice: room.pricePerNight * totalNights,
-                    status: "Confirmed",
-                    isPaid: true
-                }
-                const saved = JSON.parse(localStorage.getItem("bharatstay_bookings") || "[]")
-                saved.unshift(localBooking)
-                localStorage.setItem("bharatstay_bookings", JSON.stringify(saved))
-                toast.success(`Booking Confirmed for ${room.hotel.name}! Atithi Devo Bhava!`)
-                return
-            }
-
-            // Real DB Room Booking
-            const { data } = await axios.post('/api/bookings/book', {
-                room: room._id,
-                checkInDate: bookingDate.checkIn,
-                checkOutDate: bookingDate.checkOut,
-                guests: bookingDate.guests
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`
+            navigate('/payment', {
+                state: {
+                    room,
+                    bookingDate,
+                    basePrice,
+                    serviceFee,
+                    taxes,
+                    totalPrice: (basePrice * calculatedNights) + serviceFee + taxes,
+                    totalNights: calculatedNights
                 }
             })
-
-            if (data.success) {
-                toast.success(`Booking Confirmed for ${room.hotel.name}! Atithi Devo Bhava!`)
-            } else {
-                toast.error(data.message || "Failed to make reservation")
-            }
         } catch (error) {
-            toast.error(error.response?.data?.message || error.message)
+            toast.error(error.message)
         }
     }
 
@@ -391,7 +360,14 @@ const RoomDetails = () => {
     const basePrice = room.pricePerNight;
     const serviceFee = 1250;
     const taxes = 4500;
-    const totalNights = 3;
+    
+    // Dynamic nights calculation
+    const checkIn = new Date(bookingDate.checkIn)
+    const checkOut = new Date(bookingDate.checkOut)
+    const timeDiff = checkOut.getTime() - checkIn.getTime();
+    const nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    const totalNights = nights > 0 ? nights : 3;
+
     const totalPrice = (basePrice * totalNights) + serviceFee + taxes;
 
     return (

@@ -13,6 +13,7 @@ import Layout from './pages/hotelOwner/Layout'
 import Dashboard from './pages/hotelOwner/Dashboard'
 import AddRoom from './pages/hotelOwner/AddRoom'
 import ListRoom from './pages/hotelOwner/ListRoom'
+import Payment from './pages/Payment'
 import { Toaster } from 'react-hot-toast'
 import { useAppContext } from './context/AppContext'
 
@@ -32,7 +33,11 @@ const App = () => {
           <Route path='/' element={<Home />} />
           <Route path='/rooms' element={<AllRooms />} />
           <Route path='/rooms/:id' element={<RoomDetails />} />
+          <Route path='/payment' element={<Payment />} />
           <Route path='/my-bookings' element={<MyBookings />} />
+          <Route path='/booking' element={<MyBookings />} />
+          <Route path='/bookings' element={<MyBookings />} />
+          <Route path='/mybookings' element={<MyBookings />} />
           <Route path='/experiences' element={<Experiences />} />
           <Route path='/profile' element={<Profile />} />
           <Route path='/owner' element={<Layout />}>

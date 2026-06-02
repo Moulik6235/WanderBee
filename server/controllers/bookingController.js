@@ -37,7 +37,7 @@ export const checkAvailabilityAPI = async (req, res) => {
 
 export const createBooking = async (req, res) => {
     try {
-        const { room, checkInDate, checkOutDate, guests } = req.body;
+        const { room, checkInDate, checkOutDate, guests, paymentMethod, isPaid } = req.body;
         const user = req.user._id;
 
         // Before Booking Check Availabilty
@@ -69,6 +69,8 @@ export const createBooking = async (req, res) => {
             checkInDate,
             checkOutDate,
             totalPrice,
+            paymentMethod: paymentMethod || "Pay At Hotel",
+            isPaid: isPaid || false
         })
 
         res.json({ success: true, message: "Booking Created Successfully" })
@@ -107,6 +109,32 @@ export const getHotelBookings = async (req, res) => {
         res.json({ success: true, dashboardData: { totalBookings, totalRevenue, bookings } })
     } catch (error) {
         res.json({ success: false, message: "Failed to fetch bookings" })
+    }
+}
+
+// API to pay for an existing booking
+// PUT /api/bookings/:id/pay
+export const payBooking = async (req, res) => {
+    try {
+        const { paymentMethod } = req.body;
+        const booking = await Booking.findById(req.params.id);
+        if (!booking) {
+            return res.json({ success: false, message: "Booking not found" });
+        }
+        
+        if (booking.user.toString() !== req.user._id.toString()) {
+            return res.json({ success: false, message: "Not authorized to pay for this booking" });
+        }
+
+        booking.isPaid = true;
+        booking.status = "Confirmed";
+        booking.paymentMethod = paymentMethod || "Credit/Debit Card";
+        await booking.save();
+
+        res.json({ success: true, message: "Booking Paid Successfully", booking });
+    } catch (error) {
+        console.error("Pay Booking Error:", error);
+        res.json({ success: false, message: "Failed to pay for booking" });
     }
 }
 
