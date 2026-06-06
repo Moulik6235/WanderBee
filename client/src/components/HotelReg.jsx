@@ -55,7 +55,7 @@ const HotelReg = () => {
                     <img src={assets.closeIcon} alt="close-icon" className='absolute top-6 right-6 h-4 w-4 cursor-pointer hover:scale-110 transition-premium opacity-70' onClick={() => setShowHotelReg(false)} />
                     
                     <h2 className='text-xl md:text-2xl font-extrabold font-montserrat text-primary mt-2'>Register Your Hotel</h2>
-                    <p className="text-xs text-gray-400 mt-1 leading-relaxed">Join BharatStay's modern heritage ecosystem to list your suites and unlock premium bookings.</p>
+                    <p className="text-xs text-gray-400 mt-1 leading-relaxed">Join WanderBee's modern heritage ecosystem to list your suites and unlock premium bookings.</p>
 
                     {/* Hotel Name */}
                     <div className='w-full mt-4'>

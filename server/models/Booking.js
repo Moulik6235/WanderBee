@@ -18,7 +18,14 @@ const bookingSchema = new mongoose.Schema({
         default: "Pay At Hotel",
     },
     isPaid: { type: Boolean, default: false },
-    totalPrice: { type: Number, required: true }
+    totalPrice: { type: Number, required: true },
+    cancellationPolicy: {
+        type: String,
+        enum: ["Free Cancellation", "Cancellation Fee Applicable"],
+        default: "Free Cancellation"
+    },
+    cancellationFee: { type: Number, default: 0 },
+    refundAmount: { type: Number, default: 0 }
 
 }, { timestamps: true });
 

@@ -11,7 +11,19 @@ const Payment = () => {
 
     // If navigated directly without state, redirect to home
     const bookingData = location.state || {}
-    const { room, bookingDate, basePrice, serviceFee, taxes, totalPrice, totalNights } = bookingData
+    const { room, bookingDate, basePrice, totalNights, cancellationPolicy = 'Free Cancellation' } = bookingData
+
+    // Calculate GST based on nightly room rate
+    let gstRate = 0;
+    if (basePrice <= 1000) {
+        gstRate = 0;
+    } else if (basePrice <= 7500) {
+        gstRate = 0.05;
+    } else {
+        gstRate = 0.18;
+    }
+    const gstAmount = (basePrice || 0) * (totalNights || 1) * gstRate;
+    const totalPrice = bookingData.totalPrice || (((basePrice || 0) * (totalNights || 1)) + gstAmount);
 
     useEffect(() => {
         if (!room || !bookingDate) {
@@ -138,7 +150,7 @@ const Payment = () => {
             // A. UPDATE existing booking (if bookingId was passed from bookings page)
             if (bookingData.bookingId) {
                 if (bookingData.bookingId.startsWith("local-")) {
-                    const saved = JSON.parse(localStorage.getItem("bharatstay_bookings") || "[]")
+                    const saved = JSON.parse(localStorage.getItem("wanderbee_bookings") || "[]")
                     const updated = saved.map(b => {
                         if (b._id === bookingData.bookingId) {
                             return {
@@ -150,7 +162,7 @@ const Payment = () => {
                         }
                         return b
                     })
-                    localStorage.setItem("bharatstay_bookings", JSON.stringify(updated))
+                    localStorage.setItem("wanderbee_bookings", JSON.stringify(updated))
                     toast.success("Payment Received! Reservation Confirmed.")
                     navigate('/my-bookings')
                     return
@@ -193,11 +205,12 @@ const Payment = () => {
                     totalPrice: totalPrice,
                     status: isPaid ? "Confirmed" : "Pending Payment",
                     paymentMethod: methodLabel,
-                    isPaid: isPaid
+                    isPaid: isPaid,
+                    cancellationPolicy: cancellationPolicy
                 }
-                const saved = JSON.parse(localStorage.getItem("bharatstay_bookings") || "[]")
+                const saved = JSON.parse(localStorage.getItem("wanderbee_bookings") || "[]")
                 saved.unshift(localBooking)
-                localStorage.setItem("bharatstay_bookings", JSON.stringify(saved))
+                localStorage.setItem("wanderbee_bookings", JSON.stringify(saved))
                 
                 toast.success(`Royal stay booked successfully! Atithi Devo Bhava!`)
                 navigate('/my-bookings')
@@ -212,7 +225,8 @@ const Payment = () => {
                 guests: bookingDate.guests,
                 paymentMethod: methodLabel,
                 isPaid: isPaid,
-                totalPrice: totalPrice
+                totalPrice: totalPrice,
+                cancellationPolicy: cancellationPolicy
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -324,7 +338,7 @@ const Payment = () => {
                                     <div className="bg-gradient-to-br from-primary to-slate-900 border border-white/10 rounded-2xl p-5 text-white shadow-md relative overflow-hidden font-montserrat flex flex-col justify-between h-44 w-full sm:w-80 mx-auto transition-transform duration-500 hover:rotate-1">
                                         <div className="absolute -top-10 -right-10 w-28 h-28 bg-white/5 rounded-full blur-2xl"></div>
                                         <div className="flex justify-between items-start">
-                                            <span className="text-[10px] font-extrabold tracking-widest text-amber-300 uppercase">BharatStay Elite Club</span>
+                                            <span className="text-[10px] font-extrabold tracking-widest text-amber-300 uppercase">WanderBee Club</span>
                                             <span className="material-symbols-outlined text-amber-400 text-2xl">hotel_class</span>
                                         </div>
                                         
@@ -447,7 +461,7 @@ const Payment = () => {
                                         </div>
                                     ) : (
                                         <div className="flex flex-col items-center bg-slate-50 border border-gray-150 rounded-2xl p-6 text-center space-y-4">
-                                            <div className="text-[10px] font-bold uppercase tracking-wider text-secondary">BharatStay UPI QR Gateway</div>
+                                            <div className="text-[10px] font-bold uppercase tracking-wider text-secondary">WanderBee UPI QR Gateway</div>
                                             
                                             {/* Stylized high-fidelity QR Code mock using vector graphics */}
                                             <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 relative">
@@ -518,7 +532,7 @@ const Payment = () => {
                                         No Pre-payment Required
                                     </h4>
                                     <p className="text-xs text-amber-900/80 leading-relaxed font-inter">
-                                        You are choosing to pay directly at the front desk when you arrive at the property. No charges will be placed on your cards online today. BharatStay secures your rooms for this heritage retreat.
+                                        You are choosing to pay directly at the front desk when you arrive at the property. No charges will be placed on your cards online today. WanderBee secures your rooms for this heritage retreat.
                                     </p>
                                 </div>
                             )}
@@ -527,7 +541,7 @@ const Payment = () => {
                             <div className="flex gap-2.5 items-start mt-6 text-xs text-gray-500 font-inter leading-relaxed">
                                 <span className="material-symbols-outlined text-emerald-600 text-base mt-0.5">verified_user</span>
                                 <p>
-                                    By completing this reservation, you agree to BharatStay's <span className="text-secondary hover:underline cursor-pointer">Cancellation Policy</span>, and authorize this transaction.
+                                    By completing this reservation, you agree to WanderBee's <span className="text-secondary hover:underline cursor-pointer">Cancellation Policy</span>, and authorize this transaction.
                                 </p>
                             </div>
 
@@ -593,6 +607,10 @@ const Payment = () => {
                                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide block mb-0.5">Guests</span>
                                     <span className="font-bold text-slate-800">{bookingDate.guests} Guests</span>
                                 </div>
+                                <div className="col-span-2">
+                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide block mb-0.5">Cancellation Policy</span>
+                                    <span className={`inline-block font-bold text-xs ${cancellationPolicy === 'Cancellation Fee Applicable' ? 'text-rose-600' : 'text-emerald-600'}`}>{cancellationPolicy}</span>
+                                </div>
                             </div>
 
                             <hr className="border-gray-100" />
@@ -604,14 +622,10 @@ const Payment = () => {
                                     <span>{currency}{((basePrice || 12500) * totalNights).toLocaleString()}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span>BharatStay Service Fee</span>
-                                    <span>{currency}{(serviceFee || 1250).toLocaleString()}</span>
+                                    <span>GST ({gstRate * 100}%)</span>
+                                    <span>{currency}{gstAmount.toLocaleString()}</span>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span>Taxes (GST & Heritage Levy)</span>
-                                    <span>{currency}{(taxes || 4500).toLocaleString()}</span>
-                                </div>
-                                <hr className="border-gray-100" />
+                                <hr className="border-gray-150" />
                                 <div className="flex justify-between font-montserrat font-bold text-base text-primary">
                                     <span>Total Price</span>
                                     <span>{currency}{totalPrice?.toLocaleString()}</span>

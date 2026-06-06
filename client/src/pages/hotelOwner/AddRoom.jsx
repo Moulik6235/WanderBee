@@ -17,6 +17,7 @@ const AddRoom = () => {
     const [inputs, setInputs] = useState({
         roomType: '',
         pricePerNight: 0,
+        cancellationPolicy: 'Free Cancellation',
         amenities: {
             'Free WiFi': false,
             'Free Breakfast': false,
@@ -40,6 +41,7 @@ const AddRoom = () => {
             const formData = new FormData()
             formData.append('roomType', inputs.roomType)
             formData.append('pricePerNight', inputs.pricePerNight)
+            formData.append('cancellationPolicy', inputs.cancellationPolicy)
             // Converting Amenities to Array & Keeping only enabled Amenities
             const amenities = Object.keys(inputs.amenities).filter(key => inputs.amenities[key])
             formData.append('amenities', JSON.stringify(amenities))
@@ -60,6 +62,7 @@ const AddRoom = () => {
                 setInputs({
                     roomType: '',
                     pricePerNight: 0,
+                    cancellationPolicy: 'Free Cancellation',
                     amenities: {
                         'Free WiFi': false,
                         'Free Breakfast': false,
@@ -84,7 +87,7 @@ const AddRoom = () => {
             <Title 
                 align='left' 
                 title='Add New Suite' 
-                subTitle='Fill in the suite details, pricing, and premium amenities to list your room on BharatStay.' 
+                subTitle='Fill in the suite details, pricing, and premium amenities to list your room on WanderBee.' 
             />
 
             {/* Upload Area For Image */}
@@ -121,7 +124,7 @@ const AddRoom = () => {
             </div>
 
             {/* Room Details Form Area */}
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 bg-white border border-slate-100 rounded-3xl p-6 shadow-sm'>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 bg-white border border-slate-100 rounded-3xl p-6 shadow-sm'>
                 
                 {/* Room Type select */}
                 <div className='flex flex-col'>
@@ -157,6 +160,23 @@ const AddRoom = () => {
                         onChange={e => setInputs({ ...inputs, pricePerNight: e.target.value })} 
                         required
                     />
+                </div>
+
+                {/* Cancellation Policy select */}
+                <div className='flex flex-col'>
+                    <label className='font-montserrat font-extrabold text-xs uppercase tracking-widest text-primary mb-2.5 flex items-center gap-1.5'>
+                        <span className="material-symbols-outlined text-base">cancel</span>
+                        Cancellation
+                    </label>
+                    <select 
+                        value={inputs.cancellationPolicy} 
+                        onChange={e => setInputs({ ...inputs, cancellationPolicy: e.target.value })} 
+                        className='border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl p-3.5 w-full bg-slate-50/50 outline-none text-sm text-gray-800 transition-premium cursor-pointer font-semibold'
+                        required
+                    >
+                        <option value="Free Cancellation">Free Cancellation</option>
+                        <option value="Cancellation Fee Applicable">Cancellation Fee Applicable</option>
+                    </select>
                 </div>
             </div>
 

@@ -6,7 +6,7 @@ import StarRating from './StarRating'
 const Testimonials = () => {
   return (
     <div className='flex flex-col items-center px-6 md:px-16 lg:px-24 bg-neutral-bg pt-20 pb-30 border-t border-gray-200/50'>
-      <Title title="What Our Guests Say" subTitle="Discover why discerning travelers consistently choose BharatStay for their exclusive and luxurious accommodations." />
+      <Title title="What Our Guests Say" subTitle="Discover why discerning travelers consistently choose WanderBee for their exclusive and luxurious accommodations." />
       
       <div className="flex flex-wrap items-stretch justify-center gap-8 mt-16 w-full max-w-6xl">
         {testimonials.map((testimonial) => (

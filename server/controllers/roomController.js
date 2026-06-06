@@ -5,7 +5,7 @@ import Room from "../models/Room.js";
 // API to Create a new room for a Hotel
 export const createRoom = async (req, res) => {
     try {
-        const { roomType, pricePerNight, amenities } = req.body;
+        const { roomType, pricePerNight, amenities, cancellationPolicy } = req.body;
         const hotel = await Hotel.findOne({ owner: req.auth.userId })
 
         if (!hotel) return res.json({ success: false, message: "No Hotel Found" });
@@ -24,6 +24,7 @@ export const createRoom = async (req, res) => {
             pricePerNight: +pricePerNight,
             amenities: JSON.parse(amenities),
             images,
+            cancellationPolicy: cancellationPolicy || "Free Cancellation"
         })
         res.json({ success: true, message: "Room created successfully" })
     } catch (error) {
@@ -69,6 +70,67 @@ export const toggleRoomAvailability = async (req, res) => {
         roomData.isAvailable = !roomData.isAvailable;
         await roomData.save();
         res.json({ success: true, message: "Room availabilty Updated" });
+    } catch (error) {
+        res.json({ success: false, message: error.message });
+    }
+}
+
+// API to Update Price of a Room
+export const updateRoomPrice = async (req, res) => {
+    try {
+        const { roomId, pricePerNight, cancellationPolicy } = req.body;
+        
+        // Find the room
+        const roomData = await Room.findById(roomId);
+        if (!roomData) {
+            return res.json({ success: false, message: "Room not found" });
+        }
+        
+        // Find the hotel of the owner
+        const hotel = await Hotel.findOne({ owner: req.auth.userId });
+        if (!hotel || roomData.hotel.toString() !== hotel._id.toString()) {
+            return res.json({ success: false, message: "Unauthorized access to this room" });
+        }
+        
+        if (pricePerNight !== undefined) {
+            roomData.pricePerNight = +pricePerNight;
+        }
+        if (cancellationPolicy !== undefined) {
+            roomData.cancellationPolicy = cancellationPolicy;
+        }
+        
+        await roomData.save();
+        res.json({ 
+            success: true, 
+            message: "Room details updated successfully", 
+            pricePerNight: roomData.pricePerNight,
+            cancellationPolicy: roomData.cancellationPolicy 
+        });
+    } catch (error) {
+        res.json({ success: false, message: error.message });
+    }
+}
+
+// API to Update Cancellation Policy of a Room
+export const updateRoomCancellation = async (req, res) => {
+    try {
+        const { roomId, cancellationPolicy } = req.body;
+        
+        // Find the room
+        const roomData = await Room.findById(roomId);
+        if (!roomData) {
+            return res.json({ success: false, message: "Room not found" });
+        }
+        
+        // Find the hotel of the owner
+        const hotel = await Hotel.findOne({ owner: req.auth.userId });
+        if (!hotel || roomData.hotel.toString() !== hotel._id.toString()) {
+            return res.json({ success: false, message: "Unauthorized access to this room" });
+        }
+        
+        roomData.cancellationPolicy = cancellationPolicy || "Free Cancellation";
+        await roomData.save();
+        res.json({ success: true, message: "Room cancellation policy updated successfully", cancellationPolicy: roomData.cancellationPolicy });
     } catch (error) {
         res.json({ success: false, message: error.message });
     }

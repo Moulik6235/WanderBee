@@ -16,13 +16,19 @@ const ProfileIcon = () => (
     </svg>
 )
 
+const HotelIcon = () => (
+    <svg className="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 21h18M4 18h16M6 10v8M10 6v12M14 6v12M18 10v8M9 3h6a1 1 0 0 1 1-1v2H8V4a1 1 0 0 1 1-1Z"/>
+    </svg>
+)
+
 const Navbar = () => {
     const navLinks = [
         { name: 'Home', path: '/' },
         { name: 'Hotels', path: '/rooms' },
         { name: 'My Bookings', path: '/my-bookings' },
         { name: 'Experiences', path: '/experiences' },
-        { name: 'Offers', path: '/rooms' },
+        { name: 'Support', path: '/support' },
     ];
 
     const [isScrolled, setIsScrolled] = useState(false);
@@ -55,7 +61,7 @@ const Navbar = () => {
                 <div className="flex items-center gap-8">
                     <Link to='/' className="active:scale-95 transition-transform">
                         <span className="font-montserrat text-2xl font-bold tracking-tight text-primary">
-                            BharatStay
+                             WanderBee
                         </span>
                     </Link>
 
@@ -80,39 +86,23 @@ const Navbar = () => {
 
                 {/* Desktop Right */}
                 <div className="hidden md:flex items-center gap-6">
-                    <button className="text-gray-500 font-inter text-sm font-semibold hover:text-secondary transition-colors cursor-pointer">
-                        Support
-                    </button>
                     <div className="flex items-center gap-4 text-gray-500">
-                        <span className="material-symbols-outlined cursor-pointer hover:text-secondary transition-all" onClick={() => navigate('/rooms')}>language</span>
                         {user ? (
                             <UserButton>
                                 <UserButton.MenuItems>
                                     <UserButton.Action label="My Profile" labelIcon={<ProfileIcon />} onClick={() => navigate('/profile')} />
                                     <UserButton.Action label="My Bookings" labelIcon={<BookIcon />} onClick={() => navigate('/my-bookings')} />
+                                    <UserButton.Action 
+                                        label={isOwner ? "Dashboard" : "List Your Hotel"} 
+                                        labelIcon={<HotelIcon />} 
+                                        onClick={() => isOwner ? navigate('/owner') : setShowHotelReg(true)} 
+                                    />
                                 </UserButton.MenuItems>
                             </UserButton>
-                        ) : (
-                            <span className="material-symbols-outlined cursor-pointer hover:text-secondary transition-all" onClick={openSignIn}>account_circle</span>
-                        )}
+                        ) : null}
                     </div>
 
-                    {user ? (
-                        <div className="flex items-center gap-3">
-                            <button 
-                                className="px-4 py-2 text-xs font-bold font-montserrat rounded-lg border border-primary text-primary hover:bg-primary/5 transition-premium cursor-pointer" 
-                                onClick={() => isOwner ? navigate('/owner') : setShowHotelReg(true)}
-                            >
-                                {isOwner ? 'Dashboard' : 'List Your Hotel'}
-                            </button>
-                            <button 
-                                className="px-4 py-2 text-xs font-bold font-montserrat rounded-lg bg-secondary text-white hover:bg-secondary-dark transition-premium cursor-pointer" 
-                                onClick={() => navigate('/profile')}
-                            >
-                                Profile
-                            </button>
-                        </div>
-                    ) : (
+                    {user ? null : (
                         <button 
                             onClick={openSignIn} 
                             className="bg-primary text-white font-montserrat font-semibold px-6 py-2 rounded-lg hover:bg-secondary transition-all active:scale-95 cursor-pointer shadow-sm"
@@ -129,6 +119,11 @@ const Navbar = () => {
                             <UserButton.MenuItems>
                                 <UserButton.Action label="My Profile" labelIcon={<ProfileIcon />} onClick={() => navigate('/profile')} />
                                 <UserButton.Action label="My Bookings" labelIcon={<BookIcon />} onClick={() => navigate('/my-bookings')} />
+                                <UserButton.Action 
+                                    label={isOwner ? "Dashboard" : "List Your Hotel"} 
+                                    labelIcon={<HotelIcon />} 
+                                    onClick={() => isOwner ? navigate('/owner') : setShowHotelReg(true)} 
+                                />
                             </UserButton.MenuItems>
                         </UserButton>
                     )}
@@ -157,29 +152,9 @@ const Navbar = () => {
                         </Link>
                     ))}
 
-                    <button 
-                        onClick={() => setIsMenuOpen(false)} 
-                        className="text-primary font-inter text-base font-semibold hover:text-secondary transition-colors"
-                    >
-                        Support
-                    </button>
 
-                    {user ? (
-                        <div className="flex flex-col gap-3 w-48">
-                            <button 
-                                className="border border-primary text-primary px-5 py-2 text-sm font-bold font-montserrat rounded-lg cursor-pointer transition-premium w-full text-center" 
-                                onClick={() => { setIsMenuOpen(false); isOwner ? navigate('/owner') : setShowHotelReg(true); }}
-                            >
-                                {isOwner ? 'Dashboard' : 'List Your Hotel'}
-                            </button>
-                            <button 
-                                className="bg-secondary text-white px-5 py-2 text-sm font-bold font-montserrat rounded-lg cursor-pointer transition-premium w-full text-center" 
-                                onClick={() => { setIsMenuOpen(false); navigate('/profile'); }}
-                            >
-                                Profile
-                            </button>
-                        </div>
-                    ) : (
+
+                    {user ? null : (
                         <button 
                             onClick={() => { setIsMenuOpen(false); openSignIn(); }} 
                             className="bg-primary text-white px-8 py-2.5 font-montserrat font-bold rounded-lg hover:bg-secondary transition-all active:scale-95 shadow-sm"

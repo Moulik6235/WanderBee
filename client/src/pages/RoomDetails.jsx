@@ -9,6 +9,7 @@ const RoomDetails = () => {
     const navigate = useNavigate()
     const { axios, currency, getToken } = useAppContext()
     const [room, setRoom] = useState(null)
+    const [cancellationPolicy, setCancellationPolicy] = useState("Free Cancellation")
     const [bookingDate, setBookingDate] = useState({
         checkIn: "2026-10-12",
         checkOut: "2026-10-15",
@@ -245,8 +246,10 @@ const RoomDetails = () => {
                             amenities: dbRoom.amenities && dbRoom.amenities.length > 0 ? dbRoom.amenities : ["Swimming Pool", "Free WiFi", "Spa & Wellness", "Royal Dining"],
                             rating: 4.8,
                             reviewsCount: 24,
-                            about: "Experience majestic views and authentic Indian heritage stays from this premium handpicked property. Specially curated to offer you unparalleled traditional hospitality and comfort."
+                            about: "Experience majestic views and authentic Indian heritage stays from this premium handpicked property. Specially curated to offer you unparalleled traditional hospitality and comfort.",
+                            cancellationPolicy: dbRoom.cancellationPolicy || "Free Cancellation"
                         });
+                        setCancellationPolicy(dbRoom.cancellationPolicy || "Free Cancellation");
                         return;
                     }
                 }
@@ -339,15 +342,29 @@ const RoomDetails = () => {
             const nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
             const calculatedNights = nights > 0 ? nights : 3;
 
+            const basePrice = room.pricePerNight;
+            const discountedPrice = basePrice;
+
+            let gstRate = 0;
+            if (discountedPrice <= 1000) {
+                gstRate = 0;
+            } else if (discountedPrice <= 7500) {
+                gstRate = 0.05;
+            } else {
+                gstRate = 0.18;
+            }
+            const gstAmount = discountedPrice * calculatedNights * gstRate;
+            const totalPrice = (discountedPrice * calculatedNights) + gstAmount;
+
             navigate('/payment', {
                 state: {
                     room,
                     bookingDate,
-                    basePrice,
-                    serviceFee,
-                    taxes,
-                    totalPrice: (basePrice * calculatedNights) + serviceFee + taxes,
-                    totalNights: calculatedNights
+                    basePrice: discountedPrice,
+                    gstAmount,
+                    totalPrice,
+                    totalNights: calculatedNights,
+                    cancellationPolicy
                 }
             })
         } catch (error) {
@@ -358,8 +375,16 @@ const RoomDetails = () => {
     if (!room) return <div className="py-20 text-center font-montserrat">Loading...</div>;
 
     const basePrice = room.pricePerNight;
-    const serviceFee = 1250;
-    const taxes = 4500;
+    const discountedPrice = basePrice;
+
+    let gstRate = 0;
+    if (discountedPrice <= 1000) {
+        gstRate = 0;
+    } else if (discountedPrice <= 7500) {
+        gstRate = 0.05;
+    } else {
+        gstRate = 0.18;
+    }
     
     // Dynamic nights calculation
     const checkIn = new Date(bookingDate.checkIn)
@@ -368,7 +393,8 @@ const RoomDetails = () => {
     const nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
     const totalNights = nights > 0 ? nights : 3;
 
-    const totalPrice = (basePrice * totalNights) + serviceFee + taxes;
+    const gstAmount = discountedPrice * totalNights * gstRate;
+    const totalPrice = (discountedPrice * totalNights) + gstAmount;
 
     return (
         <main className="jali-overlay min-h-screen pb-20 bg-background">
@@ -550,19 +576,37 @@ const RoomDetails = () => {
                             </div>
                         </div>
 
+                        {/* Cancellation Option Display */}
+                        <div className="space-y-2 mt-4 pt-4 border-t border-gray-100">
+                            <span className="text-[9px] font-bold uppercase text-gray-400 block tracking-wider">Cancellation Policy</span>
+                            {cancellationPolicy === 'Cancellation Fee Applicable' ? (
+                                <div className="flex items-start gap-2.5 p-3.5 border border-rose-200 bg-rose-50/20 rounded-2xl">
+                                    <span className="material-symbols-outlined text-rose-600 text-lg">info</span>
+                                    <div>
+                                        <span className="text-xs font-bold text-rose-700 block">Cancellation Fee Applicable</span>
+                                        <span className="text-[10px] text-rose-500 font-medium block mt-0.5">A 50% cancellation fee will be charged if this stay is cancelled.</span>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="flex items-start gap-2.5 p-3.5 border border-emerald-200 bg-emerald-50/20 rounded-2xl">
+                                    <span className="material-symbols-outlined text-emerald-600 text-lg">check_circle</span>
+                                    <div>
+                                        <span className="text-xs font-bold text-emerald-700 block">Free Cancellation</span>
+                                        <span className="text-[10px] text-emerald-600 font-medium block mt-0.5">Refundable up to 48 hours prior to check-in.</span>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
                         {/* Fee breakups */}
                         <div className="space-y-3 font-inter text-sm text-gray-500">
                             <div className="flex justify-between">
-                                <span>{currency}{basePrice.toLocaleString()} x {totalNights} nights</span>
-                                <span>{currency}{(basePrice * totalNights).toLocaleString()}</span>
+                                <span>{currency}{discountedPrice.toLocaleString()} x {totalNights} nights</span>
+                                <span>{currency}{(discountedPrice * totalNights).toLocaleString()}</span>
                             </div>
                             <div className="flex justify-between underline decoration-dotted decoration-gray-300">
-                                <span>BharatStay Service Fee</span>
-                                <span>{currency}{serviceFee.toLocaleString()}</span>
-                            </div>
-                            <div className="flex justify-between underline decoration-dotted decoration-gray-300">
-                                <span>Taxes</span>
-                                <span>{currency}{taxes.toLocaleString()}</span>
+                                <span>GST ({gstRate * 100}%)</span>
+                                <span>{currency}{gstAmount.toLocaleString()}</span>
                             </div>
                             <hr className="border-gray-100" />
                             <div className="flex justify-between font-montserrat font-bold text-lg text-primary">

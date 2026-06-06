@@ -6,7 +6,12 @@ const roomSchema = new mongoose.Schema({
     pricePerNight: { type: Number, requried: true },
     amenities: { type: Array, requried: true },
     images: [{ type: String }],
-    isAvailable: { type: Boolean, default: true }
+    isAvailable: { type: Boolean, default: true },
+    cancellationPolicy: {
+        type: String,
+        enum: ["Free Cancellation", "Cancellation Fee Applicable"],
+        default: "Free Cancellation"
+    }
 
 }, { timestamps: true });
 

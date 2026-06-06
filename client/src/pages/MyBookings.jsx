@@ -13,7 +13,7 @@ const MyBookings = () => {
     useEffect(() => {
         const fetchUserBookings = async () => {
             try {
-                const localBookings = JSON.parse(localStorage.getItem("bharatstay_bookings") || "[]")
+                const localBookings = JSON.parse(localStorage.getItem("wanderbee_bookings") || "[]")
                 const token = await getToken()
                 if (!token) {
                     setBookings([...localBookings, ...userBookingsDummyData])
@@ -30,7 +30,7 @@ const MyBookings = () => {
                     const dbBookings = data.bookings.map(b => ({
                         ...b,
                         isPaid: b.isPaid || false,
-                        status: b.isPaid ? "Confirmed" : "Pending Payment"
+                        status: b.status || (b.isPaid ? "confirmed" : "pending")
                     }))
                     setBookings([...localBookings, ...dbBookings, ...userBookingsDummyData])
                 } else {
@@ -38,7 +38,7 @@ const MyBookings = () => {
                 }
             } catch (error) {
                 console.error("Fetch User Bookings Error:", error.message)
-                const localBookings = JSON.parse(localStorage.getItem("bharatstay_bookings") || "[]")
+                const localBookings = JSON.parse(localStorage.getItem("wanderbee_bookings") || "[]")
                 setBookings([...localBookings, ...userBookingsDummyData])
             }
         }
@@ -76,11 +76,12 @@ const MyBookings = () => {
                         address: booking.hotel?.address || "Rajasthan, India"
                     },
                     room: {
+                        ...booking.room,
                         roomType: booking.room?.roomType || "Luxury Suite",
                         images: booking.room?.images && booking.room.images.length > 0 ? booking.room.images : [stitchProperties[idx % stitchProperties.length].image]
                     },
                     totalPrice: booking.totalPrice || fallbackPrice,
-                    status: booking.status || "Confirmed"
+                    status: booking.status || (booking.isPaid ? "confirmed" : "pending")
                 };
             }
 
@@ -98,7 +99,7 @@ const MyBookings = () => {
                     images: [prop.image]
                 },
                 totalPrice: rawPrice < 1000 ? rawPrice * 30 : rawPrice,
-                status: booking.isPaid ? "Confirmed" : "Pending Payment"
+                status: booking.status || (booking.isPaid ? "confirmed" : "pending")
             };
         });
     }, [bookings]);
@@ -109,6 +110,18 @@ const MyBookings = () => {
         const timeDiff = checkOut.getTime() - checkIn.getTime()
         const nights = Math.max(1, Math.ceil(timeDiff / (1000 * 3600 * 24)))
         
+        const basePrice = booking.room?.pricePerNight || 12500;
+        let gstRate = 0;
+        if (basePrice <= 1000) {
+            gstRate = 0;
+        } else if (basePrice <= 7500) {
+            gstRate = 0.05;
+        } else {
+            gstRate = 0.18;
+        }
+        const gstAmount = basePrice * nights * gstRate;
+        const fallbackTotalPrice = (basePrice * nights) + gstAmount;
+        
         navigate('/payment', {
             state: {
                 room: booking.room,
@@ -117,10 +130,8 @@ const MyBookings = () => {
                     checkOut: new Date(booking.checkOutDate).toISOString().split('T')[0],
                     guests: booking.guests
                 },
-                basePrice: booking.room?.pricePerNight || 12500,
-                serviceFee: 1250,
-                taxes: 4500,
-                totalPrice: booking.totalPrice || ((booking.room?.pricePerNight || 12500) * nights) + 1250 + 4500,
+                basePrice: basePrice,
+                totalPrice: booking.totalPrice || fallbackTotalPrice,
                 totalNights: nights,
                 bookingId: booking._id
             }
@@ -131,8 +142,52 @@ const MyBookings = () => {
         toast.success("Upgrade request submitted! Our royal butler will contact you shortly.")
     }
 
-    const handleBookButler = () => {
-        toast.success("Heritage Butler pre-booked successfully for your stay.")
+    const handleCancelBooking = async (booking) => {
+        let confirmMsg = "Are you sure you want to cancel this heritage stay reservation?";
+        if (booking.cancellationPolicy === "Cancellation Fee Applicable") {
+            confirmMsg = `Warning: This reservation has a 'Cancellation Fee Applicable' policy. A 50% cancellation fee (${currency}${(booking.totalPrice * 0.5).toLocaleString()}) will be charged. Are you sure you want to cancel?`;
+        }
+        if (!window.confirm(confirmMsg)) {
+            return;
+        }
+
+        if (booking._id.startsWith("local-")) {
+            try {
+                const saved = JSON.parse(localStorage.getItem("wanderbee_bookings") || "[]")
+                const updated = saved.map(b => b._id === booking._id ? { ...b, status: "cancelled", isPaid: false } : b)
+                localStorage.setItem("wanderbee_bookings", JSON.stringify(updated))
+                toast.success("Stay reservation cancelled successfully.")
+                // Refresh list
+                window.location.reload()
+            } catch (err) {
+                toast.error("Failed to cancel booking.")
+            }
+            return
+        }
+
+        try {
+            const token = await getToken()
+            if (!token) {
+                toast.error("Please sign in to cancel booking.")
+                return
+            }
+
+            const { data } = await axios.put(`/api/bookings/${booking._id}/cancel`, {}, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+
+            if (data.success) {
+                toast.success("Stay reservation cancelled successfully. Confirmation email sent.")
+                // Update local state reactively
+                setBookings(prev => prev.map(b => b._id === booking._id ? { ...b, status: "cancelled" } : b))
+            } else {
+                toast.error(data.message || "Failed to cancel booking.")
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || error.message)
+        }
     }
 
     return (
@@ -197,6 +252,13 @@ const MyBookings = () => {
                                         <p className="font-montserrat font-bold text-sm text-gray-800 pt-1">
                                             Total Price: {currency}{booking.totalPrice.toLocaleString()}
                                         </p>
+
+                                        <div className="flex items-center gap-2 pt-1">
+                                            <span className="text-[10px] font-bold uppercase text-gray-400">Policy:</span>
+                                            <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${booking.cancellationPolicy === 'Cancellation Fee Applicable' ? 'bg-rose-50 text-rose-700 border border-rose-100' : 'bg-emerald-50 text-emerald-700 border border-emerald-100'}`}>
+                                                {booking.cancellationPolicy || 'Free Cancellation'}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -219,37 +281,53 @@ const MyBookings = () => {
                                     </div>
                                 </div>
 
-                                {/* Right Side: Status & Elite Actions */}
+                                 {/* Right Side: Status & Booking Actions */}
                                 <div className="flex flex-col sm:flex-row lg:flex-col items-stretch lg:items-end justify-between lg:w-2/12 border-t lg:border-t-0 lg:border-l border-gray-100 pt-6 lg:pt-0 lg:pl-8 gap-4">
                                     <div className="flex items-center gap-2 lg:text-right">
-                                        <div className={`h-2.5 w-2.5 rounded-full ${booking.isPaid ? "bg-emerald-500" : "bg-amber-500"}`}></div>
-                                        <span className={`text-[10px] font-extrabold uppercase tracking-wider ${booking.isPaid ? "text-emerald-600" : "text-amber-600"}`}>
-                                            {booking.isPaid ? "Confirmed & Paid" : (booking.paymentMethod?.includes("Check-in") ? "Pay At Hotel" : "Pending Payment")}
+                                        <div className={`h-2.5 w-2.5 rounded-full ${booking.status === "cancelled" ? "bg-red-500" : (booking.isPaid ? "bg-emerald-500" : "bg-amber-500")}`}></div>
+                                        <span className={`text-[10px] font-extrabold uppercase tracking-wider ${booking.status === "cancelled" ? "text-red-600" : (booking.isPaid ? "text-emerald-600" : "text-amber-600")}`}>
+                                            {booking.status === "cancelled" ? "Cancelled" : (booking.isPaid ? "Confirmed & Paid" : (booking.paymentMethod?.includes("Check-in") ? "Pay At Hotel" : "Pending Payment"))}
                                         </span>
                                     </div>
 
                                     <div className="flex flex-col gap-2 w-full">
-                                        {!booking.isPaid ? (
-                                            <button 
-                                                onClick={() => handlePayNow(booking)}
-                                                className="bg-secondary-container hover:bg-secondary text-on-secondary-container hover:text-white font-montserrat font-bold text-[10px] uppercase tracking-wider py-2.5 px-4 rounded-xl shadow-sm transition-premium cursor-pointer w-full active:scale-95 text-center"
-                                            >
-                                                Pay Now
-                                            </button>
+                                        {booking.status === "cancelled" ? (
+                                            <span className="text-[10px] text-gray-400 font-inter italic text-center w-full block py-2 border border-dashed border-gray-200 rounded-xl">
+                                                This booking has been cancelled
+                                            </span>
+                                        ) : !booking.isPaid ? (
+                                            <>
+                                                <button 
+                                                    onClick={() => handlePayNow(booking)}
+                                                    className="bg-secondary-container hover:bg-secondary text-on-secondary-container hover:text-white font-montserrat font-bold text-[10px] uppercase tracking-wider py-2.5 px-4 rounded-xl shadow-sm transition-premium cursor-pointer w-full active:scale-95 text-center"
+                                                >
+                                                    Pay Now
+                                                </button>
+                                                {!booking._id.startsWith("dummy") && (
+                                                    <button 
+                                                        onClick={() => handleCancelBooking(booking)}
+                                                        className="border border-red-200 text-red-600 hover:bg-red-50 font-montserrat font-bold text-[9px] uppercase tracking-wider py-2 px-3 rounded-xl shadow-sm transition-premium cursor-pointer w-full text-center"
+                                                    >
+                                                        Cancel Stay
+                                                    </button>
+                                                )}
+                                            </>
                                         ) : (
                                             <>
                                                 <button 
                                                     onClick={handleRequestUpgrade}
                                                     className="border border-primary text-primary hover:bg-primary/5 font-montserrat font-bold text-[9px] uppercase tracking-wider py-2 px-3 rounded-xl shadow-sm transition-premium cursor-pointer w-full text-center"
                                                 >
-                                                    Elite Upgrade
+                                                    Room Upgrade
                                                 </button>
-                                                <button 
-                                                    onClick={handleBookButler}
-                                                    className="bg-primary text-white hover:bg-secondary font-montserrat font-bold text-[9px] uppercase tracking-wider py-2 px-3 rounded-xl shadow-sm transition-premium cursor-pointer w-full text-center"
-                                                >
-                                                    Book Butler
-                                                </button>
+                                                {!booking._id.startsWith("dummy") && (
+                                                    <button 
+                                                        onClick={() => handleCancelBooking(booking)}
+                                                        className="border border-red-200 text-red-600 hover:bg-red-50 font-montserrat font-bold text-[9px] uppercase tracking-wider py-2 px-3 rounded-xl shadow-sm transition-premium cursor-pointer w-full text-center mt-1"
+                                                    >
+                                                        Cancel Stay
+                                                    </button>
+                                                )}
                                             </>
                                         )}
                                     </div>

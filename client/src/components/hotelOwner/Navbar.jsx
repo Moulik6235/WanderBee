@@ -8,7 +8,7 @@ const Navbar = () => {
             <div className="flex items-center gap-3.5">
                 <Link to='/' className="active:scale-95 transition-transform">
                     <span className="font-montserrat text-2xl font-extrabold tracking-tight text-primary">
-                        BharatStay
+                        WanderBee
                     </span>
                 </Link>
                 <span className="bg-amber-100/70 border border-amber-200 text-amber-800 text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-lg">

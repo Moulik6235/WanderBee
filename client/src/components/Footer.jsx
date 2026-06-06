@@ -6,7 +6,7 @@ const Footer = () => {
         <div className='bg-neutral-bg text-gray-500/80 pt-16 px-6 md:px-16 lg:px-24 xl:px-32 border-t border-gray-200/50'>
             <div className='flex flex-wrap justify-between gap-12 md:gap-6 max-w-7xl mx-auto'>
                 <div className='max-w-80 text-left'>
-                    <span className="font-montserrat text-2xl font-black tracking-tight text-primary block mb-6">BharatStay</span>
+                    <span className="font-montserrat text-2xl font-black tracking-tight text-primary block mb-6">WanderBee</span>
                     <p className='text-sm leading-relaxed font-inter'>
                         Discover the subcontinent's most extraordinary places to stay, from boutique heritage retreats to luxury wellness resorts and palatial escapes.
                     </p>
@@ -60,7 +60,7 @@ const Footer = () => {
             </div>
             <hr className='border-gray-200/60 mt-12 max-w-7xl mx-auto' />
             <div className='flex flex-col md:flex-row gap-4 items-center justify-between py-8 text-xs font-inter max-w-7xl mx-auto'>
-                <p>© {new Date().getFullYear()} BharatStay. Atithi Devo Bhava. All rights reserved.</p>
+                <p>© {new Date().getFullYear()} WanderBee. Atithi Devo Bhava. All rights reserved.</p>
                 <ul className='flex items-center gap-6'>
                     <li><a href="#" className="hover:text-secondary transition-premium">Privacy Policy</a></li>
                     <li><a href="#" className="hover:text-secondary transition-premium">Terms of Service</a></li>

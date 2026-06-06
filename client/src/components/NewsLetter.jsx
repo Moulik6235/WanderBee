@@ -19,7 +19,7 @@ const NewsLetter = () => {
                         Join the Circle of Heritage
                     </h2>
                     <p className="font-inter text-base text-blue-100 mb-8 max-w-md">
-                        Subscribe to get secret deals and early access to BharatStay's newest heritage openings across India.
+                        Subscribe to get secret deals and early access to WanderBee's newest heritage openings across India.
                     </p>
                     
                     <form onSubmit={(e) => e.preventDefault()} className="flex flex-col sm:flex-row gap-3 w-full max-w-md">

@@ -4,7 +4,7 @@ import { useClerk } from '@clerk/clerk-react'
 import { toast } from 'react-hot-toast'
 
 const Profile = () => {
-    const { user } = useAppContext()
+    const { user, isOwner, setShowHotelReg, navigate } = useAppContext()
     const { openSignIn } = useClerk()
     const [activeTab, setActiveTab] = useState('personal')
     const [isEditing, setIsEditing] = useState(false)
@@ -69,7 +69,7 @@ const Profile = () => {
                                 <h1 className="font-montserrat text-2xl font-extrabold text-primary">{user.fullName}</h1>
                                 <span className="bg-secondary-fixed text-on-secondary-fixed text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
                                     <span className="material-symbols-outlined text-[12px] font-fill" style={{fontVariationSettings: "'FILL' 1"}}>stars</span>
-                                    Gold Elite
+                                    Gold
                                 </span>
                             </div>
                             <p className="font-inter text-sm text-gray-500 mt-1">{user.primaryEmailAddress?.emailAddress}</p>
@@ -127,6 +127,13 @@ const Profile = () => {
                         >
                             <span className="material-symbols-outlined text-base">favorite</span>
                             Saved Retrats
+                        </button>
+                        <button 
+                            onClick={() => isOwner ? navigate('/owner') : setShowHotelReg(true)}
+                            className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl font-montserrat font-bold text-xs uppercase tracking-wider transition-all text-left bg-white text-gray-600 hover:bg-slate-50 border border-gray-100 hover:text-secondary"
+                        >
+                            <span className="material-symbols-outlined text-base">{isOwner ? "dashboard" : "add_business"}</span>
+                            {isOwner ? "Owner Dashboard" : "List Your Hotel"}
                         </button>
                     </nav>
 
@@ -251,7 +258,7 @@ const Profile = () => {
                                     
                                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
                                         <div>
-                                            <span className="text-[10px] uppercase text-amber-200 block">Elite Tier</span>
+                                            <span className="text-[10px] uppercase text-amber-200 block">Tier</span>
                                             <span className="font-montserrat font-extrabold text-lg tracking-widest">GOLD MEMBER</span>
                                         </div>
                                         <div className="text-right">

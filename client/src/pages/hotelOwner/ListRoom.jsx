@@ -7,6 +7,10 @@ const ListRoom = () => {
     const { axios, getToken, currency } = useAppContext()
     const [rooms, setRooms] = useState([])
     const [loading, setLoading] = useState(true)
+    const [editingRoomId, setEditingRoomId] = useState(null)
+    const [editingPrice, setEditingPrice] = useState("")
+    const [editingCancellation, setEditingCancellation] = useState("")
+    const [savingRoomId, setSavingRoomId] = useState(null)
 
     const fetchOwnerRooms = async () => {
         try {
@@ -44,6 +48,57 @@ const ListRoom = () => {
             }
         } catch (error) {
             toast.error(error.message)
+        }
+    }
+
+    const startEditing = (room) => {
+        setEditingRoomId(room._id)
+        setEditingPrice(room.pricePerNight)
+        setEditingCancellation(room.cancellationPolicy || "Free Cancellation")
+    }
+
+    const cancelEditing = () => {
+        setEditingRoomId(null)
+        setEditingPrice("")
+        setEditingCancellation("")
+    }
+
+    const savePrice = async (roomId) => {
+        const parsedPrice = Number(editingPrice)
+        if (!editingPrice || isNaN(parsedPrice) || parsedPrice <= 0) {
+            toast.error("Please enter a valid price greater than 0")
+            return
+        }
+        try {
+            setSavingRoomId(roomId)
+            const token = await getToken()
+            const { data } = await axios.post('/api/rooms/update-price', 
+                { 
+                    roomId, 
+                    pricePerNight: parsedPrice, 
+                    cancellationPolicy: editingCancellation 
+                }, 
+                { headers: { Authorization: `Bearer ${token}` } }
+            )
+            if (data.success) {
+                toast.success(data.message)
+                setRooms(prev => prev.map(room => 
+                    room._id === roomId ? { 
+                        ...room, 
+                        pricePerNight: parsedPrice, 
+                        cancellationPolicy: editingCancellation 
+                    } : room
+                ))
+                setEditingRoomId(null)
+                setEditingPrice("")
+                setEditingCancellation("")
+            } else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        } finally {
+            setSavingRoomId(null)
         }
     }
 
@@ -86,6 +141,7 @@ const ListRoom = () => {
                                     <th className='py-4 px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary'>Suite Type</th>
                                     <th className='py-4 px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary max-sm:hidden'>Amenities</th>
                                     <th className='py-4 px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary'>Price / Night</th>
+                                    <th className='py-4 px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary'>Cancellation</th>
                                     <th className='py-4 px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary text-center'>Status</th>
                                 </tr>
                             </thead>
@@ -105,7 +161,7 @@ const ListRoom = () => {
                                                 </div>
                                                 <div>
                                                     <span className='font-bold text-slate-800 block'>{item.roomType}</span>
-                                                    <span className='text-[10px] text-emerald-600 font-semibold uppercase tracking-wider'>BharatStay Class</span>
+                                                    <span className='text-[10px] text-emerald-600 font-semibold uppercase tracking-wider'>WanderBee Class</span>
                                                 </div>
                                             </div>
                                         </td>
@@ -123,7 +179,73 @@ const ListRoom = () => {
 
                                         {/* Price */}
                                         <td className='py-4 px-6 font-bold text-slate-900'>
-                                            ₹{item.pricePerNight.toLocaleString()}
+                                            {editingRoomId === item._id ? (
+                                                <div className="flex items-center gap-1.5 max-w-[170px]" onClick={(e) => e.stopPropagation()}>
+                                                    <div className="relative flex items-center">
+                                                        <span className="absolute left-2.5 text-xs text-gray-400 font-semibold">₹</span>
+                                                        <input 
+                                                            type="number"
+                                                            value={editingPrice}
+                                                            onChange={(e) => setEditingPrice(e.target.value)}
+                                                            className="w-24 pl-6 pr-1.5 py-1.5 border border-primary/30 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg text-xs font-semibold outline-none bg-slate-50"
+                                                            min="1"
+                                                        />
+                                                    </div>
+                                                    <button 
+                                                        onClick={() => savePrice(item._id)}
+                                                        disabled={savingRoomId === item._id}
+                                                        className="p-1.5 rounded-md bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors cursor-pointer flex items-center justify-center"
+                                                        title="Save Suite Details"
+                                                    >
+                                                        {savingRoomId === item._id ? (
+                                                            <div className="w-3.5 h-3.5 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
+                                                        ) : (
+                                                            <span className="material-symbols-outlined text-sm font-bold">check</span>
+                                                        )}
+                                                    </button>
+                                                    <button 
+                                                        onClick={cancelEditing}
+                                                        disabled={savingRoomId === item._id}
+                                                        className="p-1.5 rounded-md bg-red-50 text-red-600 hover:bg-red-100 transition-colors cursor-pointer flex items-center justify-center"
+                                                        title="Cancel"
+                                                    >
+                                                        <span className="material-symbols-outlined text-sm font-bold">close</span>
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <div className="flex items-center gap-2 group/price cursor-pointer w-max" onClick={() => startEditing(item)}>
+                                                    <span>₹{item.pricePerNight.toLocaleString()}</span>
+                                                    <span className="material-symbols-outlined text-xs text-gray-400 opacity-0 group-hover/price:opacity-100 transition-opacity hover:text-primary" title="Edit Price">edit</span>
+                                                </div>
+                                            )}
+                                        </td>
+
+                                        {/* Cancellation Policy */}
+                                        <td className='py-4 px-6'>
+                                            {editingRoomId === item._id ? (
+                                                <select
+                                                    value={editingCancellation}
+                                                    onChange={(e) => setEditingCancellation(e.target.value)}
+                                                    className="border border-primary/30 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg text-xs font-semibold p-1.5 bg-slate-50 outline-none w-full max-w-[170px] cursor-pointer"
+                                                >
+                                                    <option value="Free Cancellation">Free Cancellation</option>
+                                                    <option value="Cancellation Fee Applicable">Cancellation Fee Applicable</option>
+                                                </select>
+                                            ) : (
+                                                <div 
+                                                    className="flex items-center gap-2 group/cancel cursor-pointer w-max" 
+                                                    onClick={() => startEditing(item)}
+                                                >
+                                                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${
+                                                        item.cancellationPolicy === 'Cancellation Fee Applicable'
+                                                            ? 'bg-rose-50 text-rose-600 border border-rose-100'
+                                                            : 'bg-emerald-50 text-emerald-600 border border-emerald-100'
+                                                    }`}>
+                                                        {item.cancellationPolicy || "Free Cancellation"}
+                                                    </span>
+                                                    <span className="material-symbols-outlined text-xs text-gray-400 opacity-0 group-hover/cancel:opacity-100 transition-opacity hover:text-primary" title="Edit Policy">edit</span>
+                                                </div>
+                                            )}
                                         </td>
 
                                         {/* Availability Switch Toggle */}

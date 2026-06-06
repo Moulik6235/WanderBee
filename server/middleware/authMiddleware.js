@@ -18,8 +18,8 @@ export const protect = async (req, res, next) => {
             try {
                 // Fetch full user details from Clerk Backend API
                 const clerkUser = await clerkClient.users.getUser(userId);
-                const email = clerkUser.emailAddresses[0]?.emailAddress || "user@bharatstay.com";
-                const username = ((clerkUser.firstName || "") + " " + (clerkUser.lastName || "")).trim() || "BharatStay Guest";
+                const email = clerkUser.emailAddresses[0]?.emailAddress || "user@wanderbee.com";
+                const username = ((clerkUser.firstName || "") + " " + (clerkUser.lastName || "")).trim() || "WanderBee Guest";
                 const image = clerkUser.imageUrl || "https://img.clerk.com/placeholder";
                 
                 user = await User.create({
@@ -35,8 +35,8 @@ export const protect = async (req, res, next) => {
                 console.error("Clerk API fetch failed, falling back to stub user creation:", err.message);
                 user = await User.create({
                     _id: userId,
-                    username: "BharatStay Guest",
-                    email: "guest@bharatstay.com",
+                    username: "WanderBee Guest",
+                    email: "guest@wanderbee.com",
                     image: "https://img.clerk.com/placeholder",
                     role: "user",
                     recentSearchedCities: []

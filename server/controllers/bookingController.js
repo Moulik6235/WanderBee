@@ -1,6 +1,7 @@
 import Booking from "../models/Booking.js"
 import Room from "../models/Room.js"
 import Hotel from "../models/Hotel.js"
+import { sendBookingConfirmationEmail, sendPaymentConfirmationEmail, sendCancellationEmail } from "../configs/emailService.js"
 
 
 
@@ -37,7 +38,8 @@ export const checkAvailabilityAPI = async (req, res) => {
 
 export const createBooking = async (req, res) => {
     try {
-        const { room, checkInDate, checkOutDate, guests, paymentMethod, isPaid } = req.body;
+        console.log("createBooking request body:", req.body);
+        const { room, checkInDate, checkOutDate, guests, paymentMethod, isPaid, cancellationPolicy, totalPrice: bodyTotalPrice } = req.body;
         const user = req.user._id;
 
         // Before Booking Check Availabilty
@@ -48,36 +50,69 @@ export const createBooking = async (req, res) => {
         });
 
         if (!isAvailable) {
+            console.log("Availability check failed: room is not available");
             return res.json({ success: false, message: "Room is Not Available" })
         }
         // Get totalPrice from Room
         const roomData = await Room.findById(room).populate("hotel");
-        let totalPrice = roomData.pricePerNight;
+        if (!roomData) {
+            console.error(`Room not found in DB: ${room}`);
+            return res.json({ success: false, message: "Room Not Found" });
+        }
+        
+        const basePrice = roomData.pricePerNight;
+        const policy = roomData.cancellationPolicy || "Free Cancellation";
 
         //Calculate totalPrice based on nights
         const checkIn = new Date(checkInDate)
         const checkOut = new Date(checkOutDate)
         const timeDiff = checkOut.getTime() - checkIn.getTime();
-        const nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        let nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        if (isNaN(nights) || nights <= 0) {
+            nights = 1;
+        }
 
-        totalPrice *= nights;
+        const discountedPrice = basePrice || 0;
+
+        let gstRate = 0;
+        if (discountedPrice <= 1000) {
+            gstRate = 0;
+        } else if (discountedPrice <= 7500) {
+            gstRate = 0.05;
+        } else {
+            gstRate = 0.18;
+        }
+        const gstAmount = discountedPrice * nights * gstRate;
+        let totalPrice = (discountedPrice * nights) + gstAmount;
+
+        // Robust fallback to bodyTotalPrice if calculation failed or resulted in NaN
+        if (isNaN(totalPrice) || !totalPrice) {
+            console.log("Calculated totalPrice is NaN or invalid. Falling back to bodyTotalPrice:", bodyTotalPrice);
+            totalPrice = bodyTotalPrice;
+        }
+
+        console.log(`Booking values: user=${user}, room=${room}, hotel=${roomData.hotel?._id}, guests=${guests}, checkIn=${checkInDate}, checkOut=${checkOutDate}, totalPrice=${totalPrice}`);
+
         const booking = await Booking.create({
             user,
             room,
-            hotel: roomData.hotel._id,
-            guests: +guests,
+            hotel: roomData.hotel?._id || roomData.hotel,
+            guests: +guests || 1,
             checkInDate,
             checkOutDate,
             totalPrice,
             paymentMethod: paymentMethod || "Pay At Hotel",
-            isPaid: isPaid || false
+            isPaid: isPaid || false,
+            cancellationPolicy: policy
         })
+
+        // Send confirmation email (async, non-blocking)
+        sendBookingConfirmationEmail(req.user.email, req.user.username, booking, roomData.hotel, roomData);
 
         res.json({ success: true, message: "Booking Created Successfully" })
     } catch (error) {
-        console.log(error);
-
-        res.json({ success: false, message: "Failed to Create Booking" })
+        console.error("Error in createBooking:", error);
+        res.status(500).json({ success: false, message: error.message || "Failed to Create Booking" })
     }
 };
 
@@ -122,19 +157,93 @@ export const payBooking = async (req, res) => {
             return res.json({ success: false, message: "Booking not found" });
         }
         
+        console.log(`PayBooking auth check: booking.user='${booking.user}', req.user._id='${req.user._id}'`);
         if (booking.user.toString() !== req.user._id.toString()) {
+            console.error("PayBooking auth failed: mismatch user ID");
             return res.json({ success: false, message: "Not authorized to pay for this booking" });
         }
 
         booking.isPaid = true;
-        booking.status = "Confirmed";
+        booking.status = "confirmed"; // Use 'confirmed' to match models/Booking.js schema enum
         booking.paymentMethod = paymentMethod || "Credit/Debit Card";
         await booking.save();
+
+        // Populate room and hotel details for the email receipt
+        try {
+            await booking.populate("room hotel");
+        } catch (populateError) {
+            console.error("Mongoose populate failed in payBooking:", populateError);
+        }
+
+        let populatedRoom = booking.room;
+        let populatedHotel = booking.hotel;
+        
+        // Manual fallback if populate returned IDs or strings instead of full objects
+        if (!populatedRoom || typeof populatedRoom === 'string' || !populatedHotel || typeof populatedHotel === 'string') {
+            const roomData = await Room.findById(booking.room || booking.room?._id).populate("hotel");
+            if (roomData) {
+                populatedRoom = roomData;
+                populatedHotel = roomData.hotel || populatedHotel;
+            }
+        }
+
+        console.log(`Sending payment confirmation email to ${req.user?.email || 'unknown'} for booking ${booking._id}`);
+        // Send payment confirmation email (async, non-blocking)
+        sendPaymentConfirmationEmail(req.user.email, req.user.username, booking, populatedHotel, populatedRoom);
 
         res.json({ success: true, message: "Booking Paid Successfully", booking });
     } catch (error) {
         console.error("Pay Booking Error:", error);
-        res.json({ success: false, message: "Failed to pay for booking" });
+        res.json({ success: false, message: error.message || "Failed to pay for booking" });
+    }
+}
+
+// API to cancel an existing booking
+// PUT /api/bookings/:id/cancel
+export const cancelBooking = async (req, res) => {
+    try {
+        const booking = await Booking.findById(req.params.id);
+        if (!booking) {
+            return res.json({ success: false, message: "Booking not found" });
+        }
+
+        if (booking.user.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ success: false, message: "Not authorized to cancel this booking" });
+        }
+
+        booking.status = "cancelled";
+        if (booking.cancellationPolicy === "Cancellation Fee Applicable") {
+            booking.cancellationFee = booking.totalPrice * 0.5;
+            booking.refundAmount = booking.totalPrice * 0.5;
+        } else {
+            booking.cancellationFee = 0;
+            booking.refundAmount = booking.totalPrice;
+        }
+        await booking.save();
+
+        // Populate room and hotel details for the cancellation confirmation
+        await booking.populate("room hotel");
+
+        let populatedRoom = booking.room;
+        let populatedHotel = booking.hotel;
+        
+        // Manual fallback if populate returned IDs or strings instead of full objects
+        if (!populatedRoom || typeof populatedRoom === 'string' || !populatedHotel || typeof populatedHotel === 'string') {
+            const roomData = await Room.findById(booking.room || booking.room?._id).populate("hotel");
+            if (roomData) {
+                populatedRoom = roomData;
+                populatedHotel = roomData.hotel || populatedHotel;
+            }
+        }
+
+        console.log(`Sending cancellation email to ${req.user?.email || 'unknown'} for booking ${booking._id}`);
+        // Send cancellation email (async, non-blocking)
+        sendCancellationEmail(req.user.email, req.user.username, booking, populatedHotel, populatedRoom);
+
+        res.json({ success: true, message: "Booking Cancelled Successfully", booking });
+    } catch (error) {
+        console.error("Cancel Booking Error:", error);
+        res.json({ success: false, message: "Failed to cancel booking" });
     }
 }
 

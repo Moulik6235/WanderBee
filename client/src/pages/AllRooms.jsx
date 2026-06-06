@@ -96,7 +96,8 @@ const AllRooms = () => {
             badge3: room.amenities?.[2] || "Breakfast",
             managed: true,
             leftRooms: 2,
-            freeCancel: true,
+            cancellationPolicy: room.cancellationPolicy || "Free Cancellation",
+            freeCancel: room.cancellationPolicy !== "Cancellation Fee Applicable",
             cancelDate: "Flexible"
           }));
           setDbRooms(mapped);
@@ -625,18 +626,19 @@ const AllRooms = () => {
                     <div>
                       {room.managed && (
                         <span className="bg-amber-100/60 text-amber-800 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded flex items-center gap-1 mb-1.5 w-max">
-                          👑 BharatStay Managed
+                          👑 WanderBee Managed
                         </span>
                       )}
-                      {room.leftRooms && (
+                      {room.cancellationPolicy === 'Cancellation Fee Applicable' ? (
                         <span className="text-rose-600 text-[10px] font-bold flex items-center gap-1 mb-1.5">
-                          ⚠️ Only {room.leftRooms} rooms left!
+                          ✗ Cancellation Fee Applicable
                         </span>
-                      )}
-                      {room.freeCancel && (
-                        <span className="text-emerald-600 text-[10px] font-bold flex items-center gap-1 mb-1.5">
-                          ✓ Free cancellation before {room.cancelDate}
-                        </span>
+                      ) : (
+                        (room.cancellationPolicy === 'Free Cancellation' || room.freeCancel) && (
+                          <span className="text-emerald-600 text-[10px] font-bold flex items-center gap-1 mb-1.5">
+                            ✓ Free cancellation before {room.cancelDate || "Flexible"}
+                          </span>
+                        )
                       )}
                     </div>
 
