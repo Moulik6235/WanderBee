@@ -5,6 +5,15 @@ import { useAppContext } from '../context/AppContext'
 import { toast } from 'react-hot-toast'
 import { useClerk } from '@clerk/clerk-react'
 
+const getTodayString = (offsetDays = 0) => {
+    const d = new Date();
+    d.setDate(d.getDate() + offsetDays);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+};
+
 const RoomDetails = () => {
     const { id } = useParams()
     const navigate = useNavigate()
@@ -13,8 +22,8 @@ const RoomDetails = () => {
     const [room, setRoom] = useState(null)
     const [cancellationPolicy, setCancellationPolicy] = useState("Free Cancellation")
     const [bookingDate, setBookingDate] = useState({
-        checkIn: "2026-10-12",
-        checkOut: "2026-10-15",
+        checkIn: getTodayString(),
+        checkOut: getTodayString(3),
         guests: 2
     })
 
@@ -527,8 +536,23 @@ const RoomDetails = () => {
                                 <span className="text-[9px] font-bold uppercase text-gray-400 block">Check-in</span>
                                 <input 
                                     type="date"
+                                    min={getTodayString()}
                                     value={bookingDate.checkIn}
-                                    onChange={(e) => setBookingDate(prev => ({...prev, checkIn: e.target.value}))}
+                                    onChange={(e) => {
+                                        const newCheckIn = e.target.value;
+                                        setBookingDate(prev => {
+                                            const updated = { ...prev, checkIn: newCheckIn };
+                                            if (new Date(prev.checkOut) <= new Date(newCheckIn)) {
+                                                const d = new Date(newCheckIn);
+                                                d.setDate(d.getDate() + 3);
+                                                const yyyy = d.getFullYear();
+                                                const mm = String(d.getMonth() + 1).padStart(2, '0');
+                                                const dd = String(d.getDate()).padStart(2, '0');
+                                                updated.checkOut = `${yyyy}-${mm}-${dd}`;
+                                            }
+                                            return updated;
+                                        });
+                                    }}
                                     className="font-inter text-xs font-semibold text-gray-700 bg-transparent border-none p-0 outline-none w-full"
                                 />
                             </div>
@@ -536,6 +560,7 @@ const RoomDetails = () => {
                                 <span className="text-[9px] font-bold uppercase text-gray-400 block">Check-out</span>
                                 <input 
                                     type="date"
+                                    min={bookingDate.checkIn}
                                     value={bookingDate.checkOut}
                                     onChange={(e) => setBookingDate(prev => ({...prev, checkOut: e.target.value}))}
                                     className="font-inter text-xs font-semibold text-gray-700 bg-transparent border-none p-0 outline-none w-full"
