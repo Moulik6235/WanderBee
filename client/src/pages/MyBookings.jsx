@@ -4,11 +4,28 @@ import Title from '../components/Title'
 import { assets, userBookingsDummyData } from '../assets/quickStay-assets/assets'
 import { useAppContext } from '../context/AppContext'
 import { toast } from 'react-hot-toast'
+import { SignIn } from '@clerk/clerk-react'
 
 const MyBookings = () => {
     const navigate = useNavigate()
-    const { currency, axios, getToken } = useAppContext()
+    const { user, currency, axios, getToken } = useAppContext()
     const [bookings, setBookings] = useState([])
+
+    if (!user) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[75vh] py-16 px-6 bg-slate-50 jali-overlay text-center">
+                <div className="max-w-md mb-8">
+                    <h2 className="font-montserrat text-3xl font-extrabold text-primary mb-3">Access Your Bookings</h2>
+                    <p className="font-inter text-sm text-gray-500 leading-relaxed">
+                        Please sign in to view and manage your premium reservations with WanderBee.
+                    </p>
+                </div>
+                <div className="bg-white p-4 rounded-3xl shadow-xl border border-gray-100 flex items-center justify-center">
+                    <SignIn routing="hash" />
+                </div>
+            </div>
+        )
+    }
 
     useEffect(() => {
         const fetchUserBookings = async () => {
@@ -46,6 +63,7 @@ const MyBookings = () => {
     }, [axios, getToken])
 
     // Map properties in bookings to Stitch premium names and images for high-fidelity representation
+    // Map properties in bookings to Stitch premium names and images for high-fidelity representation
     const enhancedBookings = useMemo(() => {
         const stitchProperties = [
             {
@@ -61,6 +79,26 @@ const MyBookings = () => {
         ];
 
         return bookings.map((booking, idx) => {
+            if (booking.bookingType === "experience") {
+                const exp = booking.experience || {};
+                const images = exp.images && exp.images.length > 0 ? exp.images : (exp.image ? [exp.image] : ["https://images.unsplash.com/photo-1512100356956-c1d473461155?auto=format&fit=crop&q=80&w=600"]);
+                return {
+                    ...booking,
+                    isExperience: true,
+                    experience: {
+                        ...exp,
+                        title: exp.title || "Curated Experience",
+                        category: exp.category || "Curated",
+                        location: exp.location || "Rajasthan, India",
+                        images,
+                        timing: exp.timing,
+                        duration: exp.duration
+                    },
+                    totalPrice: booking.totalPrice || 0,
+                    status: booking.status || (booking.isPaid ? "confirmed" : "pending")
+                };
+            }
+
             // Check if it is a pre-seeded generic dummy booking or a real custom/DB booking
             const isDummyBooking = booking.hotel?.name === "Urbanza Suites" || booking.hotel?._id === "67f76393197ac559e4089b72";
             if (!isDummyBooking) {
@@ -105,6 +143,29 @@ const MyBookings = () => {
     }, [bookings]);
 
     const handlePayNow = (booking) => {
+        if (booking.bookingType === "experience") {
+            const exp = booking.experience || {}
+            const basePrice = exp.price || 0
+            navigate('/payment', {
+                state: {
+                    experience: {
+                        id: exp._id,
+                        title: exp.title,
+                        category: exp.category,
+                        location: exp.location,
+                        timing: exp.timing,
+                        duration: exp.duration,
+                        price: exp.price,
+                        image: exp.images?.[0]
+                    },
+                    basePrice,
+                    guests: booking.guests || 1,
+                    bookingId: booking._id
+                }
+            })
+            return
+        }
+
         const checkIn = new Date(booking.checkInDate)
         const checkOut = new Date(booking.checkOutDate)
         const timeDiff = checkOut.getTime() - checkIn.getTime()
@@ -139,11 +200,11 @@ const MyBookings = () => {
     }
 
     const handleRequestUpgrade = () => {
-        toast.success("Upgrade request submitted! Our royal butler will contact you shortly.")
+        toast.success("Upgrade request submitted! Our guest assistant will contact you shortly.")
     }
 
     const handleCancelBooking = async (booking) => {
-        let confirmMsg = "Are you sure you want to cancel this heritage stay reservation?";
+        let confirmMsg = "Are you sure you want to cancel this stay reservation?";
         if (booking.cancellationPolicy === "Cancellation Fee Applicable") {
             confirmMsg = `Warning: This reservation has a 'Cancellation Fee Applicable' policy. A 50% cancellation fee (${currency}${(booking.totalPrice * 0.5).toLocaleString()}) will be charged. Are you sure you want to cancel?`;
         }
@@ -206,7 +267,7 @@ const MyBookings = () => {
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4 border-b border-gray-200/50 pb-6">
                     <div className="text-left">
                         <h1 className="font-montserrat text-3xl font-extrabold text-primary">My Bookings</h1>
-                        <p className="text-gray-500 font-inter text-sm mt-1">Easily manage your past, current, and upcoming heritage reservations.</p>
+                        <p className="text-gray-500 font-inter text-sm mt-1">Easily manage your past, current, and upcoming reservations.</p>
                     </div>
                 </div>
 
@@ -223,62 +284,126 @@ const MyBookings = () => {
                                 key={booking._id} 
                                 className="bg-white rounded-3xl overflow-hidden property-card-shadow border border-gray-100 hover:border-secondary transition-premium p-6 flex flex-col lg:flex-row justify-between gap-6"
                             >
-                                {/* Left Side: Hotel & Room Info */}
+                                {/* Left Side: Hotel & Room Info / Experience Info */}
                                 <div className="flex flex-col sm:flex-row gap-6 lg:w-7/12">
-                                    <div className="w-full sm:w-48 h-32 rounded-2xl overflow-hidden shadow-sm border border-gray-100/60 relative">
-                                        <img src={booking.room.images[0]} alt={booking.hotel.name} className="w-full h-full object-cover" />
-                                    </div>
-                                    
-                                    <div className="space-y-2 text-left">
-                                        <div className="flex flex-wrap items-center gap-2">
-                                            <h2 className="font-montserrat text-lg font-extrabold text-primary leading-tight">
-                                                {booking.hotel.name}
-                                            </h2>
-                                            <span className="bg-primary/5 text-primary text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
-                                                {booking.room.roomType}
-                                            </span>
-                                        </div>
+                                    {booking.isExperience ? (
+                                        <>
+                                            <div className="w-full sm:w-48 h-32 rounded-2xl overflow-hidden shadow-sm border border-gray-100/60 relative flex-shrink-0">
+                                                <img src={booking.experience.images[0]} alt={booking.experience.title} className="w-full h-full object-cover" />
+                                            </div>
+                                            
+                                            <div className="space-y-2 text-left flex-1">
+                                                <div className="flex flex-wrap items-center gap-2">
+                                                    <h2 className="font-montserrat text-lg font-extrabold text-primary leading-tight">
+                                                        {booking.experience.title}
+                                                    </h2>
+                                                    <span className="bg-primary/5 text-primary text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
+                                                        {booking.experience.category}
+                                                    </span>
+                                                </div>
 
-                                        <div className="flex items-center gap-1.5 text-xs text-gray-400 font-inter">
-                                            <span className="material-symbols-outlined text-sm">location_on</span>
-                                            <span>{booking.hotel.address}</span>
-                                        </div>
+                                                <div className="flex items-center gap-1.5 text-xs text-gray-400 font-inter">
+                                                    <span className="material-symbols-outlined text-sm">location_on</span>
+                                                    <span>{booking.experience.location}</span>
+                                                </div>
 
-                                        <div className="flex items-center gap-1.5 text-xs text-gray-500 font-inter">
-                                            <span className="material-symbols-outlined text-sm">group</span>
-                                            <span>Guests: {booking.guests} Adults</span>
-                                        </div>
+                                                <div className="flex items-center gap-1.5 text-xs text-gray-500 font-inter">
+                                                    <span className="material-symbols-outlined text-sm">group</span>
+                                                    <span>Guests: {booking.guests} {booking.guests === 1 ? 'Person' : 'People'}</span>
+                                                </div>
 
-                                        <p className="font-montserrat font-bold text-sm text-gray-800 pt-1">
-                                            Total Price: {currency}{booking.totalPrice.toLocaleString()}
-                                        </p>
+                                                <p className="font-montserrat font-bold text-sm text-gray-800 pt-1">
+                                                    Total Price: {currency}{booking.totalPrice.toLocaleString()}
+                                                </p>
 
-                                        <div className="flex items-center gap-2 pt-1">
-                                            <span className="text-[10px] font-bold uppercase text-gray-400">Policy:</span>
-                                            <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${booking.cancellationPolicy === 'Cancellation Fee Applicable' ? 'bg-rose-50 text-rose-700 border border-rose-100' : 'bg-emerald-50 text-emerald-700 border border-emerald-100'}`}>
-                                                {booking.cancellationPolicy || 'Free Cancellation'}
-                                            </span>
-                                        </div>
-                                    </div>
+                                                <div className="flex items-center gap-2 pt-1">
+                                                    <span className="text-[10px] font-bold uppercase text-gray-400">Policy:</span>
+                                                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                                        Free Cancellation
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="w-full sm:w-48 h-32 rounded-2xl overflow-hidden shadow-sm border border-gray-100/60 relative flex-shrink-0">
+                                                <img src={booking.room.images[0]} alt={booking.hotel.name} className="w-full h-full object-cover" />
+                                            </div>
+                                            
+                                            <div className="space-y-2 text-left flex-1">
+                                                <div className="flex flex-wrap items-center gap-2">
+                                                    <h2 className="font-montserrat text-lg font-extrabold text-primary leading-tight">
+                                                        {booking.hotel.name}
+                                                    </h2>
+                                                    <span className="bg-primary/5 text-primary text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
+                                                        {booking.room.roomType}
+                                                    </span>
+                                                </div>
+
+                                                <div className="flex items-center gap-1.5 text-xs text-gray-400 font-inter">
+                                                    <span className="material-symbols-outlined text-sm">location_on</span>
+                                                    <span>{booking.hotel.address}</span>
+                                                </div>
+
+                                                <div className="flex items-center gap-1.5 text-xs text-gray-500 font-inter">
+                                                    <span className="material-symbols-outlined text-sm">group</span>
+                                                    <span>Guests: {booking.guests} Adults</span>
+                                                </div>
+
+                                                <p className="font-montserrat font-bold text-sm text-gray-800 pt-1">
+                                                    Total Price: {currency}{booking.totalPrice.toLocaleString()}
+                                                </p>
+
+                                                <div className="flex items-center gap-2 pt-1">
+                                                    <span className="text-[10px] font-bold uppercase text-gray-400">Policy:</span>
+                                                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${booking.cancellationPolicy === 'Cancellation Fee Applicable' ? 'bg-rose-50 text-rose-700 border border-rose-100' : 'bg-emerald-50 text-emerald-700 border border-emerald-100'}`}>
+                                                        {booking.cancellationPolicy || 'Free Cancellation'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
 
-                                {/* Center Side: Trip Dates */}
+                                {/* Center Side: Trip Dates / Experience Schedule */}
                                 <div className="flex flex-row items-center gap-8 justify-start lg:w-3/12 border-t lg:border-t-0 lg:border-l border-gray-100 pt-6 lg:pt-0 lg:pl-8 text-sm text-left">
-                                    <div>
-                                        <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 block">Check-in</span>
-                                        <span className="font-montserrat font-bold text-primary mt-1 block">
-                                            {new Date(booking.checkInDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
-                                        </span>
-                                        <span className="text-xs text-gray-400 font-inter">From 12:00 PM</span>
-                                    </div>
-                                    <div className="h-8 border-l border-gray-200"></div>
-                                    <div>
-                                        <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 block">Check-out</span>
-                                        <span className="font-montserrat font-bold text-primary mt-1 block">
-                                            {new Date(booking.checkOutDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
-                                        </span>
-                                        <span className="text-xs text-gray-400 font-inter">Before 11:00 AM</span>
-                                    </div>
+                                    {booking.isExperience ? (
+                                        <>
+                                            <div>
+                                                <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 block">Experience Date</span>
+                                                <span className="font-montserrat font-bold text-primary mt-1 block">
+                                                    {booking.bookingDate ? new Date(booking.bookingDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : new Date(booking.checkInDate || booking.createdAt).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                                </span>
+                                                <span className="text-xs text-gray-400 font-inter">Duration: {booking.experience.duration || 'Flexible'}</span>
+                                            </div>
+                                            <div className="h-8 border-l border-gray-200"></div>
+                                            <div>
+                                                <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 block">Timing</span>
+                                                <span className="font-montserrat font-bold text-primary mt-1 block">
+                                                    {booking.experience.timing || 'Flexible'}
+                                                </span>
+                                                <span className="text-xs text-gray-400 font-inter">Curated Slot</span>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div>
+                                                <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 block">Check-in</span>
+                                                <span className="font-montserrat font-bold text-primary mt-1 block">
+                                                    {new Date(booking.checkInDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                                </span>
+                                                <span className="text-xs text-gray-400 font-inter">From 12:00 PM</span>
+                                            </div>
+                                            <div className="h-8 border-l border-gray-200"></div>
+                                            <div>
+                                                <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 block">Check-out</span>
+                                                <span className="font-montserrat font-bold text-primary mt-1 block">
+                                                    {new Date(booking.checkOutDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                                </span>
+                                                <span className="text-xs text-gray-400 font-inter">Before 11:00 AM</span>
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
 
                                  {/* Right Side: Status & Booking Actions */}
@@ -308,24 +433,33 @@ const MyBookings = () => {
                                                         onClick={() => handleCancelBooking(booking)}
                                                         className="border border-red-200 text-red-600 hover:bg-red-50 font-montserrat font-bold text-[9px] uppercase tracking-wider py-2 px-3 rounded-xl shadow-sm transition-premium cursor-pointer w-full text-center"
                                                     >
-                                                        Cancel Stay
+                                                        {booking.isExperience ? "Cancel Experience" : "Cancel Stay"}
                                                     </button>
                                                 )}
                                             </>
                                         ) : (
                                             <>
-                                                <button 
-                                                    onClick={handleRequestUpgrade}
-                                                    className="border border-primary text-primary hover:bg-primary/5 font-montserrat font-bold text-[9px] uppercase tracking-wider py-2 px-3 rounded-xl shadow-sm transition-premium cursor-pointer w-full text-center"
-                                                >
-                                                    Room Upgrade
-                                                </button>
+                                                {booking.isExperience ? (
+                                                    <button 
+                                                        onClick={() => toast.success("Butler guide details will be sent to your email shortly.")}
+                                                        className="border border-primary text-primary hover:bg-primary/5 font-montserrat font-bold text-[9px] uppercase tracking-wider py-2 px-3 rounded-xl shadow-sm transition-premium cursor-pointer w-full text-center"
+                                                    >
+                                                        Butler Details
+                                                    </button>
+                                                ) : (
+                                                    <button 
+                                                        onClick={handleRequestUpgrade}
+                                                        className="border border-primary text-primary hover:bg-primary/5 font-montserrat font-bold text-[9px] uppercase tracking-wider py-2 px-3 rounded-xl shadow-sm transition-premium cursor-pointer w-full text-center"
+                                                    >
+                                                        Room Upgrade
+                                                    </button>
+                                                )}
                                                 {!booking._id.startsWith("dummy") && (
                                                     <button 
                                                         onClick={() => handleCancelBooking(booking)}
                                                         className="border border-red-200 text-red-600 hover:bg-red-50 font-montserrat font-bold text-[9px] uppercase tracking-wider py-2 px-3 rounded-xl shadow-sm transition-premium cursor-pointer w-full text-center mt-1"
                                                     >
-                                                        Cancel Stay
+                                                        {booking.isExperience ? "Cancel Experience" : "Cancel Stay"}
                                                     </button>
                                                 )}
                                             </>

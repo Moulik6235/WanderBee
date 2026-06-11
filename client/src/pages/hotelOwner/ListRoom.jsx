@@ -138,11 +138,11 @@ const ListRoom = () => {
                         <table className='w-full border-collapse'>
                             <thead className='bg-slate-50/70 border-b border-slate-100'>
                                 <tr>
-                                    <th className='py-4 px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary'>Suite Type</th>
-                                    <th className='py-4 px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary max-sm:hidden'>Amenities</th>
-                                    <th className='py-4 px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary'>Price / Night</th>
-                                    <th className='py-4 px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary'>Cancellation</th>
-                                    <th className='py-4 px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary text-center'>Status</th>
+                                    <th className='py-4 px-3 md:px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary text-left'>Suite Type</th>
+                                    <th className='py-4 px-3 md:px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary max-sm:hidden text-left'>Amenities</th>
+                                    <th className='py-4 px-3 md:px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary text-left'>Price / Night</th>
+                                    <th className='py-4 px-3 md:px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary text-left'>Cancellation</th>
+                                    <th className='py-4 px-3 md:px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary text-center'>Status</th>
                                 </tr>
                             </thead>
 
@@ -150,24 +150,24 @@ const ListRoom = () => {
                                 {rooms.map((item, index) => (
                                     <tr key={item._id || index} className="hover:bg-slate-50/40 transition-premium">
                                         {/* Suite Type */}
-                                        <td className='py-4 px-6'>
+                                        <td className='py-4 px-3 md:px-6'>
                                             <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center border border-slate-100 overflow-hidden">
+                                                <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center border border-slate-100 overflow-hidden shrink-0">
                                                     {item.images && item.images[0] ? (
                                                         <img src={item.images[0]} alt={item.roomType} className="w-full h-full object-cover" />
                                                     ) : (
                                                         <span className="material-symbols-outlined text-primary text-xl">bed</span>
                                                     )}
                                                 </div>
-                                                <div>
-                                                    <span className='font-bold text-slate-800 block'>{item.roomType}</span>
-                                                    <span className='text-[10px] text-emerald-600 font-semibold uppercase tracking-wider'>WanderBee Class</span>
+                                                <div className="min-w-0">
+                                                    <span className='font-bold text-slate-800 block truncate max-w-[100px] sm:max-w-none'>{item.roomType}</span>
+                                                    <span className='text-[10px] text-emerald-600 font-semibold uppercase tracking-wider block'>WanderBee Class</span>
                                                 </div>
                                             </div>
                                         </td>
 
                                         {/* Amenities */}
-                                        <td className='py-4 px-6 max-sm:hidden'>
+                                        <td className='py-4 px-3 md:px-6 max-sm:hidden'>
                                             <div className="flex flex-wrap gap-1.5">
                                                 {item.amenities.map((amenity, idx) => (
                                                     <span key={idx} className="bg-primary/5 text-primary text-[9px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-md">
@@ -178,90 +178,90 @@ const ListRoom = () => {
                                         </td>
 
                                         {/* Price */}
-                                        <td className='py-4 px-6 font-bold text-slate-900'>
+                                        <td className='py-4 px-3 md:px-6 font-bold text-slate-900'>
                                             {editingRoomId === item._id ? (
                                                 <div className="flex items-center gap-1.5 max-w-[170px]" onClick={(e) => e.stopPropagation()}>
                                                     <div className="relative flex items-center">
-                                                        <span className="absolute left-2.5 text-xs text-gray-400 font-semibold">₹</span>
+                                                        <span className="absolute left-2 text-xs text-gray-400 font-semibold">₹</span>
                                                         <input 
                                                             type="number"
                                                             value={editingPrice}
                                                             onChange={(e) => setEditingPrice(e.target.value)}
-                                                            className="w-24 pl-6 pr-1.5 py-1.5 border border-primary/30 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg text-xs font-semibold outline-none bg-slate-50"
+                                                            className="w-16 sm:w-24 pl-5 pr-1 py-1.5 border border-primary/30 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg text-xs font-semibold outline-none bg-slate-50"
                                                             min="1"
                                                         />
                                                     </div>
                                                     <button 
                                                         onClick={() => savePrice(item._id)}
                                                         disabled={savingRoomId === item._id}
-                                                        className="p-1.5 rounded-md bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors cursor-pointer flex items-center justify-center"
+                                                        className="p-1 rounded-md bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors cursor-pointer flex items-center justify-center shrink-0"
                                                         title="Save Suite Details"
                                                     >
                                                         {savingRoomId === item._id ? (
-                                                            <div className="w-3.5 h-3.5 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
+                                                            <div className="w-3 h-3 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
                                                         ) : (
-                                                            <span className="material-symbols-outlined text-sm font-bold">check</span>
+                                                            <span className="material-symbols-outlined text-xs font-bold">check</span>
                                                         )}
                                                     </button>
                                                     <button 
                                                         onClick={cancelEditing}
                                                         disabled={savingRoomId === item._id}
-                                                        className="p-1.5 rounded-md bg-red-50 text-red-600 hover:bg-red-100 transition-colors cursor-pointer flex items-center justify-center"
+                                                        className="p-1 rounded-md bg-red-50 text-red-600 hover:bg-red-100 transition-colors cursor-pointer flex items-center justify-center shrink-0"
                                                         title="Cancel"
                                                     >
-                                                        <span className="material-symbols-outlined text-sm font-bold">close</span>
+                                                        <span className="material-symbols-outlined text-xs font-bold">close</span>
                                                     </button>
                                                 </div>
                                             ) : (
-                                                <div className="flex items-center gap-2 group/price cursor-pointer w-max" onClick={() => startEditing(item)}>
+                                                <div className="flex items-center gap-1.5 group/price cursor-pointer w-max" onClick={() => startEditing(item)}>
                                                     <span>₹{item.pricePerNight.toLocaleString()}</span>
-                                                    <span className="material-symbols-outlined text-xs text-gray-400 opacity-0 group-hover/price:opacity-100 transition-opacity hover:text-primary" title="Edit Price">edit</span>
+                                                    <span className="material-symbols-outlined text-[10px] text-gray-400 opacity-0 group-hover/price:opacity-100 transition-opacity hover:text-primary" title="Edit Price">edit</span>
                                                 </div>
                                             )}
                                         </td>
 
                                         {/* Cancellation Policy */}
-                                        <td className='py-4 px-6'>
+                                        <td className='py-4 px-3 md:px-6'>
                                             {editingRoomId === item._id ? (
                                                 <select
                                                     value={editingCancellation}
                                                     onChange={(e) => setEditingCancellation(e.target.value)}
-                                                    className="border border-primary/30 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg text-xs font-semibold p-1.5 bg-slate-50 outline-none w-full max-w-[170px] cursor-pointer"
+                                                    className="border border-primary/30 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg text-[10px] sm:text-xs font-semibold p-1 bg-slate-50 outline-none w-full max-w-[130px] cursor-pointer"
                                                 >
                                                     <option value="Free Cancellation">Free Cancellation</option>
                                                     <option value="Cancellation Fee Applicable">Cancellation Fee Applicable</option>
                                                 </select>
                                             ) : (
                                                 <div 
-                                                    className="flex items-center gap-2 group/cancel cursor-pointer w-max" 
+                                                    className="flex items-center gap-1.5 group/cancel cursor-pointer w-max" 
                                                     onClick={() => startEditing(item)}
                                                 >
-                                                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${
+                                                    <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
                                                         item.cancellationPolicy === 'Cancellation Fee Applicable'
                                                             ? 'bg-rose-50 text-rose-600 border border-rose-100'
                                                             : 'bg-emerald-50 text-emerald-600 border border-emerald-100'
                                                     }`}>
-                                                        {item.cancellationPolicy || "Free Cancellation"}
+                                                        {item.cancellationPolicy === 'Cancellation Fee Applicable' ? 'Fee Applies' : 'Free Cancel'}
                                                     </span>
-                                                    <span className="material-symbols-outlined text-xs text-gray-400 opacity-0 group-hover/cancel:opacity-100 transition-opacity hover:text-primary" title="Edit Policy">edit</span>
+                                                    <span className="material-symbols-outlined text-[10px] text-gray-400 opacity-0 group-hover/cancel:opacity-100 transition-opacity hover:text-primary" title="Edit Policy">edit</span>
                                                 </div>
                                             )}
                                         </td>
 
                                         {/* Availability Switch Toggle */}
-                                        <td className='py-4 px-6 text-center'>
+                                        <td className='py-4 px-3 md:px-6 text-center'>
                                             <div className="inline-flex items-center justify-center">
-                                                <label className='relative inline-flex items-center cursor-pointer justify-center'>
+                                                <label className='relative inline-flex items-center cursor-pointer justify-center shrink-0'>
                                                     <input 
                                                         type="checkbox" 
                                                         className='sr-only peer' 
                                                         checked={item.isAvailable} 
                                                         onChange={() => toggleAvailability(item._id)}
                                                     />
-                                                    <div className='w-11 h-6 bg-slate-200 peer-checked:bg-primary rounded-full transition-colors duration-300'></div>
-                                                    <span className='absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full transition-all duration-300 ease-in-out peer-checked:translate-x-5 shadow-sm'></span>
+                                                    <div className='w-9 h-5 bg-slate-200 peer-checked:bg-primary rounded-full transition-colors duration-300'></div>
+                                                    <span className='absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full transition-all duration-300 ease-in-out peer-checked:translate-x-4 shadow-sm'></span>
                                                 </label>
-                                                <span className="text-[10px] font-bold text-slate-400 ml-2.5 uppercase tracking-wider">
+                                                <span className="text-[10px] font-bold text-slate-400 ml-2 uppercase tracking-wider hidden sm:inline">
                                                     {item.isAvailable ? "Active" : "Paused"}
                                                 </span>
                                             </div>

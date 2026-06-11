@@ -6,9 +6,12 @@ const Footer = () => {
         <div className='bg-neutral-bg text-gray-500/80 pt-16 px-6 md:px-16 lg:px-24 xl:px-32 border-t border-gray-200/50'>
             <div className='flex flex-wrap justify-between gap-12 md:gap-6 max-w-7xl mx-auto'>
                 <div className='max-w-80 text-left'>
-                    <span className="font-montserrat text-2xl font-black tracking-tight text-primary block mb-6">WanderBee</span>
+                    <div className="flex items-center gap-2.5 mb-6">
+                        <img src={assets.logo} alt="WanderBee" className="h-7 w-auto object-contain" />
+                        <span className="font-montserrat text-2xl font-black tracking-tight text-primary">WanderBee</span>
+                    </div>
                     <p className='text-sm leading-relaxed font-inter'>
-                        Discover the subcontinent's most extraordinary places to stay, from boutique heritage retreats to luxury wellness resorts and palatial escapes.
+                        Discover the subcontinent's most extraordinary places to stay, from boutique retreats and premium hotels to luxury wellness resorts.
                     </p>
                     <div className='flex items-center gap-4 mt-6'>
                         {/* Instagram */}
@@ -47,7 +50,7 @@ const Footer = () => {
                 <div className='max-w-80 text-left'>
                     <p className='font-montserrat text-xs font-extrabold uppercase tracking-widest text-primary'>Stay Updated</p>
                     <p className='mt-4 text-sm leading-relaxed font-inter'>
-                        Subscribe to our newsletter for curated escapes, heritage openings, and exclusive member privileges.
+                        Subscribe to our newsletter for curated escapes, new openings, and exclusive member privileges.
                     </p>
                     <div className='flex items-center mt-5'>
                         <input type="text" className='bg-white rounded-l-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary h-10 px-3 outline-none text-sm font-inter flex-1' placeholder='Your email' />

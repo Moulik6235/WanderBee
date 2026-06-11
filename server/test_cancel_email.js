@@ -12,11 +12,11 @@ const testEmail = async () => {
         paymentMethod: "Credit Card"
     };
     const hotel = {
-        name: "Test Palace Resort",
+        name: "Test Resort",
         address: "123 Mewar Road, Udaipur"
     };
     const room = {
-        roomType: "Royal Maharaja Suite"
+        roomType: "Luxury Suite"
     };
 
     try {

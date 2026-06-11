@@ -16,10 +16,10 @@ const NewsLetter = () => {
 
                 <div className="relative z-10 lg:w-1/2 w-full">
                     <h2 className="font-montserrat text-3xl md:text-4xl font-extrabold text-white mb-4">
-                        Join the Circle of Heritage
+                        Join the Circle of WanderBee
                     </h2>
                     <p className="font-inter text-base text-blue-100 mb-8 max-w-md">
-                        Subscribe to get secret deals and early access to WanderBee's newest heritage openings across India.
+                        Subscribe to get secret deals and early access to WanderBee's newest hotel openings.
                     </p>
                     
                     <form onSubmit={(e) => e.preventDefault()} className="flex flex-col sm:flex-row gap-3 w-full max-w-md">

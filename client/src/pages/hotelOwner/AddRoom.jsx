@@ -96,7 +96,7 @@ const AddRoom = () => {
                     <span className="material-symbols-outlined text-lg text-secondary">add_a_photo</span>
                     Suite Gallery Images
                 </p>
-                <p className="text-[11px] text-gray-400 mb-4">Upload up to 4 high-definition photos of your heritage room. At least 1 image is required.</p>
+                <p className="text-[11px] text-gray-400 mb-4">Upload up to 4 high-definition photos of your suite. At least 1 image is required.</p>
                 
                 <div className='grid grid-cols-2 sm:flex gap-4 my-2 flex-wrap'>
                     {Object.keys(images).map((key) => (

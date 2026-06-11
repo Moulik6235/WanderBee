@@ -149,8 +149,8 @@ const Support = () => {
   // Initial welcome message from the bot
   useEffect(() => {
     const welcomeText = user
-      ? `Namaste, ${user.fullName}! I am your Royal Heritage AI Butler. I have loaded your Gold profile details and your bookings. How may I assist you with your heritage stay today?`
-      : "Namaste! Welcome to WanderBee Royal Support. I see you are visiting as a guest. How can I assist you today? (You can sign in to view and ask questions about your bookings!)";
+      ? `Hello, ${user.fullName}! I am your WanderBee AI Assistant. I have loaded your Gold profile details and your bookings. How may I assist you with your stay today?`
+      : "Hello! Welcome to WanderBee Support. I see you are visiting as a guest. How can I assist you today? (You can sign in to view and ask questions about your bookings!)";
     
     setMessages([
       {
@@ -173,19 +173,19 @@ const Support = () => {
     if (text.includes("hello") || text.includes("hi") || text.includes("hey") || text.includes("namaste")) {
       const namePart = user ? `, ${user.firstName || user.fullName}` : "";
       return {
-        text: `Namaste${namePart}! Welcome to WanderBee Support. How can I assist you with your heritage stays or special requests today?`
+        text: `Hello${namePart}! Welcome to WanderBee Support. How can I assist you with your hotel stays or special requests today?`
       };
     }
     
     if (text.includes("booking") || text.includes("reservation") || text.includes("stay") || text.includes("my room")) {
       if (!user) {
         return {
-          text: "To view or manage your bookings, please sign in using the button in the profile panel. I can guide you through our general heritage booking policies in the meantime."
+          text: "To view or manage your bookings, please sign in using the button in the profile panel. I can guide you through our general booking policies in the meantime."
         };
       }
       if (upcomingBookings.length === 0) {
         return {
-          text: `I checked your account, ${user.firstName || user.fullName}, but couldn't find any upcoming heritage bookings. Would you like assistance finding and booking a palace stay?`
+          text: `I checked your account, ${user.firstName || user.fullName}, but couldn't find any upcoming hotel bookings. Would you like assistance finding and booking a stay?`
         };
       }
       
@@ -203,7 +203,7 @@ const Support = () => {
     if (text.includes("upgrade") || text.includes("better room") || text.includes("room upgrade")) {
       if (!user) {
         return {
-          text: "Heritage room upgrades are part of our Gold privileges. Please sign in to see if your current booking qualifies."
+          text: "Room upgrades are part of our Gold privileges. Please sign in to see if your current booking qualifies."
         };
       }
       if (upcomingBookings.length === 0) {
@@ -213,7 +213,7 @@ const Support = () => {
       }
       const b = upcomingBookings[0];
       return {
-        text: `As a Gold tier member, you are eligible for complimentary room upgrades based on availability. I have logged your upgrade request for your stay at **${b.hotel.name}** checking in on ${new Date(b.checkInDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}. The palace front desk has been notified.`,
+        text: `As a Gold tier member, you are eligible for complimentary room upgrades based on availability. I have logged your upgrade request for your stay at **${b.hotel.name}** checking in on ${new Date(b.checkInDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}. The front desk has been notified.`,
         bookingContext: b,
         actions: [
           { label: "🤵 Book Butler", type: "butler" },
@@ -222,20 +222,20 @@ const Support = () => {
       };
     }
 
-    if (text.includes("butler") || text.includes("royal butler") || text.includes("service")) {
+    if (text.includes("butler") || text.includes("assistant") || text.includes("service")) {
       if (!user) {
         return {
-          text: "Our personalized Heritage Butler service is available at all of our listed palaces. Please sign in to link this service to your stay."
+          text: "Our personalized Guest Assistant service is available at all of our listed hotels. Please sign in to link this service to your stay."
         };
       }
       if (upcomingBookings.length === 0) {
         return {
-          text: "You don't have any upcoming bookings. Book a premium palace room first to reserve your butler!"
+          text: "You don't have any upcoming bookings. Book a room first to assign your assistant!"
         };
       }
       const b = upcomingBookings[0];
       return {
-        text: `Certainly! Pre-booking for your Heritage Butler is now confirmed for your stay at **${b.hotel.name}**. Your butler will contact you 24 hours prior to check-in to coordinate your Mewar heritage dining, sightseeing schedule, and any dietary preferences.`,
+        text: `Certainly! Pre-booking for your Guest Assistant is now confirmed for your stay at **${b.hotel.name}**. Your assistant will contact you 24 hours prior to check-in to coordinate your dining, sightseeing schedule, and any dietary preferences.`,
         bookingContext: b,
         actions: [
           { label: "⭐ Request Upgrade", type: "upgrade" },
@@ -246,13 +246,13 @@ const Support = () => {
 
     if (text.includes("cancel") || text.includes("refund") || text.includes("cancellation")) {
       return {
-        text: "Under WanderBee's Royal policy, free cancellations are accepted up to 48 hours prior to your scheduled check-in. Cancellations within 48 hours will incur a one-night room charge plus taxes. Select an upcoming booking in the sidebar to request a cancel action directly."
+        text: "Under WanderBee's policy, free cancellations are accepted up to 48 hours prior to your scheduled check-in. Cancellations within 48 hours will incur a one-night room charge plus taxes. Select an upcoming booking in the sidebar to request a cancel action directly."
       };
     }
 
     if (text.includes("udaipur") || text.includes("attraction") || text.includes("visit") || text.includes("sightseeing")) {
       return {
-        text: "Udaipur features stunning historical marvels! I highly recommend visiting:\n\n1. **The City Palace** - Udaipur's royal centerpiece overlooking Lake Pichola.\n2. **Sajjangarh Monsoon Palace** - Breathtaking panoramic sunset views from the hilltop.\n3. **Jag Mandir** - A floating garden palace on the lake.\n\nOur local team can arrange custom guides, heritage walks, and vintage car rentals. Let me know if you want us to set it up!"
+        text: "Udaipur features stunning historical marvels! I highly recommend visiting:\n\n1. **The City Palace** - Udaipur's centerpiece overlooking Lake Pichola.\n2. **Sajjangarh Monsoon Palace** - Breathtaking panoramic sunset views from the hilltop.\n3. **Jag Mandir** - A floating garden resort on the lake.\n\nOur local team can arrange custom guides, city walks, and vintage car rentals. Let me know if you want us to set it up!"
       };
     }
 
@@ -280,7 +280,7 @@ const Support = () => {
     }
 
     return {
-      text: "I am here to assist with your upcoming heritage bookings, hotel details, upgrades, and royal butler services. Please specify what you would like to know, or select an upcoming booking in the sidebar!"
+      text: "I am here to assist with your upcoming bookings, hotel details, upgrades, and guest butler services. Please specify what you would like to know, or select an upcoming booking in the sidebar!"
     };
   };
 
@@ -353,14 +353,14 @@ const Support = () => {
 
     if (option === "upgrade") {
       messageText = `I want to request a room upgrade for my booking at ${booking.hotel.name} checking in on ${checkInDateStr}.`;
-      replyText = `Understood. I have initiated an upgrade inquiry for your room (${booking.room.roomType}) at **${booking.hotel.name}**. Since you are a **Gold** tier member, you qualify for complimentary upgrades to high-tier suites upon availability at check-in. The palace concierge has been alerted!`;
+      replyText = `Understood. I have initiated an upgrade inquiry for your room (${booking.room.roomType}) at **${booking.hotel.name}**. Since you are a **Gold** tier member, you qualify for complimentary upgrades to high-tier suites upon availability at check-in. The concierge has been alerted!`;
       actions = [
         { label: "🤵 Book Butler", type: "butler" },
         { label: "📄 Rules & Policy", type: "details" }
       ];
     } else if (option === "butler") {
-      messageText = `I want to pre-book a Heritage Butler for my booking at ${booking.hotel.name}.`;
-      replyText = `Excellent! Pre-booking for your Heritage Butler is now confirmed for your stay at **${booking.hotel.name}**. Your butler will contact you 24 hours prior to check-in to coordinate your Mewar heritage dining, sightseeing schedule, and any dietary preferences.`;
+      messageText = `I want to pre-book a Guest Butler for my booking at ${booking.hotel.name}.`;
+      replyText = `Excellent! Pre-booking for your Guest Butler is now confirmed for your stay at **${booking.hotel.name}**. Your butler will contact you 24 hours prior to check-in to coordinate your dining, sightseeing schedule, and any dietary preferences.`;
       actions = [
         { label: "⭐ Request Upgrade", type: "upgrade" },
         { label: "📄 Rules & Policy", type: "details" }
@@ -374,7 +374,7 @@ const Support = () => {
       const diffHours = Math.ceil(diffTime / (1000 * 60 * 60)); // hours
       
       if (diffHours >= 48) {
-        replyText = `We are sorry to hear that you need to cancel your stay at **${booking.hotel.name}**. Since check-in is on ${checkInDateStr} (more than 48 hours away), you are eligible for a **full refund** under our royal flexible terms.\n\nWould you like me to proceed with the cancellation and refund?`;
+        replyText = `We are sorry to hear that you need to cancel your stay at **${booking.hotel.name}**. Since check-in is on ${checkInDateStr} (more than 48 hours away), you are eligible for a **full refund** under our flexible terms.\n\nWould you like me to proceed with the cancellation and refund?`;
         if (!booking._id.startsWith("dummy")) {
           actions = [
             { label: "❌ Yes, Cancel Booking", type: "confirm_cancellation" }
@@ -515,9 +515,9 @@ const Support = () => {
         {/* Title Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4 border-b border-gray-200/50 pb-6">
           <div className="text-left">
-            <h1 className="font-montserrat text-3xl font-extrabold text-primary">Royal Support Desk</h1>
+            <h1 className="font-montserrat text-3xl font-extrabold text-primary">Support Desk</h1>
             <p className="text-gray-500 font-inter text-sm mt-1">
-              Chat with our Heritage Butler Bot, connected to your profile preferences and reservation details.
+              Chat with our AI Assistant Bot, connected to your profile preferences and reservation details.
             </p>
           </div>
         </div>
@@ -669,7 +669,7 @@ const Support = () => {
               ) : (
                 <div className="text-center py-6 text-gray-300">
                   <span className="material-symbols-outlined text-5xl">calendar_today</span>
-                  <p className="text-[11px] text-gray-400 mt-2 font-inter">Sign in to view your heritage reservations.</p>
+                  <p className="text-[11px] text-gray-400 mt-2 font-inter">Sign in to view your reservations.</p>
                 </div>
               )}
             </div>
@@ -687,7 +687,7 @@ const Support = () => {
                 </div>
                 <div className="flex gap-2">
                   <span className="material-symbols-outlined text-secondary text-lg shrink-0">shield_with_heart</span>
-                  <p>Royal Cleanliness Protocol is active across all Rajasthan Heritage Haveli assets.</p>
+                  <p>Cleanliness Protocol is active across all hotel properties.</p>
                 </div>
                 <div className="flex gap-2">
                   <span className="material-symbols-outlined text-secondary text-lg shrink-0">call</span>
@@ -710,8 +710,8 @@ const Support = () => {
                     <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 border border-primary rounded-full"></span>
                   </div>
                   <div className="text-left">
-                    <h3 className="font-montserrat text-sm font-bold tracking-wide">Heritage AI Butler</h3>
-                    <p className="text-[10px] text-amber-200 font-inter">Mewar Royal Butler Service</p>
+                    <h3 className="font-montserrat text-sm font-bold tracking-wide">AI Guest Assistant</h3>
+                    <p className="text-[10px] text-amber-200 font-inter">WanderBee Support Service</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full text-xs font-bold font-montserrat">
@@ -792,7 +792,7 @@ const Support = () => {
                   onClick={() => handleQuickQuestion("What are the butler services?")}
                   className="inline-block bg-slate-50 hover:bg-primary/5 hover:text-primary text-[10px] font-bold text-gray-600 px-3 py-1.5 rounded-full border border-gray-200/60 transition-premium cursor-pointer"
                 >
-                  🤵 Heritage Butler Info
+                  🛎️ Butler Info
                 </button>
                 <button 
                   onClick={() => handleQuickQuestion("Am I eligible for room upgrade?")}
@@ -820,7 +820,7 @@ const Support = () => {
                   type="text" 
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
-                  placeholder="Ask about your bookings, room upgrade status, heritage butler services..."
+                  placeholder="Ask about your bookings, room upgrade status, butler services..."
                   className="flex-1 bg-slate-50 hover:bg-slate-100/50 border border-gray-200/60 rounded-xl px-4 py-3 text-xs outline-none transition-premium focus:ring-1 focus:ring-primary focus:bg-white text-gray-800"
                 />
                 <button 

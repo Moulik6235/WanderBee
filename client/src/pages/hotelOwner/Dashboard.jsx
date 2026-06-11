@@ -93,9 +93,9 @@ const Dashboard = () => {
                                 <span className="bg-amber-400/20 text-amber-300 text-[9px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-md w-max block font-montserrat">
                                     Gold Tier Host
                                 </span>
-                                <h4 className="font-montserrat text-sm font-extrabold text-white mt-3 leading-snug">Royal Heritage Performance</h4>
+                                <h4 className="font-montserrat text-sm font-extrabold text-white mt-3 leading-snug">WanderBee Performance</h4>
                             </div>
-                            <p className="font-inter text-xs text-slate-300 mt-1 leading-relaxed">You are managing a premium heritage hotel listed on WanderBee.</p>
+                            <p className="font-inter text-xs text-slate-300 mt-1 leading-relaxed">You are managing a premium hotel stay listed on WanderBee.</p>
                         </div>
 
                     </div>
@@ -121,30 +121,30 @@ const Dashboard = () => {
                                     <table className='w-full border-collapse'>
                                         <thead className='bg-slate-50/70 border-b border-slate-100'>
                                             <tr>
-                                                <th className='py-4 px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary'>Guest Name</th>
-                                                <th className='py-4 px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary max-sm:hidden'>Suite Type</th>
-                                                <th className='py-4 px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary text-center'>Total Price</th>
-                                                <th className='py-4 px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary text-center'>Payment Status</th>
+                                                <th className='py-4 px-3 md:px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary text-left'>Guest Name</th>
+                                                <th className='py-4 px-3 md:px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary max-sm:hidden text-left'>Suite Type</th>
+                                                <th className='py-4 px-3 md:px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary text-center'>Total Price</th>
+                                                <th className='py-4 px-3 md:px-6 font-montserrat font-extrabold text-xs uppercase tracking-wider text-primary text-center'>Payment Status</th>
                                             </tr>
                                         </thead>
 
                                         <tbody className='text-sm text-gray-700 divide-y divide-slate-50'>
                                             {dashboardData.bookings.map((item, index) => (
                                                 <tr key={item._id || index} className="hover:bg-slate-50/40 transition-premium">
-                                                    <td className='py-4 px-6 flex items-center gap-3'>
-                                                        <div className="w-8 h-8 rounded-full bg-primary/5 text-primary flex items-center justify-center font-bold text-xs uppercase">
+                                                    <td className='py-4 px-3 md:px-6 flex items-center gap-3'>
+                                                        <div className="w-8 h-8 rounded-full bg-primary/5 text-primary flex items-center justify-center font-bold text-xs uppercase shrink-0">
                                                             {(item.user?.username || "Guest").substring(0, 2)}
                                                         </div>
-                                                        <div>
-                                                            <span className='font-bold text-slate-800 block'>{item.user?.username || "WanderBee Guest"}</span>
-                                                            <span className='text-[10px] text-gray-400 font-inter'>{item.user?.email || "guest@gmail.com"}</span>
+                                                        <div className="min-w-0">
+                                                            <span className='font-bold text-slate-800 block truncate max-w-[110px] sm:max-w-none'>{item.user?.username || "WanderBee Guest"}</span>
+                                                            <span className='text-[10px] text-gray-400 font-inter block truncate max-w-[110px] sm:max-w-none'>{item.user?.email || "guest@gmail.com"}</span>
                                                         </div>
                                                     </td>
-                                                    <td className='py-4 px-6 max-sm:hidden text-slate-500 font-medium'>{item.room?.roomType || "Luxury Suite"}</td>
-                                                    <td className='py-4 px-6 text-center font-bold text-slate-900'>{currency}{(item.totalPrice || 0).toLocaleString()}</td>
+                                                    <td className='py-4 px-3 md:px-6 max-sm:hidden text-slate-500 font-medium'>{item.room?.roomType || "Luxury Suite"}</td>
+                                                    <td className='py-4 px-3 md:px-6 text-center font-bold text-slate-900'>{currency}{(item.totalPrice || 0).toLocaleString()}</td>
 
-                                                    <td className='py-4 px-6 text-center'>
-                                                        <span className={`inline-block py-1.5 px-3.5 text-[9px] font-extrabold uppercase tracking-widest rounded-xl ${
+                                                    <td className='py-4 px-3 md:px-6 text-center'>
+                                                        <span className={`inline-block py-1.5 px-2 md:px-3.5 text-[9px] font-extrabold uppercase tracking-widest rounded-xl ${
                                                             item.isPaid 
                                                                 ? 'bg-emerald-100/70 text-emerald-800 border border-emerald-200/50' 
                                                                 : 'bg-amber-100/70 text-amber-800 border border-amber-200/50'

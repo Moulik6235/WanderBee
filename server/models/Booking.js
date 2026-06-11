@@ -2,10 +2,16 @@ import mongoose from "mongoose";
 
 const bookingSchema = new mongoose.Schema({
     user: { type: String, ref: "User", required: true },
-    room: { type: String, ref: "Room", required: true },
-    hotel: { type: String, ref: "Hotel", required: true },
-    checkInDate: { type: Date, required: true },
-    checkOutDate: { type: Date, required: true },
+    bookingType: {
+        type: String,
+        enum: ["room", "experience"],
+        default: "room"
+    },
+    room: { type: String, ref: "Room", required: false },
+    hotel: { type: String, ref: "Hotel", required: false },
+    experience: { type: String, ref: "Experience", required: false },
+    checkInDate: { type: Date, required: false },
+    checkOutDate: { type: Date, required: false },
     guests: { type: Number, required: true },
     status: {
         type: String,

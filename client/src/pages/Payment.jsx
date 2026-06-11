@@ -11,26 +11,38 @@ const Payment = () => {
 
     // If navigated directly without state, redirect to home
     const bookingData = location.state || {}
-    const { room, bookingDate, basePrice, totalNights, cancellationPolicy = 'Free Cancellation' } = bookingData
+    const { room, bookingDate, basePrice, totalNights, cancellationPolicy = 'Free Cancellation', experience } = bookingData
+    const isExperience = !!experience
 
-    // Calculate GST based on nightly room rate
+    const [guestsCount, setGuestsCount] = useState(bookingData.guests || 1)
+
+    // Calculate GST based on nightly room rate or experience flat 5% GST
     let gstRate = 0;
-    if (basePrice <= 1000) {
-        gstRate = 0;
-    } else if (basePrice <= 7500) {
+    let gstAmount = 0;
+    let totalPrice = 0;
+
+    if (isExperience) {
         gstRate = 0.05;
+        gstAmount = (basePrice || 0) * guestsCount * gstRate;
+        totalPrice = ((basePrice || 0) * guestsCount) + gstAmount;
     } else {
-        gstRate = 0.18;
+        if (basePrice <= 1000) {
+            gstRate = 0;
+        } else if (basePrice <= 7500) {
+            gstRate = 0.05;
+        } else {
+            gstRate = 0.18;
+        }
+        gstAmount = (basePrice || 0) * (totalNights || 1) * gstRate;
+        totalPrice = bookingData.totalPrice || (((basePrice || 0) * (totalNights || 1)) + gstAmount);
     }
-    const gstAmount = (basePrice || 0) * (totalNights || 1) * gstRate;
-    const totalPrice = bookingData.totalPrice || (((basePrice || 0) * (totalNights || 1)) + gstAmount);
 
     useEffect(() => {
-        if (!room || !bookingDate) {
-            toast.error("Invalid reservation path. Please select a room first.")
+        if (!experience && (!room || !bookingDate)) {
+            toast.error("Invalid reservation path. Please select a room or experience first.")
             navigate('/')
         }
-    }, [room, bookingDate, navigate])
+    }, [room, bookingDate, experience, navigate])
 
     // State for Payment Methods: 'upi' | 'netbanking' | 'card' | 'checkin'
     const [paymentMethod, setPaymentMethod] = useState('card')
@@ -187,6 +199,62 @@ const Payment = () => {
             }
 
             // B. CREATE new booking
+            if (isExperience) {
+                const isStaticExp = typeof experience.id === 'number' || (typeof experience.id === 'string' && !isNaN(Number(experience.id)));
+                if (isStaticExp || !token) {
+                    const localBooking = {
+                        _id: `local-exp-${Date.now()}`,
+                        bookingType: "experience",
+                        experience: {
+                            _id: experience.id,
+                            title: experience.title,
+                            category: experience.category,
+                            location: experience.location,
+                            timing: experience.timing,
+                            duration: experience.duration,
+                            price: experience.price,
+                            images: [experience.image]
+                        },
+                        guests: guestsCount,
+                        checkInDate: new Date().toISOString(),
+                        totalPrice: totalPrice,
+                        status: isPaid ? "Confirmed" : "Pending Payment",
+                        paymentMethod: methodLabel,
+                        isPaid: isPaid,
+                        cancellationPolicy: "Free Cancellation"
+                    }
+                    const saved = JSON.parse(localStorage.getItem("wanderbee_bookings") || "[]")
+                    saved.unshift(localBooking)
+                    localStorage.setItem("wanderbee_bookings", JSON.stringify(saved))
+                    
+                    toast.success(`Experience booked successfully!`)
+                    navigate('/my-bookings')
+                    return
+                }
+
+                // Database backend call for DB experiences
+                const { data } = await axios.post('/api/bookings/book', {
+                    experience: experience.id || experience._id,
+                    guests: guestsCount,
+                    paymentMethod: methodLabel,
+                    isPaid: isPaid,
+                    totalPrice: totalPrice,
+                    cancellationPolicy: "Free Cancellation"
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+
+                if (data.success) {
+                    toast.success(`Experience Booking Confirmed!`)
+                    navigate('/my-bookings')
+                } else {
+                    toast.error(data.message || "Failed to make reservation")
+                }
+                return
+            }
+
             // 1. Save in LocalStorage if mock custom room
             if (room._id.startsWith("ud-") || room._id.startsWith("jp-") || room._id.startsWith("jd-")) {
                 const localBooking = {
@@ -212,7 +280,7 @@ const Payment = () => {
                 saved.unshift(localBooking)
                 localStorage.setItem("wanderbee_bookings", JSON.stringify(saved))
                 
-                toast.success(`Royal stay booked successfully! Atithi Devo Bhava!`)
+                toast.success(`Stay booked successfully! Atithi Devo Bhava!`)
                 navigate('/my-bookings')
                 return
             }
@@ -246,7 +314,7 @@ const Payment = () => {
         }
     }
 
-    if (!room) return null
+    if (!room && !experience) return null
 
     return (
         <main className="jali-overlay min-h-screen pb-20 bg-background text-left font-inter">
@@ -255,7 +323,7 @@ const Payment = () => {
                 <Title 
                     align="left"
                     title="Confirm & Pay"
-                    subTitle="Complete your reservation at this handpicked heritage sanctuary."
+                    subTitle="Complete your reservation at this handpicked hotel stay."
                 />
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
@@ -334,7 +402,7 @@ const Payment = () => {
                             {paymentMethod === 'card' && (
                                 <div className="space-y-4">
                                     
-                                    {/* Visual Royal Card Display */}
+                                    {/* Visual Card Display */}
                                     <div className="bg-gradient-to-br from-primary to-slate-900 border border-white/10 rounded-2xl p-5 text-white shadow-md relative overflow-hidden font-montserrat flex flex-col justify-between h-44 w-full sm:w-80 mx-auto transition-transform duration-500 hover:rotate-1">
                                         <div className="absolute -top-10 -right-10 w-28 h-28 bg-white/5 rounded-full blur-2xl"></div>
                                         <div className="flex justify-between items-start">
@@ -532,7 +600,7 @@ const Payment = () => {
                                         No Pre-payment Required
                                     </h4>
                                     <p className="text-xs text-amber-900/80 leading-relaxed font-inter">
-                                        You are choosing to pay directly at the front desk when you arrive at the property. No charges will be placed on your cards online today. WanderBee secures your rooms for this heritage retreat.
+                                        You are choosing to pay directly at the front desk when you arrive at the property. No charges will be placed on your cards online today. WanderBee secures your rooms for this stay.
                                     </p>
                                 </div>
                             )}
@@ -554,12 +622,12 @@ const Payment = () => {
                                 {loading ? (
                                     <>
                                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                        Processing Royal Handshake...
+                                        Processing Payment...
                                     </>
                                 ) : (
                                     <>
                                         <span className="material-symbols-outlined text-sm font-bold">lock_open</span>
-                                        {paymentMethod === 'checkin' ? 'Secure Stay & Pay Later' : `Pay & Confirm Stay (${currency}${totalPrice?.toLocaleString()})`}
+                                        {paymentMethod === 'checkin' ? 'Secure Booking & Pay Later' : `Pay & Confirm ${isExperience ? 'Experience' : 'Stay'} (${currency}${totalPrice?.toLocaleString()})`}
                                     </>
                                 )}
                             </button>
@@ -569,62 +637,132 @@ const Payment = () => {
                     {/* Right Column: Receipt Summary */}
                     <div className="lg:col-span-5 space-y-6">
                         
-                        {/* Mini Room Card */}
-                        <div className="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm flex items-center gap-4 text-left">
-                            <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-sm">
-                                <img src={room.images?.[0] || room.image} alt={room.hotel?.name} className="w-full h-full object-cover" />
-                            </div>
-                            <div className="space-y-1">
-                                <h4 className="font-montserrat font-extrabold text-sm text-primary leading-tight line-clamp-1">{room.hotel?.name}</h4>
-                                <div className="flex items-center gap-0.5 text-gray-400 text-[10px]">
-                                    <span className="material-symbols-outlined text-xs">location_on</span>
-                                    <span className="truncate">{room.hotel?.address}</span>
+                        {/* Mini Room Card / Experience Card */}
+                        {isExperience ? (
+                            <div className="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm flex items-center gap-4 text-left">
+                                <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-sm flex-shrink-0">
+                                    <img src={experience.images?.[0] || experience.image} alt={experience.title} className="w-full h-full object-cover" />
                                 </div>
-                                <span className="inline-block bg-primary/5 text-primary text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
-                                    {room.roomType || room.type || "Luxury Suite"}
-                                </span>
+                                <div className="space-y-1 flex-1">
+                                    <h4 className="font-montserrat font-extrabold text-sm text-primary leading-tight line-clamp-1">{experience.title}</h4>
+                                    <div className="flex items-center gap-0.5 text-gray-400 text-[10px]">
+                                        <span className="material-symbols-outlined text-xs">location_on</span>
+                                        <span className="truncate">{experience.location}</span>
+                                    </div>
+                                    <span className="inline-block bg-primary/5 text-primary text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
+                                        {experience.category || "Experience"}
+                                    </span>
+                                </div>
                             </div>
-                        </div>
+                        ) : (
+                            <div className="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm flex items-center gap-4 text-left">
+                                <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-sm flex-shrink-0">
+                                    <img src={room.images?.[0] || room.image} alt={room.hotel?.name} className="w-full h-full object-cover" />
+                                </div>
+                                <div className="space-y-1">
+                                    <h4 className="font-montserrat font-extrabold text-sm text-primary leading-tight line-clamp-1">{room.hotel?.name}</h4>
+                                    <div className="flex items-center gap-0.5 text-gray-400 text-[10px]">
+                                        <span className="material-symbols-outlined text-xs">location_on</span>
+                                        <span className="truncate">{room.hotel?.address}</span>
+                                    </div>
+                                    <span className="inline-block bg-primary/5 text-primary text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
+                                        {room.roomType || room.type || "Luxury Suite"}
+                                    </span>
+                                </div>
+                            </div>
+                        )}
 
                         {/* Summary Details */}
                         <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm space-y-6 text-left">
-                            <h3 className="font-montserrat font-bold text-xs uppercase tracking-wider text-primary border-b border-gray-100 pb-3">Reservation Details</h3>
+                            <h3 className="font-montserrat font-bold text-xs uppercase tracking-wider text-primary border-b border-gray-100 pb-3">
+                                {isExperience ? 'Experience Details' : 'Reservation Details'}
+                            </h3>
                             
                             <div className="grid grid-cols-2 gap-4 text-xs font-inter text-gray-600">
-                                <div>
-                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide block mb-0.5">Check-in</span>
-                                    <span className="font-bold text-slate-800">{bookingDate.checkIn}</span>
-                                </div>
-                                <div>
-                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide block mb-0.5">Check-out</span>
-                                    <span className="font-bold text-slate-800">{bookingDate.checkOut}</span>
-                                </div>
-                                <div>
-                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide block mb-0.5">Nights</span>
-                                    <span className="font-bold text-slate-800">{totalNights} Nights</span>
-                                </div>
-                                <div>
-                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide block mb-0.5">Guests</span>
-                                    <span className="font-bold text-slate-800">{bookingDate.guests} Guests</span>
-                                </div>
-                                <div className="col-span-2">
-                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide block mb-0.5">Cancellation Policy</span>
-                                    <span className={`inline-block font-bold text-xs ${cancellationPolicy === 'Cancellation Fee Applicable' ? 'text-rose-600' : 'text-emerald-600'}`}>{cancellationPolicy}</span>
-                                </div>
+                                {isExperience ? (
+                                    <>
+                                        <div>
+                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide block mb-0.5">Timing</span>
+                                            <span className="font-bold text-slate-800">{experience.timing || 'Flexible'}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide block mb-0.5">Duration</span>
+                                            <span className="font-bold text-slate-800">{experience.duration || 'Flexible'}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide block mb-0.5">Category</span>
+                                            <span className="font-bold text-slate-800">{experience.category || 'Curated'}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide block mb-0.5 font-bold text-primary">Number of People</span>
+                                            <select
+                                                value={guestsCount}
+                                                onChange={(e) => setGuestsCount(Number(e.target.value))}
+                                                className="w-full bg-slate-50 border border-primary/20 rounded-xl px-2 py-1 text-xs font-bold text-slate-800 outline-none focus:border-primary cursor-pointer mt-0.5"
+                                            >
+                                                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => (
+                                                    <option key={n} value={n}>{n} {n === 1 ? 'Person' : 'People'}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div>
+                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide block mb-0.5">Check-in</span>
+                                            <span className="font-bold text-slate-800">{bookingDate.checkIn}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide block mb-0.5">Check-out</span>
+                                            <span className="font-bold text-slate-800">{bookingDate.checkOut}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide block mb-0.5">Nights</span>
+                                            <span className="font-bold text-slate-800">{totalNights} Nights</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide block mb-0.5">Guests</span>
+                                            <span className="font-bold text-slate-800">{bookingDate.guests} Guests</span>
+                                        </div>
+                                        <div className="col-span-2">
+                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide block mb-0.5">Cancellation Policy</span>
+                                            <span className={`inline-block font-bold text-xs ${cancellationPolicy === 'Cancellation Fee Applicable' ? 'text-rose-600' : 'text-emerald-600'}`}>{cancellationPolicy}</span>
+                                        </div>
+                                    </>
+                                )}
                             </div>
 
                             <hr className="border-gray-100" />
 
                             {/* Charge breakdown */}
                             <div className="space-y-3 font-inter text-xs text-gray-500">
-                                <div className="flex justify-between">
-                                    <span>Room Rate ({totalNights} nights)</span>
-                                    <span>{currency}{((basePrice || 12500) * totalNights).toLocaleString()}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span>GST ({gstRate * 100}%)</span>
-                                    <span>{currency}{gstAmount.toLocaleString()}</span>
-                                </div>
+                                {isExperience ? (
+                                    <>
+                                        <div className="flex justify-between">
+                                            <span>Price Per Person</span>
+                                            <span>{currency}{(basePrice || 0).toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span>Total Base Price ({guestsCount} {guestsCount === 1 ? 'person' : 'people'})</span>
+                                            <span>{currency}{((basePrice || 0) * guestsCount).toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span>GST (5%)</span>
+                                            <span>{currency}{gstAmount.toLocaleString()}</span>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className="flex justify-between">
+                                            <span>Room Rate ({totalNights} nights)</span>
+                                            <span>{currency}{((basePrice || 12500) * totalNights).toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span>GST ({gstRate * 100}%)</span>
+                                            <span>{currency}{gstAmount.toLocaleString()}</span>
+                                        </div>
+                                    </>
+                                )}
                                 <hr className="border-gray-150" />
                                 <div className="flex justify-between font-montserrat font-bold text-base text-primary">
                                     <span>Total Price</span>

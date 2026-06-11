@@ -83,15 +83,18 @@ export const cities = [
 
 // Exclusive Offers Dummy Data
 export const exclusiveOffers = [
-    { _id: 1, title: "Diwali Delight", description: "Up to 35% off on luxury heritage stays.", priceOff: 35, expiryDate: "Nov 15", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuA8nnsAMI80NQWnyiRKgKQab0gnTh78PhVbw36oQpGLbROToSXkol5c7XujA6wA7TjUVgH3t0VJRE46Lz7wrAnumOA9kHPYMKwnRRAu0opgsirYtXQgt1Zll2YU1PMNT-9yvmIuiEpHaNwfWLBXrGKHUaR6SIRx62qYI8MmliL4kGdFDc5VvUqolOI7meU1yxZ11_OjKuAVT9viiWJzadQ2ayG_wNqPbetoAsyBKRn_UKphsUJZhS1VWgsCil_wbEO-ZT5FtYNh_MTL", label: "Limited Time" },
+    { _id: 1, title: "Diwali Delight", description: "Up to 35% off on luxury hotel stays.", priceOff: 35, expiryDate: "Nov 15", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuA8nnsAMI80NQWnyiRKgKQab0gnTh78PhVbw36oQpGLbROToSXkol5c7XujA6wA7TjUVgH3t0VJRE46Lz7wrAnumOA9kHPYMKwnRRAu0opgsirYtXQgt1Zll2YU1PMNT-9yvmIuiEpHaNwfWLBXrGKHUaR6SIRx62qYI8MmliL4kGdFDc5VvUqolOI7meU1yxZ11_OjKuAVT9viiWJzadQ2ayG_wNqPbetoAsyBKRn_UKphsUJZhS1VWgsCil_wbEO-ZT5FtYNh_MTL", label: "Limited Time" },
     { _id: 2, title: "Ayurvedic Rejuvenation", description: "Complimentary spa treatment on 3+ nights.", priceOff: 20, expiryDate: "Dec 10", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuD9hxNHLGNzNeqoL1l7FRuLa9wTvj7zKEkBUWBs3HVWiCTDe3bUaMa8IDzhXzD-hxkT_H_JQ1404M5eHa_5-i-hi7z9zcOl7Ze29q7V20HhYRAtDv0VKtaLGftyUGgP6QvyeTsIsaVayvUw1Lb86M1YvS9ewRkyXh5urVVwR2CqFQxWhCp3r7_RSWJRGUNe4tJ-PVkJY9UmZiq_2kpxtGY34FmqWbrLy-lKiAzJQMIFQsNpB2e61hKUhjhcuTl6V4SA6cakOolIW7WR", label: "Wellness Exclusive" },
 ]
 
 // Testimonials Dummy Data
 export const testimonials = [
-    { id: 1, name: "Emma Rodriguez", address: "Barcelona, Spain", image: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200", rating: 5, review: "I've used many booking platforms before, but none compare to the personalized experience and attention to detail that QuickStay provides." },
-    { id: 2, name: "Liam Johnson", address: "New York, USA", image: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200", rating: 4, review: "QuickStay exceeded my expectations. The booking process was seamless, and the hotels were absolutely top-notch. Highly recommended!" },
-    { id: 3, name: "Sophia Lee", address: "Seoul, South Korea", image: "https://images.unsplash.com/photo-1701615004837-40d8573b6652?q=80&w=200", rating: 5, review: "Amazing service! I always find the best luxury accommodations through QuickStay. Their recommendations never disappoint!" }
+    { id: 1, name: "Emma Rodriguez", address: "Barcelona, Spain", image: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200", rating: 5, review: "I've used many booking platforms before, but none compare to the personalized experience and attention to detail that WanderBee provides." },
+    { id: 2, name: "Aarav Mehta", address: "Mumbai, India", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200", rating: 5, review: "WanderBee has redefined my local travel experience. The stays are premium, bookings are seamless, and the support is outstanding." },
+    { id: 3, name: "Sophia Lee", address: "Seoul, South Korea", image: "https://images.unsplash.com/photo-1701615004837-40d8573b6652?q=80&w=200", rating: 5, review: "Amazing service! I always find the best premium accommodations through WanderBee. Their recommendations never disappoint!" },
+    { id: 4, name: "Ananya Sharma", address: "Delhi, India", image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200", rating: 5, review: "Extremely pleased with the guest support assistant. They guided us to the best locations and the room was absolutely spotless." },
+    { id: 5, name: "Liam Johnson", address: "New York, USA", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200", rating: 4, review: "WanderBee exceeded my expectations. The booking process was seamless, and the hotels were absolutely top-notch. Highly recommended!" },
+    { id: 6, name: "Vikram Patel", address: "Bangalore, India", image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=200", rating: 5, review: "Great service and premium properties. Booking with WanderBee was quick, and the actual experience exceeded our expectations." }
 ];
 
 // Facility Icon

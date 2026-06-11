@@ -11,7 +11,7 @@ const Profile = () => {
     const [formData, setFormData] = useState({
         phone: "+91 98765 43210",
         address: "Mewar Enclave, Udaipur, Rajasthan",
-        prefStay: "Palace Hotel",
+        prefStay: "Premium Hotel",
         prefDiet: "Ayurvedic Vegetarian",
         language: "Hindi & English"
     })
@@ -19,7 +19,7 @@ const Profile = () => {
     const handleSave = (e) => {
         e.preventDefault()
         setIsEditing(false)
-        toast.success("Your heritage stay preferences have been successfully updated!")
+        toast.success("Your stay preferences have been successfully updated!")
     }
 
     if (!user) {
@@ -27,9 +27,9 @@ const Profile = () => {
             <div className="min-h-[80vh] flex flex-col justify-center items-center px-6 py-20 text-center jali-pattern">
                 <div className="bg-white p-8 md:p-12 rounded-3xl border border-gray-200/80 shadow-2xl max-w-lg w-full flex flex-col items-center">
                     <span className="material-symbols-outlined text-primary text-7xl mb-6 animate-pulse">lock</span>
-                    <h2 className="font-montserrat text-2xl font-extrabold text-primary mb-3">Join the Heritage Circle</h2>
+                    <h2 className="font-montserrat text-2xl font-extrabold text-primary mb-3">Join the WanderBee Circle</h2>
                     <p className="font-inter text-gray-500 text-sm mb-8 leading-relaxed">
-                        Sign in to view your royal profile, track your exclusive heritage bookings, and access gold-tier privileges.
+                        Sign in to view your profile, track your exclusive bookings, and access gold-tier privileges.
                     </p>
                     <button 
                         onClick={openSignIn}
@@ -49,7 +49,7 @@ const Profile = () => {
                 <img 
                     className="w-full h-full object-cover opacity-35" 
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9rmuOj5iWmWeJucgaxzlcgax4VI7caas8PUTwdrI0-5ZTw7s58TUoJzSGhS_bqTU5LGsUDGAqhGXYK5HIiueDAI4G_5uuI81won73xQzS8U_z71uBXFdd5UlzakF-wOUSm0WYwu7e9iZ_ApUf3PXvxiQjn0K3_RXVgQ_uooPylgorRlpotNVxF9co-b9NqRtzZSzgrAS8S0T_cM2JN0CVAQR_npC4jZoU-UdcFvCN6dViHPfbD6S6YXeC8WekWxx6qyylqDz_1tdw" 
-                    alt="Heritage Background" 
+                    alt="Stay Background" 
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50"></div>
             </div>
@@ -115,7 +115,7 @@ const Profile = () => {
                             }`}
                         >
                             <span className="material-symbols-outlined text-base">card_membership</span>
-                            Heritage Benefits
+                            WanderBee Benefits
                         </button>
                         <button 
                             onClick={() => setActiveTab('wishlist')}
@@ -126,7 +126,7 @@ const Profile = () => {
                             }`}
                         >
                             <span className="material-symbols-outlined text-base">favorite</span>
-                            Saved Retrats
+                            Saved Retreats
                         </button>
                         <button 
                             onClick={() => isOwner ? navigate('/owner') : setShowHotelReg(true)}
@@ -194,15 +194,15 @@ const Profile = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Preferred Heritage Type</label>
+                                        <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Preferred Stay Type</label>
                                         <select 
                                             disabled={!isEditing}
                                             value={formData.prefStay}
                                             onChange={(e) => setFormData(prev => ({...prev, prefStay: e.target.value}))}
                                             className={`w-full bg-transparent border rounded-xl px-4 py-2.5 text-sm font-inter font-semibold text-primary outline-none transition-premium focus:ring-1 focus:ring-primary cursor-pointer ${isEditing ? 'border-primary' : 'border-gray-200 bg-slate-50/40'}`}
                                         >
-                                            <option value="Palace Hotel">Palace Hotel</option>
-                                            <option value="Heritage Haveli">Heritage Haveli</option>
+                                            <option value="Premium Hotel">Premium Hotel</option>
+                                            <option value="Boutique Stay">Boutique Stay</option>
                                             <option value="Boutique Resort">Boutique Resort</option>
                                             <option value="Luxury Suite">Luxury Suite</option>
                                         </select>
@@ -238,7 +238,7 @@ const Profile = () => {
 
                         {activeTab === 'club' && (
                             <div className="space-y-6">
-                                <h2 className="font-montserrat text-lg font-extrabold text-primary border-b border-gray-100 pb-4 mb-4 uppercase tracking-wider">Heritage Circle privileges</h2>
+                                <h2 className="font-montserrat text-lg font-extrabold text-primary border-b border-gray-100 pb-4 mb-4 uppercase tracking-wider">WanderBee Club privileges</h2>
                                 
                                 {/* VIP Membership card */}
                                 <div className="bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-700 p-6 md:p-8 rounded-3xl text-white relative overflow-hidden shadow-xl border border-white/10">
@@ -251,7 +251,7 @@ const Profile = () => {
                                     <div className="flex justify-between items-start mb-10">
                                         <div>
                                             <span className="text-[10px] font-bold uppercase tracking-wider text-amber-200">Membership Club</span>
-                                            <h3 className="font-montserrat text-2xl font-extrabold tracking-widest mt-1">HERITAGE CIRCLE</h3>
+                                            <h3 className="font-montserrat text-2xl font-extrabold tracking-widest mt-1">WANDERBEE CLUB</h3>
                                         </div>
                                         <span className="material-symbols-outlined text-4xl text-amber-200">hotel_class</span>
                                     </div>
@@ -273,14 +273,14 @@ const Profile = () => {
                                         <span className="material-symbols-outlined text-secondary text-3xl font-fill" style={{fontVariationSettings: "'FILL' 1"}}>spa</span>
                                         <div>
                                             <h4 className="font-montserrat text-sm font-bold text-primary">Ayurvedic Welcome Spa</h4>
-                                            <p className="font-inter text-xs text-gray-500 mt-1 leading-relaxed">Enjoy a complimentary 30-minute stress release oil massage upon checking in at any of our Palace Stays.</p>
+                                            <p className="font-inter text-xs text-gray-500 mt-1 leading-relaxed">Enjoy a complimentary 30-minute stress release oil massage upon checking in at any of our Premium Stays.</p>
                                         </div>
                                     </div>
                                     <div className="border border-gray-100 p-5 rounded-2xl flex gap-3 text-left">
                                         <span className="material-symbols-outlined text-secondary text-3xl font-fill" style={{fontVariationSettings: "'FILL' 1"}}>room_service</span>
                                         <div>
-                                            <h4 className="font-montserrat text-sm font-bold text-primary">Royal Butler Assistance</h4>
-                                            <p className="font-inter text-xs text-gray-500 mt-1 leading-relaxed">Dedicated expert butler to assist you with local historical curations and packing/unpacking.</p>
+                                            <h4 className="font-montserrat text-sm font-bold text-primary">Guest Assistant Service</h4>
+                                            <p className="font-inter text-xs text-gray-500 mt-1 leading-relaxed">Dedicated expert assistant to assist you with local historical curations and packing/unpacking.</p>
                                         </div>
                                     </div>
                                     <div className="border border-gray-100 p-5 rounded-2xl flex gap-3 text-left">
@@ -293,8 +293,8 @@ const Profile = () => {
                                     <div className="border border-gray-100 p-5 rounded-2xl flex gap-3 text-left">
                                         <span className="material-symbols-outlined text-secondary text-3xl font-fill" style={{fontVariationSettings: "'FILL' 1"}}>dinner_dining</span>
                                         <div>
-                                            <h4 className="font-montserrat text-sm font-bold text-primary">Curated Mewar Dining</h4>
-                                            <p className="font-inter text-xs text-gray-500 mt-1 leading-relaxed">Complimentary high-tier Mewari breakfast and sunset snacks served inside private palace courtyards.</p>
+                                            <h4 className="font-montserrat text-sm font-bold text-primary">Curated Dining</h4>
+                                            <p className="font-inter text-xs text-gray-500 mt-1 leading-relaxed">Complimentary high-tier breakfast and sunset snacks served inside private courtyards.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -303,7 +303,7 @@ const Profile = () => {
 
                         {activeTab === 'wishlist' && (
                             <div className="space-y-6">
-                                <h2 className="font-montserrat text-lg font-extrabold text-primary border-b border-gray-100 pb-4 mb-4 uppercase tracking-wider">Your saved heritage retreats</h2>
+                                <h2 className="font-montserrat text-lg font-extrabold text-primary border-b border-gray-100 pb-4 mb-4 uppercase tracking-wider">Your saved retreats</h2>
                                 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                     <div className="group border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md cursor-pointer transition-premium text-left">

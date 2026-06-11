@@ -21,11 +21,12 @@ const AllRooms = () => {
   const [selectedAmenities, setSelectedAmenities] = useState([]); // Empty by default so all hotels show up
   const [propertyType, setPropertyType] = useState(""); // Empty by default so all hotels show up
   const [selectedSort, setSelectedSort] = useState("Popularity");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const [dbRooms, setDbRooms] = useState([]);
 
   const roomTypes = [
-    "Heritage Stays",
+    "Premium Stays",
     "Boutique Hotels",
     "Luxury Resorts"
   ];
@@ -81,9 +82,9 @@ const AllRooms = () => {
         if (data.success) {
           const mapped = data.rooms.map(room => ({
             _id: room._id,
-            name: room.hotel?.name || "Premium Heritage Stay",
+            name: room.hotel?.name || "Premium Stay",
             city: room.hotel?.city || "Udaipur",
-            address: room.hotel?.address || "Mewar Heritage Region",
+            address: room.hotel?.address || "Mewar Region",
             rating: 4.8,
             reviewsCount: 24,
             type: room.roomType.includes("Luxury") || room.roomType.includes("Suite") ? "Luxury Resorts" : "Boutique Hotels",
@@ -114,12 +115,12 @@ const AllRooms = () => {
     // Udaipur Properties (Matching the design screenshot exactly!)
     {
       _id: "ud-1",
-      name: "The Mewar Grand Heritage",
+      name: "The Mewar Grand Hotel",
       city: "Udaipur",
       address: "Lake Pichola, Udaipur",
       rating: 4.9,
       reviewsCount: 342,
-      type: "Heritage Stays",
+      type: "Premium Stays",
       pricePerNight: 18500,
       originalPrice: 24000,
       image: "https://lh3.googleusercontent.com/aida-public/AB6AXuARK86bQhppCPH3GLs4FM9czrEDFWlrxPzwBkJ3BqQYMLUQl0gha4A8vliiWWj1xmXO6x6-L9_nqtVId3YGX-Do0csB_i4s7SNFfzADXK2N4EBR2QyWXeL_4YYM5kr9zTPNJE8j_zFoK-A_SiS57VfMKfdSayWBC_63wwQKZ1BKWE1Ldehh00G2e8bJ8AIbXwSzBGMaBqanZRGiwkwYRYvO2O6IuN_oOS44uD3UUadKXP6uycFqSd0QQs1bpPzqSDqQZ0h80lwQSjvI",
@@ -152,7 +153,7 @@ const AllRooms = () => {
     },
     {
       _id: "ud-3",
-      name: "Royal Aravali Resort & Spa",
+      name: "Grand Aravali Resort & Spa",
       city: "Udaipur",
       address: "Sajjangarh Road, Udaipur",
       rating: 4.8,
@@ -173,12 +174,12 @@ const AllRooms = () => {
     // Jaipur Properties
     {
       _id: "jp-1",
-      name: "The Raj Palace Heritage",
+      name: "The Raj Grand Hotel",
       city: "Jaipur",
       address: "Amer Road, Pink City, Jaipur",
       rating: 4.9,
       reviewsCount: 450,
-      type: "Heritage Stays",
+      type: "Premium Stays",
       pricePerNight: 24500,
       originalPrice: 30000,
       image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDYnxXIKa_qwaAI8LEyjwDTt8BZ3oSoHOOoElVLtX2xHbfIT_U927oeD1l3uQEe9e_hsDjAbf7SGwS5jH40strZMYHuhXW15FSsXc5Ysq_FbAUDh3tSnuRuCPCuIMOZ62GHyFbyQdK-OwkSyGR9kcdM2aFSnhwvgoifQdRY38kjBNC1DkDo8TseMFMqi0ZJBuoykxbqcRGQmBvU7eO9UDjrBnVfpM8e8c9qDQlWmBEYr2xGExeOH-hPrR8C0biA8Pk3bjARZLS_P1sh",
@@ -193,7 +194,7 @@ const AllRooms = () => {
     },
     {
       _id: "jp-2",
-      name: "Jaipur Vista Palace",
+      name: "Jaipur Vista Hotel",
       city: "Jaipur",
       address: "M.I. Road, Jaipur",
       rating: 4.6,
@@ -224,7 +225,7 @@ const AllRooms = () => {
       image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBY9TfYTQd55PQEfwQIQDHMpdNGa38-RkOQ4v8oncrb1lYcGrNdD8ULF9pD7L7KPS1U41Lb0ycDC7A29ojVs4XxiYRTJfkmfYXIlWbN7M0kc6rctXOCdiYbY8Fb3j5hTAkUinnWQomYHeHWOwaZy8n88gVaumAkfIuc5Ai9jD3tQ7KuJimPQkfJq64nQ1Hx2k4qxbzGwK8Rhi3bspthW28xGszBhXk8GSm4A3wYeUym2qq0uF4pJwKWc_MDqz9uK2grIYrSaiWle8Wy",
       amenities: ["Swimming Pool", "Free WiFi", "Spa & Wellness", "Breakfast Included"],
       badge: "Spa & Salon",
-      badge2: "Royal Butler",
+      badge2: "Guest Assistant",
       badge3: "Desert View",
       managed: true,
       leftRooms: null,
@@ -291,9 +292,9 @@ const AllRooms = () => {
     setActiveCity(searchLocation.trim());
     setShowSuggestions(false);
     if (searchLocation.trim()) {
-      toast.success(`Showing heritage properties in ${searchLocation}`);
+      toast.success(`Showing properties in ${searchLocation}`);
     } else {
-      toast.success("Showing all heritage properties across India");
+      toast.success("Showing all properties across India");
     }
   };
 
@@ -301,7 +302,7 @@ const AllRooms = () => {
     setSearchLocation(city);
     setActiveCity(city);
     setShowSuggestions(false);
-    toast.success(`Showing heritage properties in ${city}`);
+    toast.success(`Showing properties in ${city}`);
   };
 
   const handleRatingChange = (checked, label) => {
@@ -337,7 +338,7 @@ const AllRooms = () => {
         </nav>
       </div>
 
-      {/* 🔍 Royal Search Bar Card with Suggestions */}
+      {/* 🔍 Search Bar Card with Suggestions */}
       <section className="max-w-6xl mx-auto px-6 md:px-16 lg:px-24 xl:px-32 mt-4 mb-8">
         <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-lg relative z-20">
           <form onSubmit={handleSearchSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
@@ -428,18 +429,29 @@ const AllRooms = () => {
           </h2>
         </div>
 
-        {/* Sort select */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-400 font-inter">Sort by:</span>
-          <select 
-            value={selectedSort}
-            onChange={(e) => setSelectedSort(e.target.value)}
-            className="bg-white border border-gray-200 rounded-xl px-3 py-1.5 text-xs font-inter font-semibold text-primary outline-none focus:ring-1 focus:ring-primary cursor-pointer hover:border-secondary transition-colors"
+        {/* Sort select & Mobile Filters Button */}
+        <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+          <button 
+            type="button"
+            onClick={() => setIsFilterOpen(true)}
+            className="lg:hidden flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-4 py-1.5 text-xs font-inter font-semibold text-primary hover:border-secondary transition-colors active:scale-95 shadow-sm cursor-pointer"
           >
-            {sortOptions.map((opt, i) => (
-              <option key={i} value={opt}>{opt}</option>
-            ))}
-          </select>
+            <span className="material-symbols-outlined text-sm text-secondary font-bold">filter_alt</span>
+            Filters
+          </button>
+
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-400 font-inter">Sort by:</span>
+            <select 
+              value={selectedSort}
+              onChange={(e) => setSelectedSort(e.target.value)}
+              className="bg-white border border-gray-200 rounded-xl px-3 py-1.5 text-xs font-inter font-semibold text-primary outline-none focus:ring-1 focus:ring-primary cursor-pointer hover:border-secondary transition-colors"
+            >
+              {sortOptions.map((opt, i) => (
+                <option key={i} value={opt}>{opt}</option>
+              ))}
+            </select>
+          </div>
         </div>
       </section>
 
@@ -447,7 +459,7 @@ const AllRooms = () => {
       <div className="max-w-6xl mx-auto px-6 md:px-16 lg:px-24 xl:px-32 grid grid-cols-12 gap-8 items-start relative z-10">
         
         {/* 🎛️ Left Sidebar Filters */}
-        <aside className="col-span-12 lg:col-span-3 space-y-6">
+        <aside className="hidden lg:block lg:col-span-3 space-y-6">
           
           <div className="bg-white rounded-3xl border border-gray-100 p-5 shadow-sm space-y-6">
             
@@ -548,7 +560,7 @@ const AllRooms = () => {
           <div className="bg-primary p-5 rounded-3xl text-left border border-white/5 relative overflow-hidden shadow-md">
             <span className="material-symbols-outlined text-amber-200 text-3xl mb-2">hotel_class</span>
             <h4 className="font-montserrat text-sm font-extrabold text-white">Unlock Member Prices</h4>
-            <p className="font-inter text-xs text-slate-300 mt-1 mb-4 leading-relaxed">Save an extra 15% on your first heritage booking.</p>
+            <p className="font-inter text-xs text-slate-300 mt-1 mb-4 leading-relaxed">Save an extra 15% on your first stay booking.</p>
             <button 
               onClick={() => navigate('/profile')}
               className="bg-secondary text-white font-montserrat font-bold text-[9px] uppercase tracking-widest px-4 py-2 rounded-xl transition-premium shadow-sm hover:shadow-md cursor-pointer"
@@ -564,7 +576,7 @@ const AllRooms = () => {
           {filteredRooms.length === 0 ? (
             <div className="bg-white rounded-3xl p-12 text-center border border-gray-100 shadow-sm font-montserrat">
               <span className="material-symbols-outlined text-gray-300 text-6xl mb-4">home_work</span>
-              <p className="text-gray-500 font-semibold text-lg">No heritage properties found in "{activeCity}".</p>
+              <p className="text-gray-500 font-semibold text-lg">No properties found in "{activeCity}".</p>
               <p className="text-gray-400 text-xs mt-1">Try entering "Udaipur" or "Jaipur" in the search box!</p>
             </div>
           ) : (
@@ -662,6 +674,134 @@ const AllRooms = () => {
           )}
         </div>
 
+      </div>
+
+      {/* 📱 Mobile Filters Drawer Overlay */}
+      <div 
+        className={`fixed inset-0 bg-black/40 z-50 transition-opacity duration-300 lg:hidden ${isFilterOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`} 
+        onClick={() => setIsFilterOpen(false)}
+      >
+        <div 
+          className={`fixed bottom-0 left-0 w-full bg-white rounded-t-[2.5rem] max-h-[85vh] overflow-y-auto p-6 transition-transform duration-300 z-50 shadow-2xl space-y-6 border-t border-gray-100/50 ${isFilterOpen ? "translate-y-0" : "translate-y-full"}`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="flex justify-between items-center border-b border-gray-100 pb-4">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-secondary text-xl font-bold">filter_alt</span>
+              <h3 className="font-montserrat text-sm font-bold text-primary uppercase tracking-wider">Filters</h3>
+            </div>
+            <div className="flex items-center gap-4">
+              <button 
+                type="button"
+                onClick={() => {
+                  setPriceRange(50000);
+                  setSelectedRatings([]);
+                  setSelectedAmenities([]);
+                  setPropertyType("Luxury Resorts");
+                }}
+                className="text-secondary font-montserrat font-bold text-[10px] uppercase tracking-wider hover:underline cursor-pointer"
+              >
+                Clear all
+              </button>
+              <button 
+                type="button"
+                onClick={() => setIsFilterOpen(false)}
+                className="material-symbols-outlined text-gray-400 hover:text-primary text-xl font-bold bg-slate-50 p-1.5 rounded-full cursor-pointer transition-colors"
+              >
+                close
+              </button>
+            </div>
+          </div>
+
+          {/* Drawer Body - Reuses same filter contents */}
+          <div className="space-y-6 text-left">
+            {/* Price slider */}
+            <div>
+              <h4 className="font-montserrat text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3">Price Range (per night)</h4>
+              <input 
+                type="range"
+                min="1000"
+                max="50000"
+                step="1000"
+                value={priceRange}
+                onChange={(e) => setPriceRange(Number(e.target.value))}
+                className="w-full h-1 bg-gray-100 rounded-full appearance-none cursor-pointer accent-secondary"
+              />
+              <div className="flex justify-between text-[10px] text-gray-400 font-inter font-semibold mt-2">
+                <span>₹1,000</span>
+                <span className="text-secondary font-bold">Up to ₹{priceRange.toLocaleString()}</span>
+                <span>₹50,000+</span>
+              </div>
+            </div>
+
+            {/* Guest Ratings */}
+            <div>
+              <h4 className="font-montserrat text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Guest Rating</h4>
+              <div className="space-y-2">
+                {guestRatings.map((rating, idx) => (
+                  <label key={idx} className="flex gap-2.5 items-center cursor-pointer text-xs text-gray-600 font-inter">
+                    <input 
+                      type="checkbox"
+                      checked={selectedRatings.includes(rating)}
+                      onChange={(e) => handleRatingChange(e.target.checked, rating)}
+                      className="rounded text-primary focus:ring-primary border-gray-200 w-4 h-4 accent-secondary cursor-pointer"
+                    />
+                    <span>{rating}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Amenities */}
+            <div>
+              <h4 className="font-montserrat text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Amenities</h4>
+              <div className="space-y-2">
+                {amenitiesOptions.map((amenity, idx) => (
+                  <label key={idx} className="flex gap-2.5 items-center cursor-pointer text-xs text-gray-600 font-inter">
+                    <input 
+                      type="checkbox"
+                      checked={selectedAmenities.includes(amenity)}
+                      onChange={(e) => handleAmenityChange(e.target.checked, amenity)}
+                      className="rounded text-primary focus:ring-primary border-gray-200 w-4 h-4 accent-secondary cursor-pointer"
+                    />
+                    <span>{amenity}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Property Type Radio Group */}
+            <div>
+              <h4 className="font-montserrat text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Property Type</h4>
+              <div className="space-y-2">
+                {roomTypes.map((type, idx) => (
+                  <label key={idx} className="flex gap-2.5 items-center cursor-pointer text-xs text-gray-600 font-inter">
+                    <input 
+                      type="radio"
+                      name="mobile-property-type"
+                      checked={propertyType === type}
+                      onChange={() => setPropertyType(type)}
+                      className="text-primary focus:ring-primary border-gray-200 w-4 h-4 accent-secondary cursor-pointer"
+                    />
+                    <span>{type}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Drawer Footer CTA */}
+          <div className="pt-4 border-t border-gray-100 flex gap-4">
+            <button 
+              type="button"
+              onClick={() => setIsFilterOpen(false)}
+              className="w-full bg-primary text-white py-3 rounded-xl font-montserrat font-bold text-xs tracking-wider uppercase active:scale-95 cursor-pointer shadow-sm hover:bg-secondary transition-all"
+            >
+              Apply Filters
+            </button>
+          </div>
+        </div>
       </div>
     </main>
   )

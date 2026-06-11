@@ -3,10 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { roomsDummyData } from '../assets/quickStay-assets/assets'
 import { useAppContext } from '../context/AppContext'
 import { toast } from 'react-hot-toast'
+import { useClerk } from '@clerk/clerk-react'
 
 const RoomDetails = () => {
     const { id } = useParams()
     const navigate = useNavigate()
+    const { openSignIn } = useClerk()
     const { axios, currency, getToken } = useAppContext()
     const [room, setRoom] = useState(null)
     const [cancellationPolicy, setCancellationPolicy] = useState("Free Cancellation")
@@ -24,16 +26,16 @@ const RoomDetails = () => {
         city: "Udaipur",
         rating: 4.9,
         reviewsCount: 240,
-        type: "Palace Hotel",
+        type: "Premium Hotel",
         price: 12500,
-        about: "Experience majestic views of Pichola Lake and Lake Palace from this historic 18th-century sanctuary of the Mewar rulers. Meticulously restored to its original splendor, it features exquisite marble carvings, crystal chandeliers, hand-painted frescoes, and world-class royal dining, delivering the signature 'Atithi Devo Bhava' service.",
+        about: "Experience majestic views of Pichola Lake and the lake island from this historic 18th-century sanctuary. Meticulously restored to its original splendor, it features exquisite marble carvings, crystal chandeliers, hand-painted frescoes, and world-class dining, delivering the signature 'Atithi Devo Bhava' service.",
         images: [
             "https://lh3.googleusercontent.com/aida-public/AB6AXuARK86bQhppCPH3GLs4FM9czrEDFWlrxPzwBkJ3BqQYMLUQl0gha4A8vliiWWj1xmXO6x6-L9_nqtVId3YGX-Do0csB_i4s7SNFfzADXK2N4EBR2QyWXeL_4YYM5kr9zTPNJE8j_zFoK-A_SiS57VfMKfdSayWBC_63wwQKZ1BKWE1Ldehh00G2e8bJ8AIbXwSzBGMaBqanZRGiwkwYRYvO2O6IuN_oOS44uD3UUadKXP6uycFqSd0QQs1bpPzqSDqQZ0h80lwQSjvI",
             "https://lh3.googleusercontent.com/aida-public/AB6AXuA_ZYqirc6aOsriRZ6YZ2yYaIPt5W-uagipa9Zne5l-h7aNa7bgx0dJ92VCGr52PBxwUUMHBzi1xULXEZP1KE9hUBlFKBZei-q-4BoHTLGLAeCtW32UuBp1JLD1ZmCODEPgJqkE5THzj13inswULn-3KcG80OPcilxxP6FgMbukrYKFsniij3QVjXrXuNcAODcOWzde9RZzUM7I6RnJUtd0W_0gqqWgw_wJVBXfcZJalFr5fdTcAPofArgMYblGU3C2AvVOfjUYOnSr",
             "https://lh3.googleusercontent.com/aida-public/AB6AXuBY9TfYTQd55PQEfwQIQDHMpdNGa38-RkOQ4v8oncrb1lYcGrNdD8ULF9pD7L7KPS1U41Lb0ycDC7A29ojVs4XxiYRTJfkmfYXIlWbN7M0kc6rctXOCdiYbY8Fb3j5hTAkUinnWQomYHeHWOwaZy8n88gVaumAkfIuc5Ai9jD3tQ7KuJimPQkfJq64nQ1Hx2k4qxbzGwK8Rhi3bspthW28xGszBhXk8GSm4A3wYeUym2qq0uF4pJwKWc_MDqz9uK2grIYrSaiWle8Wy",
             "https://lh3.googleusercontent.com/aida-public/AB6AXuD9rmuOj5iWmWeJucgaxzlcgax4VI7caas8PUTwdrI0-5ZTw7s58TUoJzSGhS_bqTU5LGsUDGAqhGXYK5HIiueDAI4G_5uuI81won73xQzS8U_z71uBXFdd5UlzakF-wOUSm0WYwu7e9iZ_ApUf3PXvxiQjn0K3_RXVgQ_uooPylgorRlpotNVxF9co-b9NqRtzZSzgrAS8S0T_cM2JN0CVAQR_npC4jZoU-UdcFvCN6dViHPfbD6S6YXeC8WekWxx6qyylqDz_1tdw"
         ],
-        amenities: ["Swimming Pool", "Free WiFi", "Spa & Wellness", "Royal Dining"]
+        amenities: ["Swimming Pool", "Free WiFi", "Spa & Wellness", "Fine Dining"]
       },
       {
         name: "Aravalli Boutique Haveli",
@@ -41,16 +43,16 @@ const RoomDetails = () => {
         city: "Udaipur",
         rating: 4.7,
         reviewsCount: 180,
-        type: "Heritage Haveli",
+        type: "Boutique Hotel",
         price: 8900,
-        about: "Perched beautifully near Fateh Sagar Lake against the dramatic backdrop of the Aravalli hills, this boutique heritage home combines traditional architecture with bespoke modern luxury. Rest in beautifully curated suites adorned with local Rajasthani art, vintage fabrics, and hand-carved stone pillars.",
+        about: "Perched beautifully near Fateh Sagar Lake against the dramatic backdrop of the Aravalli hills, this boutique home combines traditional architecture with bespoke modern luxury. Rest in beautifully curated suites adorned with local Rajasthani art, vintage fabrics, and hand-carved stone pillars.",
         images: [
             "https://lh3.googleusercontent.com/aida-public/AB6AXuBN9iaHyFAXfWWZtCWdzoBn0yRbqD8bp8UW7w7DTBVfyfgWbZhvFhpCFBRbYK80O5311zUJ5ValbdxNDfQsUYg4hHcTJhDizzn-XLZ_hpJhSQTqR-YDsMuIA2CZaS5jm0FGOgdOdR_ANlhb-Rp64X6Pv3Lo-x_lb1cd_RkjyJ7N9B9cjg4LJXzOX0oGHjIIK079crEak7G-bxfsH5-Jm1rRJXBv0WzD3Op3wEUAgTEhcuhedokDjz93Mfh325Ari2AnKi2tzl93pUQ2",
             "https://lh3.googleusercontent.com/aida-public/AB6AXuDpfDnnoxRLnX9Z1MXeB31XFJLClZI41FYwzdn-u_y0Ww2Ev95ew52gSrW-NhAWDTpIelfx0mkWYk-lOKC76TQ_Yl5AAticlNsmOGkO2OdV0Kh-z-Y74hbc1znxZToPSH3XCt1HygtlDUQ2kNXOYc0ryLAOn8fwVLJ52nXY0b2CJ-HiVeDfJR0ZOdhjE7tybzjnu5u0jwr9Y9wfYH94t0hzbi4csbL1Tys6EdK_fEDPyUMFk05DcBA68wqpV2va_6T-muRDCutb-9Id",
             "https://lh3.googleusercontent.com/aida-public/AB6AXuA_ZYqirc6aOsriRZ6YZ2yYaIPt5W-uagipa9Zne5l-h7aNa7bgx0dJ92VCGr52PBxwUUMHBzi1xULXEZP1KE9hUBlFKBZei-q-4BoHTLGLAeCtW32UuBp1JLD1ZmCODEPgJqkE5THzj13inswULn-3KcG80OPcilxxP6FgMbukrYKFsniij3QVjXrXuNcAODcOWzde9RZzUM7I6RnJUtd0W_0gqqWgw_wJVBXfcZJalFr5fdTcAPofArgMYblGU3C2AvVOfjUYOnSr",
             "https://lh3.googleusercontent.com/aida-public/AB6AXuBY9TfYTQd55PQEfwQIQDHMpdNGa38-RkOQ4v8oncrb1lYcGrNdD8ULF9pD7L7KPS1U41Lb0ycDC7A29ojVs4XxiYRTJfkmfYXIlWbN7M0kc6rctXOCdiYbY8Fb3j5hTAkUinnWQomYHeHWOwaZy8n88gVaumAkfIuc5Ai9jD3tQ7KuJimPQkfJq64nQ1Hx2k4qxbzGwK8Rhi3bspthW28xGszBhXk8GSm4A3wYeUym2qq0uF4pJwKWc_MDqz9uK2grIYrSaiWle8Wy"
         ],
-        amenities: ["Free WiFi", "Royal Dining", "Room Service", "Mountain View"]
+        amenities: ["Free WiFi", "Fine Dining", "Room Service", "Mountain View"]
       },
       {
         name: "The Grand Mewar Resort & Spa",
@@ -67,17 +69,17 @@ const RoomDetails = () => {
             "https://lh3.googleusercontent.com/aida-public/AB6AXuDpfDnnoxRLnX9Z1MXeB31XFJLClZI41FYwzdn-u_y0Ww2Ev95ew52gSrW-NhAWDTpIelfx0mkWYk-lOKC76TQ_Yl5AAticlNsmOGkO2OdV0Kh-z-Y74hbc1znxZToPSH3XCt1HygtlDUQ2kNXOYc0ryLAOn8fwVLJ52nXY0b2CJ-HiVeDfJR0ZOdhjE7tybzjnu5u0jwr9Y9wfYH94t0hzbi4csbL1Tys6EdK_fEDPyUMFk05DcBA68wqpV2va_6T-muRDCutb-9Id",
             "https://lh3.googleusercontent.com/aida-public/AB6AXuA_ZYqirc6aOsriRZ6YZ2yYaIPt5W-uagipa9Zne5l-h7aNa7bgx0dJ92VCGr52PBxwUUMHBzi1xULXEZP1KE9hUBlFKBZei-q-4BoHTLGLAeCtW32UuBp1JLD1ZmCODEPgJqkE5THzj13inswULn-3KcG80OPcilxxP6FgMbukrYKFsniij3QVjXrXuNcAODcOWzde9RZzUM7I6RnJUtd0W_0gqqWgw_wJVBXfcZJalFr5fdTcAPofArgMYblGU3C2AvVOfjUYOnSr"
         ],
-        amenities: ["Swimming Pool", "Spa & Wellness", "Royal Dining", "Room Service"]
+        amenities: ["Swimming Pool", "Spa & Wellness", "Fine Dining", "Room Service"]
       },
       {
-        name: "Udaipur Heritage Palace",
-        address: "Near City Palace, Udaipur, Rajasthan",
+        name: "Udaipur Vista Hotel",
+        address: "Near City Centre, Udaipur, Rajasthan",
         city: "Udaipur",
         rating: 4.4,
         reviewsCount: 95,
         type: "Luxury Suite",
         price: 6500,
-        about: "Step inside this majestic retreat situated right adjacent to the royal City Palace complex. Indulge in classic Rajput elegance, private courtyard swings, rooftop views of Lake Pichola, and standard amenities that elevate your cultural stays into unforgettable heritage experiences.",
+        about: "Step inside this majestic retreat situated near the historic city center. Indulge in classic Rajput elegance, private courtyard swings, rooftop views of Lake Pichola, and standard amenities that elevate your stays into unforgettable experiences.",
         images: [
             "https://lh3.googleusercontent.com/aida-public/AB6AXuDpfDnnoxRLnX9Z1MXeB31XFJLClZI41FYwzdn-u_y0Ww2Ev95ew52gSrW-NhAWDTpIelfx0mkWYk-lOKC76TQ_Yl5AAticlNsmOGkO2OdV0Kh-z-Y74hbc1znxZToPSH3XCt1HygtlDUQ2kNXOYc0ryLAOn8fwVLJ52nXY0b2CJ-HiVeDfJR0ZOdhjE7tybzjnu5u0jwr9Y9wfYH94t0hzbi4csbL1Tys6EdK_fEDPyUMFk05DcBA68wqpV2va_6T-muRDCutb-9Id",
             "https://lh3.googleusercontent.com/aida-public/AB6AXuA_ZYqirc6aOsriRZ6YZ2yYaIPt5W-uagipa9Zne5l-h7aNa7bgx0dJ92VCGr52PBxwUUMHBzi1xULXEZP1KE9hUBlFKBZei-q-4BoHTLGLAeCtW32UuBp1JLD1ZmCODEPgJqkE5THzj13inswULn-3KcG80OPcilxxP6FgMbukrYKFsniij3QVjXrXuNcAODcOWzde9RZzUM7I6RnJUtd0W_0gqqWgw_wJVBXfcZJalFr5fdTcAPofArgMYblGU3C2AvVOfjUYOnSr",
@@ -94,12 +96,12 @@ const RoomDetails = () => {
             const luxuryMockRooms = [
                 {
                   _id: "ud-1",
-                  name: "The Mewar Grand Heritage",
+                  name: "The Mewar Grand Hotel",
                   city: "Udaipur",
                   address: "Lake Pichola, Udaipur, Rajasthan",
                   rating: 4.9,
                   reviewsCount: 342,
-                  type: "Heritage Stays",
+                  type: "Premium Stays",
                   pricePerNight: 18500,
                   originalPrice: 24000,
                   image: "https://lh3.googleusercontent.com/aida-public/AB6AXuARK86bQhppCPH3GLs4FM9czrEDFWlrxPzwBkJ3BqQYMLUQl0gha4A8vliiWWj1xmXO6x6-L9_nqtVId3YGX-Do0csB_i4s7SNFfzADXK2N4EBR2QyWXeL_4YYM5kr9zTPNJE8j_zFoK-A_SiS57VfMKfdSayWBC_63wwQKZ1BKWE1Ldehh00G2e8bJ8AIbXwSzBGMaBqanZRGiwkwYRYvO2O6IuN_oOS44uD3UUadKXP6uycFqSd0QQs1bpPzqSDqQZ0h80lwQSjvI",
@@ -110,7 +112,7 @@ const RoomDetails = () => {
                       "https://lh3.googleusercontent.com/aida-public/AB6AXuD9rmuOj5iWmWeJucgaxzlcgax4VI7caas8PUTwdrI0-5ZTw7s58TUoJzSGhS_bqTU5LGsUDGAqhGXYK5HIiueDAI4G_5uuI81won73xQzS8U_z71uBXFdd5UlzakF-wOUSm0WYwu7e9iZ_ApUf3PXvxiQjn0K3_RXVgQ_uooPylgorRlpotNVxF9co-b9NqRtzZSzgrAS8S0T_cM2JN0CVAQR_npC4jZoU-UdcFvCN6dViHPfbD6S6YXeC8WekWxx6qyylqDz_1tdw"
                   ],
                   amenities: ["Swimming Pool", "Free WiFi", "Breakfast Included"],
-                  about: "Experience majestic views of Pichola Lake and Lake Palace from this historic 18th-century sanctuary of the Mewar rulers. Meticulously restored to its original splendor, it features exquisite marble carvings, crystal chandeliers, hand-painted frescoes, and world-class royal dining, delivering the signature 'Atithi Devo Bhava' service."
+                  about: "Experience majestic views of Pichola Lake and the lake island from this historic 18th-century sanctuary. Meticulously restored to its original splendor, it features exquisite marble carvings, crystal chandeliers, hand-painted frescoes, and world-class dining, delivering the signature 'Atithi Devo Bhava' service."
                 },
                 {
                   _id: "ud-2",
@@ -128,12 +130,12 @@ const RoomDetails = () => {
                       "https://lh3.googleusercontent.com/aida-public/AB6AXuA_ZYqirc6aOsriRZ6YZ2yYaIPt5W-uagipa9Zne5l-h7aNa7bgx0dJ92VCGr52PBxwUUMHBzi1xULXEZP1KE9hUBlFKBZei-q-4BoHTLGLAeCtW32UuBp1JLD1ZmCODEPgJqkE5THzj13inswULn-3KcG80OPcilxxP6FgMbukrYKFsniij3QVjXrXuNcAODcOWzde9RZzUM7I6RnJUtd0W_0gqqWgw_wJVBXfcZJalFr5fdTcAPofArgMYblGU3C2AvVOfjUYOnSr",
                       "https://lh3.googleusercontent.com/aida-public/AB6AXuBY9TfYTQd55PQEfwQIQDHMpdNGa38-RkOQ4v8oncrb1lYcGrNdD8ULF9pD7L7KPS1U41Lb0ycDC7A29ojVs4XxiYRTJfkmfYXIlWbN7M0kc6rctXOCdiYbY8Fb3j5hTAkUinnWQomYHeHWOwaZy8n88gVaumAkfIuc5Ai9jD3tQ7KuJimPQkfJq64nQ1Hx2k4qxbzGwK8Rhi3bspthW28xGszBhXk8GSm4A3wYeUym2qq0uF4pJwKWc_MDqz9uK2grIYrSaiWle8Wy"
                   ],
-                  amenities: ["Free WiFi", "Royal Dining", "Room Service", "Mountain View"],
-                  about: "Perched beautifully near Fateh Sagar Lake against the dramatic backdrop of the Aravalli hills, this boutique heritage home combines traditional architecture with bespoke modern luxury. Rest in beautifully curated suites adorned with local Rajasthani art, vintage fabrics, and hand-carved stone pillars."
+                  amenities: ["Free WiFi", "Fine Dining", "Room Service", "Mountain View"],
+                  about: "Perched beautifully near Fateh Sagar Lake against the dramatic backdrop of the Aravalli hills, this boutique home combines traditional architecture with bespoke modern luxury. Rest in beautifully curated suites adorned with local Rajasthani art, vintage fabrics, and hand-carved stone pillars."
                 },
                 {
                   _id: "ud-3",
-                  name: "Royal Aravali Resort & Spa",
+                  name: "Grand Aravali Resort & Spa",
                   city: "Udaipur",
                   address: "Sajjangarh Road, Udaipur, Rajasthan",
                   rating: 4.8,
@@ -147,17 +149,17 @@ const RoomDetails = () => {
                       "https://lh3.googleusercontent.com/aida-public/AB6AXuDpfDnnoxRLnX9Z1MXeB31XFJLClZI41FYwzdn-u_y0Ww2Ev95ew52gSrW-NhAWDTpIelfx0mkWYk-lOKC76TQ_Yl5AAticlNsmOGkO2OdV0Kh-z-Y74hbc1znxZToPSH3XCt1HygtlDUQ2kNXOYc0ryLAOn8fwVLJ52nXY0b2CJ-HiVeDfJR0ZOdhjE7tybzjnu5u0jwr9Y9wfYH94t0hzbi4csbL1Tys6EdK_fEDPyUMFk05DcBA68wqpV2va_6T-muRDCutb-9Id",
                       "https://lh3.googleusercontent.com/aida-public/AB6AXuA_ZYqirc6aOsriRZ6YZ2yYaIPt5W-uagipa9Zne5l-h7aNa7bgx0dJ92VCGr52PBxwUUMHBzi1xULXEZP1KE9hUBlFKBZei-q-4BoHTLGLAeCtW32UuBp1JLD1ZmCODEPgJqkE5THzj13inswULn-3KcG80OPcilxxP6FgMbukrYKFsniij3QVjXrXuNcAODcOWzde9RZzUM7I6RnJUtd0W_0gqqWgw_wJVBXfcZJalFr5fdTcAPofArgMYblGU3C2AvVOfjUYOnSr"
                   ],
-                  amenities: ["Swimming Pool", "Spa & Wellness", "Royal Dining", "Room Service"],
+                  amenities: ["Swimming Pool", "Spa & Wellness", "Fine Dining", "Room Service"],
                   about: "Surround yourself with premium Mewari hospitality and wellness therapies on the edge of the Sajjangarh Wildlife Sanctuary. Rejuvenate with state-of-the-art spa programs, fine Indian specialty cuisine, and infinity-edge pools that frame the scenic hills and valleys of Southern Rajasthan."
                 },
                 {
                   _id: "jp-1",
-                  name: "The Raj Palace Heritage",
+                  name: "The Raj Grand Hotel",
                   city: "Jaipur",
                   address: "Amer Road, Pink City, Jaipur, Rajasthan",
                   rating: 4.9,
                   reviewsCount: 450,
-                  type: "Heritage Stays",
+                  type: "Premium Stays",
                   pricePerNight: 24500,
                   image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDYnxXIKa_qwaAI8LEyjwDTt8BZ3oSoHOOoElVLtX2xHbfIT_U927oeD1l3uQEe9e_hsDjAbf7SGwS5jH40strZMYHuhXW15FSsXc5Ysq_FbAUDh3tSnuRuCPCuIMOZ62GHyFbyQdK-OwkSyGR9kcdM2aFSnhwvgoifQdRY38kjBNC1DkDo8TseMFMqi0ZJBuoykxbqcRGQmBvU7eO9UDjrBnVfpM8e8c9qDQlWmBEYr2xGExeOH-hPrR8C0biA8Pk3bjARZLS_P1sh",
                   images: [
@@ -167,11 +169,11 @@ const RoomDetails = () => {
                       "https://lh3.googleusercontent.com/aida-public/AB6AXuD9rmuOj5iWmWeJucgaxzlcgax4VI7caas8PUTwdrI0-5ZTw7s58TUoJzSGhS_bqTU5LGsUDGAqhGXYK5HIiueDAI4G_5uuI81won73xQzS8U_z71uBXFdd5UlzakF-wOUSm0WYwu7e9iZ_ApUf3PXvxiQjn0K3_RXVgQ_uooPylgorRlpotNVxF9co-b9NqRtzZSzgrAS8S0T_cM2JN0CVAQR_npC4jZoU-UdcFvCN6dViHPfbD6S6YXeC8WekWxx6qyylqDz_1tdw"
                   ],
                   amenities: ["Swimming Pool", "Free WiFi", "Breakfast Included"],
-                  about: "Step inside this majestic retreat situated right adjacent to the royal Pink City. Indulge in classic Rajput elegance, private courtyard swings, rooftop views, and standard amenities that elevate your cultural stays into unforgettable heritage experiences."
+                  about: "Step inside this majestic retreat situated right adjacent to the historic Pink City. Indulge in classic Rajput elegance, private courtyard swings, rooftop views, and standard amenities that elevate your cultural stays into unforgettable premium experiences."
                 },
                 {
                   _id: "jp-2",
-                  name: "Jaipur Vista Palace",
+                  name: "Jaipur Vista Hotel",
                   city: "Jaipur",
                   address: "M.I. Road, Jaipur, Rajasthan",
                   rating: 4.6,
@@ -205,7 +207,7 @@ const RoomDetails = () => {
                       "https://lh3.googleusercontent.com/aida-public/AB6AXuD9rmuOj5iWmWeJucgaxzlcgax4VI7caas8PUTwdrI0-5ZTw7s58TUoJzSGhS_bqTU5LGsUDGAqhGXYK5HIiueDAI4G_5uuI81won73xQzS8U_z71uBXFdd5UlzakF-wOUSm0WYwu7e9iZ_ApUf3PXvxiQjn0K3_RXVgQ_uooPylgorRlpotNVxF9co-b9NqRtzZSzgrAS8S0T_cM2JN0CVAQR_npC4jZoU-UdcFvCN6dViHPfbD6S6YXeC8WekWxx6qyylqDz_1tdw"
                   ],
                   amenities: ["Swimming Pool", "Free WiFi", "Spa & Wellness", "Breakfast Included"],
-                  about: "Rejuvenate with royal desert luxury therapies, butler service, and gorgeous panoramic sand-dune vistas of Jodhpur. Unwind under starry skies and explore historic forts with curated private guides."
+                  about: "Rejuvenate with premium desert luxury therapies, butler service, and gorgeous panoramic sand-dune vistas of Jodhpur. Unwind under starry skies and explore historic forts with curated private guides."
                 }
             ];
 
@@ -231,9 +233,9 @@ const RoomDetails = () => {
                         setRoom({
                             _id: dbRoom._id,
                             hotel: {
-                                name: dbRoom.hotel?.name || "Premium Heritage Stay",
+                                name: dbRoom.hotel?.name || "Premium Stay",
                                 city: dbRoom.hotel?.city || "Udaipur",
-                                address: dbRoom.hotel?.address || "Mewar Heritage Region",
+                                address: dbRoom.hotel?.address || "Mewar Region",
                             },
                             roomType: dbRoom.roomType,
                             pricePerNight: dbRoom.pricePerNight,
@@ -243,10 +245,10 @@ const RoomDetails = () => {
                                 "https://lh3.googleusercontent.com/aida-public/AB6AXuBY9TfYTQd55PQEfwQIQDHMpdNGa38-RkOQ4v8oncrb1lYcGrNdD8ULF9pD7L7KPS1U41Lb0ycDC7A29ojVs4XxiYRTJfkmfYXIlWbN7M0kc6rctXOCdiYbY8Fb3j5hTAkUinnWQomYHeHWOwaZy8n88gVaumAkfIuc5Ai9jD3tQ7KuJimPQkfJq64nQ1Hx2k4qxbzGwK8Rhi3bspthW28xGszBhXk8GSm4A3wYeUym2qq0uF4pJwKWc_MDqz9uK2grIYrSaiWle8Wy",
                                 "https://lh3.googleusercontent.com/aida-public/AB6AXuD9rmuOj5iWmWeJucgaxzlcgax4VI7caas8PUTwdrI0-5ZTw7s58TUoJzSGhS_bqTU5LGsUDGAqhGXYK5HIiueDAI4G_5uuI81won73xQzS8U_z71uBXFdd5UlzakF-wOUSm0WYwu7e9iZ_ApUf3PXvxiQjn0K3_RXVgQ_uooPylgorRlpotNVxF9co-b9NqRtzZSzgrAS8S0T_cM2JN0CVAQR_npC4jZoU-UdcFvCN6dViHPfbD6S6YXeC8WekWxx6qyylqDz_1tdw"
                             ],
-                            amenities: dbRoom.amenities && dbRoom.amenities.length > 0 ? dbRoom.amenities : ["Swimming Pool", "Free WiFi", "Spa & Wellness", "Royal Dining"],
+                            amenities: dbRoom.amenities && dbRoom.amenities.length > 0 ? dbRoom.amenities : ["Swimming Pool", "Free WiFi", "Spa & Wellness", "Fine Dining"],
                             rating: 4.8,
                             reviewsCount: 24,
-                            about: "Experience majestic views and authentic Indian heritage stays from this premium handpicked property. Specially curated to offer you unparalleled traditional hospitality and comfort.",
+                            about: "Experience majestic views and authentic Indian stays from this premium handpicked property. Specially curated to offer you unparalleled traditional hospitality and comfort.",
                             cancellationPolicy: dbRoom.cancellationPolicy || "Free Cancellation"
                         });
                         setCancellationPolicy(dbRoom.cancellationPolicy || "Free Cancellation");
@@ -286,16 +288,16 @@ const RoomDetails = () => {
     // Mock data for similar rooms to show under "Choose Your Room"
     const otherRooms = useMemo(() => [
         {
-            _id: "heritage-suite",
-            name: "Heritage Suite",
+            _id: "deluxe-suite",
+            name: "Deluxe Suite",
             desc: "450 sq ft • City View • Balcony",
             price: 12500,
             badge: "Rare Find",
             image: "https://lh3.googleusercontent.com/aida-public/AB6AXuA_ZYqirc6aOsriRZ6YZ2yYaIPt5W-uagipa9Zne5l-h7aNa7bgx0dJ92VCGr52PBxwUUMHBzi1xULXEZP1KE9hUBlFKBZei-q-4BoHTLGLAeCtW32UuBp1JLD1ZmCODEPgJqkE5THzj13inswULn-3KcG80OPcilxxP6FgMbukrYKFsniij3QVjXrXuNcAODcOWzde9RZzUM7I6RnJUtd0W_0gqqWgw_wJVBXfcZJalFr5fdTcAPofArgMYblGU3C2AvVOfjUYOnSr"
         },
         {
-            _id: "royal-palace-suite",
-            name: "Royal Palace Suite",
+            _id: "premium-suite",
+            name: "Premium Suite",
             desc: "650 sq ft • Lake View • Terrace",
             price: 24500,
             badge: "Guest Favorite",
@@ -332,7 +334,8 @@ const RoomDetails = () => {
         try {
             const token = await getToken()
             if (!token) {
-                toast.error("Please sign in to book your heritage stay.")
+                toast.error("Please sign in to book your stay.")
+                openSignIn()
                 return
             }
 
@@ -431,7 +434,19 @@ const RoomDetails = () => {
                 </div>
 
                 {/* Bento Gallery layout */}
-                <div className="grid grid-cols-4 grid-rows-2 gap-3 h-[480px] rounded-3xl overflow-hidden custom-shadow bg-white border border-gray-100 p-2">
+                {/* Mobile Gallery (single main image, clean height) */}
+                <div className="md:hidden w-full h-[260px] rounded-3xl overflow-hidden custom-shadow bg-white border border-gray-100 p-2">
+                    <div className="w-full h-full relative overflow-hidden rounded-2xl">
+                        <img 
+                            className="w-full h-full object-cover" 
+                            src={room.images[0]} 
+                            alt={room.hotel.name} 
+                        />
+                    </div>
+                </div>
+
+                {/* Desktop Bento Gallery layout */}
+                <div className="hidden md:grid grid-cols-4 grid-rows-2 gap-3 h-[480px] rounded-3xl overflow-hidden custom-shadow bg-white border border-gray-100 p-2">
                     {/* Large primary image */}
                     <div className="col-span-2 row-span-2 relative group overflow-hidden rounded-2xl cursor-pointer">
                         <img 
@@ -463,10 +478,6 @@ const RoomDetails = () => {
                             src={room.images[3] || room.images[0]} 
                             alt={room.hotel.name} 
                         />
-                        <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-xl font-montserrat font-bold text-xs text-primary shadow-sm flex items-center gap-1.5 cursor-pointer hover:bg-white transition-all">
-                            <span className="material-symbols-outlined text-sm">grid_view</span>
-                            View all 48 photos
-                        </div>
                     </div>
                 </div>
 
@@ -476,9 +487,9 @@ const RoomDetails = () => {
             <section className="max-w-6xl mx-auto px-6 md:px-16 lg:px-24 xl:px-32 py-12 flex flex-col lg:flex-row gap-8 items-start">
                 
                 {/* Left block: Spec description */}
-                <div className="w-full lg:w-5/12 space-y-8 text-left">
+                <div className="w-full lg:w-7/12 space-y-8 text-left order-2 lg:order-1">
                     <div>
-                        <h2 className="font-montserrat text-2xl font-extrabold text-primary mb-4">About this Heritage Gem</h2>
+                        <h2 className="font-montserrat text-2xl font-extrabold text-primary mb-4">About this Premium Stay</h2>
                         <p className="font-inter text-gray-500 leading-relaxed text-sm">
                             {room.about}
                         </p>
@@ -502,39 +513,8 @@ const RoomDetails = () => {
                     </div>
                 </div>
 
-                {/* Middle block: Choose Your Room */}
-                <div className="w-full lg:w-4/12 space-y-6 text-left">
-                    <h2 className="font-montserrat text-2xl font-extrabold text-primary">Choose Your Room</h2>
-                    <div className="space-y-6">
-                        {otherRooms.map((r) => (
-                            <div 
-                                key={r._id} 
-                                className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md border border-gray-100 hover:border-secondary transition-premium cursor-pointer"
-                            >
-                                <div className="h-40 overflow-hidden">
-                                    <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src={r.image} alt={r.name} />
-                                </div>
-                                <div className="p-5 space-y-2">
-                                    <div className="flex justify-between items-start">
-                                        <h3 className="font-montserrat text-base font-bold text-primary">{r.name}</h3>
-                                        <span className="bg-secondary-fixed text-on-secondary-fixed text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">{r.badge}</span>
-                                    </div>
-                                    <p className="font-inter text-xs text-gray-400">{r.desc}</p>
-                                    <div className="flex justify-between items-end pt-2">
-                                        <div>
-                                            <span className="font-montserrat text-base font-bold text-primary">{currency}{r.price.toLocaleString()}</span>
-                                            <span className="font-inter text-[10px] text-gray-400">/night</span>
-                                        </div>
-                                        <button className="text-secondary font-bold text-xs uppercase tracking-widest font-montserrat hover:text-secondary-dark">Details</button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
                 {/* Right block: Sticky reservation widget */}
-                <div className="w-full lg:w-3/12">
+                <div className="w-full lg:w-5/12 order-1 lg:order-2">
                     <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-md sticky top-24 space-y-6 text-left">
                         <div className="flex justify-between items-end border-b border-gray-100 pb-3">
                             <span className="font-montserrat text-2xl font-extrabold text-primary">{currency}{basePrice.toLocaleString()}</span>

@@ -12,19 +12,19 @@ const Hero = () => {
 
   return (
     <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-      {/* Opulent Indian Palace at dusk background */}
+      {/* Opulent Hotel at dusk background */}
       <div className="absolute inset-0 z-0">
         <img 
           className="w-full h-full object-cover" 
           src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9CgXiXoXg1jVN2XTSEl0E0xR2k_S4M0MFcU83Jzd3hkMyh_Ep8lrfKnAlJIvVpUaHKJepwil7hxWLwHYy_FvThIlcnOoZjdujR3YY3YExiAALxf-XgSl14cm9F94v2NQxsXgGOSZYX8E4QUhvIfN4BFt6MUvjUnPyiDyR2FLqVYQ5R8p16CEl2f0y7CqkIPIvY50ZmZNJC64_aaE52oJU2SkmvsMWpH0ICpvfPJ_Z4_8Q5AWeQuGMvHl9b-pR38fyQKHfge2m5P1t" 
-          alt="Royal Indian Palace Dusk Background" 
+          alt="Premium Indian Stay Dusk Background" 
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/50"></div>
       </div>
 
       <div className="relative z-10 w-full max-w-7xl px-6 md:px-16 lg:px-24 xl:px-32 text-center">
         <h1 className="font-montserrat text-4xl md:text-5xl lg:text-5xl font-extrabold text-white mb-10 text-shadow-sm tracking-tight leading-tight">
-          Experience Royalty. Embrace Bharat.
+          Discover Premium Stays. Embrace Bharat.
         </h1>
 
         {/* Search Bar Container */}

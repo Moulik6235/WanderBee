@@ -7,13 +7,11 @@ const ExclusiveOffer = () => {
 
     return (
         <section className="py-16 max-w-6xl mx-auto px-6 md:px-16 lg:px-24 xl:px-32 bg-white">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
-                <div className="text-left">
-                    <h2 className="font-montserrat text-3xl font-bold text-primary mb-2">Offers for You</h2>
-                    <p className="font-inter text-gray-500">Handpicked festive deals just for you.</p>
-                </div>
+            <div className="flex flex-col items-center text-center mb-8 gap-2">
+                <h2 className="font-montserrat text-3xl font-bold text-primary mb-2">Offers for You</h2>
+                <p className="font-inter text-gray-500 mb-2">Handpicked festive deals just for you.</p>
                 <a 
-                    className="text-primary font-montserrat font-bold text-sm hover:text-secondary flex items-center gap-1 group transition-premium" 
+                    className="text-primary font-montserrat font-bold text-sm hover:text-secondary flex items-center gap-1 group transition-premium mb-4" 
                     href="#offers"
                     onClick={(e) => { e.preventDefault(); navigate('/rooms'); }}
                 >

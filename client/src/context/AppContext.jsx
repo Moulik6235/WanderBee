@@ -12,10 +12,11 @@ export const AppProvider = ({ children }) => {
 
     const currency = import.meta.env.VITE_CURRENCY || "$";
     const navigate = useNavigate();
-    const { user } = useUser();
+    const { isLoaded, user } = useUser();
     const { getToken } = useAuth()
 
     const [isOwner, setIsOwner] = useState(false)
+    const [isOwnerLoaded, setIsOwnerLoaded] = useState(false)
     const [showHotelReg, setShowHotelReg] = useState(false)
     const [searchedCities, setSearchedCities] = useState([])
 
@@ -25,6 +26,7 @@ export const AppProvider = ({ children }) => {
             if (data.success) {
                 setIsOwner(data.role === "hotelOwner");
                 setSearchedCities(data.recentSearchedCities)
+                setIsOwnerLoaded(true);
             } else {
                 // Retry Fetching User Details After 5 Seconds
                 setTimeout(() => {
@@ -33,17 +35,23 @@ export const AppProvider = ({ children }) => {
             }
         } catch (error) {
             toast.error(error.message)
+            setIsOwnerLoaded(true);
         }
     }
 
     useEffect(() => {
-        if (user) {
-            fetchUser();
+        if (isLoaded) {
+            if (user) {
+                fetchUser();
+            } else {
+                setIsOwner(false);
+                setIsOwnerLoaded(true);
+            }
         }
-    }, [user])
+    }, [isLoaded, user])
 
     const value = {
-        currency, navigate, user, getToken, isOwner, setIsOwner, axios, showHotelReg, setShowHotelReg,searchedCities, setSearchedCities
+        currency, navigate, user, getToken, isOwner, setIsOwner, isOwnerLoaded, axios, showHotelReg, setShowHotelReg,searchedCities, setSearchedCities
     }
 
     return (

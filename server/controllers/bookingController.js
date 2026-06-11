@@ -1,7 +1,8 @@
 import Booking from "../models/Booking.js"
 import Room from "../models/Room.js"
 import Hotel from "../models/Hotel.js"
-import { sendBookingConfirmationEmail, sendPaymentConfirmationEmail, sendCancellationEmail } from "../configs/emailService.js"
+import Experience from "../models/Experience.js"
+import { sendBookingConfirmationEmail, sendPaymentConfirmationEmail, sendCancellationEmail, sendExperienceBookingEmail } from "../configs/emailService.js"
 
 
 
@@ -39,8 +40,44 @@ export const checkAvailabilityAPI = async (req, res) => {
 export const createBooking = async (req, res) => {
     try {
         console.log("createBooking request body:", req.body);
-        const { room, checkInDate, checkOutDate, guests, paymentMethod, isPaid, cancellationPolicy, totalPrice: bodyTotalPrice } = req.body;
+        const { experience, room, checkInDate, checkOutDate, guests, paymentMethod, isPaid, cancellationPolicy, totalPrice: bodyTotalPrice } = req.body;
         const user = req.user._id;
+
+        if (experience) {
+            // Experience Booking Path
+            const experienceData = await Experience.findById(experience);
+            if (!experienceData) {
+                return res.json({ success: false, message: "Experience Not Found" });
+            }
+
+            const basePrice = experienceData.price || 0;
+            const guestsCount = +guests || 1;
+            const gstAmount = basePrice * guestsCount * 0.05;
+            let totalPrice = (basePrice * guestsCount) + gstAmount;
+
+            if (isNaN(totalPrice) || !totalPrice) {
+                totalPrice = bodyTotalPrice;
+            }
+
+            const booking = await Booking.create({
+                user,
+                bookingType: "experience",
+                experience: experienceData._id,
+                guests: guestsCount,
+                checkInDate: checkInDate || new Date(),
+                checkOutDate: checkInDate || new Date(),
+                totalPrice,
+                paymentMethod: paymentMethod || "Pay At Hotel",
+                isPaid: isPaid || false,
+                status: isPaid ? "confirmed" : "pending",
+                cancellationPolicy: "Free Cancellation"
+            });
+
+            // Send confirmation email
+            sendExperienceBookingEmail(req.user.email, req.user.username, booking, experienceData);
+
+            return res.json({ success: true, message: "Experience Booking Created Successfully", booking });
+        }
 
         // Before Booking Check Availabilty
         const isAvailable = await checkAvailability({
@@ -121,7 +158,7 @@ export const createBooking = async (req, res) => {
 export const getUserBookings = async (req, res) => {
     try {
         const user = req.user._id;
-        const bookings = await Booking.find({ user }).populate("room hotel").sort({ createdAt: -1 })
+        const bookings = await Booking.find({ user }).populate("room hotel experience").sort({ createdAt: -1 })
         res.json({ success: true, bookings })
     } catch (error) {
         res.json({ success: false, message: "Failed to fetch bookings" });
@@ -168,28 +205,33 @@ export const payBooking = async (req, res) => {
         booking.paymentMethod = paymentMethod || "Credit/Debit Card";
         await booking.save();
 
-        // Populate room and hotel details for the email receipt
-        try {
-            await booking.populate("room hotel");
-        } catch (populateError) {
-            console.error("Mongoose populate failed in payBooking:", populateError);
-        }
-
-        let populatedRoom = booking.room;
-        let populatedHotel = booking.hotel;
-        
-        // Manual fallback if populate returned IDs or strings instead of full objects
-        if (!populatedRoom || typeof populatedRoom === 'string' || !populatedHotel || typeof populatedHotel === 'string') {
-            const roomData = await Room.findById(booking.room || booking.room?._id).populate("hotel");
-            if (roomData) {
-                populatedRoom = roomData;
-                populatedHotel = roomData.hotel || populatedHotel;
+        if (booking.bookingType === "experience") {
+            const experienceData = await Experience.findById(booking.experience);
+            sendExperienceBookingEmail(req.user.email, req.user.username, booking, experienceData);
+        } else {
+            // Populate room and hotel details for the email receipt
+            try {
+                await booking.populate("room hotel");
+            } catch (populateError) {
+                console.error("Mongoose populate failed in payBooking:", populateError);
             }
-        }
 
-        console.log(`Sending payment confirmation email to ${req.user?.email || 'unknown'} for booking ${booking._id}`);
-        // Send payment confirmation email (async, non-blocking)
-        sendPaymentConfirmationEmail(req.user.email, req.user.username, booking, populatedHotel, populatedRoom);
+            let populatedRoom = booking.room;
+            let populatedHotel = booking.hotel;
+            
+            // Manual fallback if populate returned IDs or strings instead of full objects
+            if (!populatedRoom || typeof populatedRoom === 'string' || !populatedHotel || typeof populatedHotel === 'string') {
+                const roomData = await Room.findById(booking.room || booking.room?._id).populate("hotel");
+                if (roomData) {
+                    populatedRoom = roomData;
+                    populatedHotel = roomData.hotel || populatedHotel;
+                }
+            }
+
+            console.log(`Sending payment confirmation email to ${req.user?.email || 'unknown'} for booking ${booking._id}`);
+            // Send payment confirmation email (async, non-blocking)
+            sendPaymentConfirmationEmail(req.user.email, req.user.username, booking, populatedHotel, populatedRoom);
+        }
 
         res.json({ success: true, message: "Booking Paid Successfully", booking });
     } catch (error) {

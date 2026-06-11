@@ -55,12 +55,12 @@ const HotelReg = () => {
                     <img src={assets.closeIcon} alt="close-icon" className='absolute top-6 right-6 h-4 w-4 cursor-pointer hover:scale-110 transition-premium opacity-70' onClick={() => setShowHotelReg(false)} />
                     
                     <h2 className='text-xl md:text-2xl font-extrabold font-montserrat text-primary mt-2'>Register Your Hotel</h2>
-                    <p className="text-xs text-gray-400 mt-1 leading-relaxed">Join WanderBee's modern heritage ecosystem to list your suites and unlock premium bookings.</p>
+                    <p className="text-xs text-gray-400 mt-1 leading-relaxed">Join WanderBee's premium booking network to list your rooms and unlock exclusive bookings.</p>
 
                     {/* Hotel Name */}
                     <div className='w-full mt-4'>
                         <label htmlFor="name" className='font-montserrat font-bold text-[10px] uppercase tracking-wider text-gray-400'>Hotel Name</label>
-                        <input id='name' onChange={(e) => setName(e.target.value)} value={name} type="text" placeholder='e.g. Royal Heritage Palace' className='border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg w-full px-3 py-2.5 mt-1 outline-none font-inter text-sm bg-slate-50/50 transition-premium' required />
+                        <input id='name' onChange={(e) => setName(e.target.value)} value={name} type="text" placeholder='e.g. Grand Plaza Hotel' className='border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg w-full px-3 py-2.5 mt-1 outline-none font-inter text-sm bg-slate-50/50 transition-premium' required />
                     </div>
 
                     {/* Contact */}
@@ -72,7 +72,7 @@ const HotelReg = () => {
                     {/* Address */}
                     <div className='w-full mt-3'>
                         <label htmlFor="address" className='font-montserrat font-bold text-[10px] uppercase tracking-wider text-gray-400'>Address</label>
-                        <input id='address' type="text" onChange={(e) => setAddress(e.target.value)} value={address} placeholder='e.g. 101 Royal Boulevard' className='border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg w-full px-3 py-2.5 mt-1 outline-none font-inter text-sm bg-slate-50/50 transition-premium' required />
+                        <input id='address' type="text" onChange={(e) => setAddress(e.target.value)} value={address} placeholder='e.g. 101 Plaza Boulevard' className='border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg w-full px-3 py-2.5 mt-1 outline-none font-inter text-sm bg-slate-50/50 transition-premium' required />
                     </div>
 
                     {/* City & State Side-by-side */}

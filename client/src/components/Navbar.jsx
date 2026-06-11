@@ -59,7 +59,8 @@ const Navbar = () => {
             <nav className="flex justify-between items-center px-6 md:px-16 lg:px-24 xl:px-32 py-4 max-w-7xl mx-auto">
                 {/* Logo */}
                 <div className="flex items-center gap-8">
-                    <Link to='/' className="active:scale-95 transition-transform">
+                    <Link to='/' className="active:scale-95 transition-transform flex items-center gap-2.5">
+                        <img src={assets.logo} alt="WanderBee" className="h-7 w-auto object-contain" />
                         <span className="font-montserrat text-2xl font-bold tracking-tight text-primary">
                              WanderBee
                         </span>
@@ -69,10 +70,17 @@ const Navbar = () => {
                     <div className="hidden md:flex gap-6 items-center">
                         {navLinks.map((link, i) => {
                             const isActive = location.pathname === link.path;
+                            const isBookingsLink = link.path === '/my-bookings';
                             return (
                                 <Link 
                                     key={i} 
-                                    to={link.path} 
+                                    to={isBookingsLink && !user ? '#' : link.path} 
+                                    onClick={(e) => {
+                                        if (isBookingsLink && !user) {
+                                            e.preventDefault();
+                                            openSignIn();
+                                        }
+                                    }}
                                     className={`font-inter text-sm font-semibold transition-all duration-200 cursor-pointer active:scale-95 hover:text-secondary ${
                                         isActive ? "text-primary border-b-2 border-primary pb-1" : "text-gray-500 hover:text-secondary"
                                     }`}
@@ -141,16 +149,25 @@ const Navbar = () => {
                         <img src={assets.closeIcon} alt="close-menu" className="h-6.5" />
                     </button>
 
-                    {navLinks.map((link, i) => (
-                        <Link 
-                            key={i} 
-                            to={link.path} 
-                            onClick={() => setIsMenuOpen(false)} 
-                            className="font-montserrat font-semibold text-lg text-primary hover:text-secondary transition-premium"
-                        >
-                            {link.name}
-                        </Link>
-                    ))}
+                    {navLinks.map((link, i) => {
+                        const isBookingsLink = link.path === '/my-bookings';
+                        return (
+                            <Link 
+                                key={i} 
+                                to={isBookingsLink && !user ? '#' : link.path} 
+                                onClick={(e) => {
+                                    setIsMenuOpen(false);
+                                    if (isBookingsLink && !user) {
+                                        e.preventDefault();
+                                        openSignIn();
+                                    }
+                                }} 
+                                className="font-montserrat font-semibold text-lg text-primary hover:text-secondary transition-premium"
+                            >
+                                {link.name}
+                            </Link>
+                        );
+                    })}
 
 
 
