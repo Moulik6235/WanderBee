@@ -205,7 +205,7 @@ export const payBooking = async (req, res) => {
         booking.isPaid = true;
         booking.status = "confirmed"; // Use 'confirmed' to match models/Booking.js schema enum
         booking.paymentMethod = paymentMethod || "Credit/Debit Card";
-        await booking.save();
+        await booking.save({ validateModifiedOnly: true });
 
         if (booking.bookingType === "experience") {
             const experienceData = await Experience.findById(booking.experience);
@@ -263,7 +263,7 @@ export const cancelBooking = async (req, res) => {
             booking.cancellationFee = 0;
             booking.refundAmount = booking.totalPrice;
         }
-        await booking.save();
+        await booking.save({ validateModifiedOnly: true });
 
         // Populate room and hotel details for the cancellation confirmation
         await booking.populate("room hotel");
