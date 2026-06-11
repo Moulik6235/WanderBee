@@ -1,4 +1,4 @@
-# 🐝 WanderBee — Premium Hotel Booking & Host Management Platform
+#  WanderBee — Premium Hotel Booking & Host Management Platform
 
 WanderBee is a premium, full-stack hotel stay booking platform and host dashboard application designed for modern travelers and property owners. It provides a dual-sided marketplace featuring a consumer-facing booking application and a dedicated host management portal ("Owner Suite") for managing room listings, pricing, and bookings in real-time.
 
