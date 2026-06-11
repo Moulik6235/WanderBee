@@ -10,23 +10,6 @@ const MyBookings = () => {
     const navigate = useNavigate()
     const { user, currency, axios, getToken } = useAppContext()
     const [bookings, setBookings] = useState([])
-
-    if (!user) {
-        return (
-            <div className="flex flex-col items-center justify-center min-h-[75vh] py-16 px-6 bg-slate-50 jali-overlay text-center">
-                <div className="max-w-md mb-8">
-                    <h2 className="font-montserrat text-3xl font-extrabold text-primary mb-3">Access Your Bookings</h2>
-                    <p className="font-inter text-sm text-gray-500 leading-relaxed">
-                        Please sign in to view and manage your premium reservations with WanderBee.
-                    </p>
-                </div>
-                <div className="bg-white p-4 rounded-3xl shadow-xl border border-gray-100 flex items-center justify-center">
-                    <SignIn routing="hash" />
-                </div>
-            </div>
-        )
-    }
-
     useEffect(() => {
         const fetchUserBookings = async () => {
             try {
@@ -249,6 +232,21 @@ const MyBookings = () => {
         } catch (error) {
             toast.error(error.response?.data?.message || error.message)
         }
+    }
+    if (!user) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[75vh] py-16 px-6 bg-slate-50 jali-overlay text-center">
+                <div className="max-w-md mb-8">
+                    <h2 className="font-montserrat text-3xl font-extrabold text-primary mb-3">Access Your Bookings</h2>
+                    <p className="font-inter text-sm text-gray-500 leading-relaxed">
+                        Please sign in to view and manage your premium reservations with WanderBee.
+                    </p>
+                </div>
+                <div className="bg-white p-4 rounded-3xl shadow-xl border border-gray-100 flex items-center justify-center">
+                    <SignIn routing="hash" />
+                </div>
+            </div>
+        )
     }
 
     return (
