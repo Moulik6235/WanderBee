@@ -11,8 +11,9 @@ const checkAvailability = async ({ checkInDate, checkOutDate, room }) => {
     try {
         const bookings = await Booking.find({
             room,
-            checkInDate: { $lte: checkOutDate },
-            checkOutDate: { $gte: checkInDate, }
+            status: { $ne: "cancelled" },
+            checkInDate: { $lt: checkOutDate },
+            checkOutDate: { $gt: checkInDate, }
         });
         const isAvailable = bookings.length === 0;
         return isAvailable;
@@ -140,6 +141,7 @@ export const createBooking = async (req, res) => {
             totalPrice,
             paymentMethod: paymentMethod || "Pay At Hotel",
             isPaid: isPaid || false,
+            status: isPaid ? "confirmed" : "pending",
             cancellationPolicy: policy
         })
 
